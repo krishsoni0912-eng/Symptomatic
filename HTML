@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Symptom Tracker App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f4f4f8;
+      color: #111827;
+    }
+
+    header {
+      background: #4f46e5;
+      color: white;
+      padding: 1rem 1.5rem;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.4rem;
+    }
+
+    header p {
+      margin: 0.25rem 0 0;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .container {
+      padding: 1rem;
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.5fr);
+      gap: 1rem;
+    }
+
+    @media (max-width: 900px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: white;
+      border-radius: 0.75rem;
+      padding: 1rem;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 1.1rem;
+    }
+
+    label {
+      font-size: 0.9rem;
+      display: block;
+      margin-bottom: 0.25rem;
+      font-weight: 500;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.5rem 0.6rem;
+      border-radius: 0.5rem;
+      border: 1px solid #d1d5db;
+      font-size: 0.9rem;
+      margin-bottom: 0.7rem;
+    }
+
+    textarea {
+      min-height: 60px;
+      resize: vertical;
+    }
+
+    button {
+      border-radius: 999px;
+      border: none;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
+    }
+
+    button.primary {
+      background: #4f46e5;
+      color: white;
+      box-shadow: 0 6px 14px rgba(79, 70, 229, 0.3);
+    }
+
+    button.primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px rgba(79, 70, 229, 0.35);
+    }
+
+    button.secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .row {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .row > * {
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      background: #eef2ff;
+      color: #4338ca;
+      margin-right: 0.25rem;
+    }
+
+    .history-item {
+      border-bottom: 1px solid #e5e7eb;
+      padding: 0.5rem 0;
+      font-size: 0.85rem;
+    }
+
+    .history-item:last-child {
+      border-bottom: none;
+    }
+
+    .history-meta {
+      font-size: 0.7rem;
+      color: #6b7280;
+    }
+
+    .section-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin: 0.5rem 0 0.25rem;
+    }
+
+    .pill {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 0.2rem 0.45rem;
+      border-radius: 999px;
+      background: #f3f4f6;
+      margin: 0.1rem 0.1rem 0.1rem 0;
+    }
+
+    .search-bar {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .search-bar input {
+      margin-bottom: 0;
+    }
+
+    .ai-messages {
+      max-height: 260px;
+      overflow-y: auto;
+      border-radius: 0.75rem;
+      background: #f9fafb;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.85rem;
+    }
+
+    .ai-bubble {
+      background: #e0f2fe;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.75rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .ai-bubble .time {
+      font-size: 0.7rem;
+      color: #6b7280;
+      margin-top: 0.15rem;
+    }
+
+    .tiny {
+      font-size: 0.7rem;
+      color: #6b7280;
+    }
+
+    .highlight {
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Symptom Tracker (Prototype)</h1>
+    <p>For tracking only – not medical advice. Always talk to a doctor or trusted adult if you feel unwell.</p>
+  </header>
+
+  <div class="container">
+    <!-- LEFT COLUMN: Questionnaire + Search -->
+    <div class="left">
+      <div class="card">
+        <h2>Log a Symptom</h2>
+        <form id="symptomForm">
+          <label for="symptomName">Symptom</label>
+          <input
+            type="text"
+            id="symptomName"
+            placeholder="e.g., headache, nausea, tired, anxious"
+            required
+          />
+
+          <div class="row">
+            <div>
+              <label for="severity">Severity (1–10)</label>
+              <input
+                type="number"
+                id="severity"
+                min="1"
+                max="10"
+                value="5"
+                required
+              />
+            </div>
+            <div>
+              <label for="duration">Duration</label>
+              <input
+                type="text"
+                id="duration"
+                placeholder="e.g., 2 hours, 3 days"
+              />
+            </div>
+          </div>
+
+          <label for="notes">Extra notes (optional)</label>
+          <textarea
+            id="notes"
+            placeholder="When did it start? Anything that might have triggered it?"
+          ></textarea>
+
+          <button type="submit" class="primary">Save Symptom Entry</button>
+        </form>
+        <p class="tiny" style="margin-top:0.5rem;">
+          Your data is currently stored only in this browser (localStorage).
+          To use a real backend, connect the saved entries to your server or database.
+        </p>
+      </div>
+
+      <div class="card" style="margin-top:1rem;">
+        <h2>Search Symptoms</h2>
+        <div class="search-bar">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search (e.g., headache, sleep, mood)..."
+          />
+          <button id="searchBtn" class="secondary">Search</button>
+        </div>
+        <div id="searchResults"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: History + AI Messenger -->
+    <div class="right">
+      <div class="card">
+        <h2>History</h2>
+        <div id="historyList"></div>
+      </div>
+
+      <div class="card" style="margin-top:1rem;">
+        <h2>AI Messenger (Prototype)</h2>
+        <div class="ai-messages" id="aiMessages"></div>
+        <p class="tiny">
+          This “AI” is rule-based right now (no real medical AI).
+          In a real app, you’d connect this to a trusted AI backend **with safety filters** and adult review.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /**************************************************
+     * 1. Symptom "database"
+     * (You can expand this with more symptoms later)
+     **************************************************/
+    const SYMPTOM_DB = [
+      {
+        id: "headache",
+        name: "Headache",
+        category: "Pain",
+        commonTriggers: ["Dehydration", "Stress", "Too much screen time", "Lack of sleep"],
+        selfCareIdeas: [
+          "Drink water slowly and regularly.",
+          "Rest your eyes and take a break from screens.",
+          "Try relaxing in a quiet, dim room.",
+          "Track how many hours you’re sleeping."
+        ],
+        whenToSeekHelp:
+          "If the headache is very strong, doesn’t improve, started after an injury, or you feel very sick (e.g., vomiting, confusion, vision changes), talk to a doctor or trusted adult immediately."
+      },
+      {
+        id: "stomachache",
+        name: "Stomachache",
+        category: "Pain",
+        commonTriggers: ["Certain foods", "Stress/anxiety", "Eating too fast"],
+        selfCareIdeas: [
+          "Sip water and avoid very heavy or greasy foods for a while.",
+          "Rest and notice if certain foods make it worse.",
+          "Try gentle movement or stretching if it feels comfortable."
+        ],
+        whenToSeekHelp:
+          "If the pain is very strong, lasts a long time, you have fever, vomiting, or the pain is in one specific spot (like lower right), talk to a doctor or trusted adult right away."
+      },
+      {
+        id: "tired",
+        name: "Tiredness / Low Energy",
+        category: "Energy",
+        commonTriggers: ["Not enough sleep", "Irregular sleep schedule", "Stress"],
+        selfCareIdeas: [
+          "Aim for a regular bedtime and wake-up time.",
+          "Limit screens at least 30–60 minutes before sleep.",
+          "Keep a short note of how you feel after different sleep amounts."
+        ],
+        whenToSeekHelp:
+          "If you are always tired, even after sleeping, or if tiredness is affecting school or daily life a lot, talk to a doctor or trusted adult."
+      },
+      {
+        id: "anxious",
+        name: "Anxious / Worried",
+        category: "Mood",
+        commonTriggers: ["Stressful events", "Overthinking", "Social pressure"],
+        selfCareIdeas: [
+          "Try slow, deep breathing (in through your nose, out through your mouth).",
+          "Write feelings in a journal or notes app.",
+          "Talk to someone you trust about what’s worrying you.",
+          "Take a short break to move around, stretch, or walk."
+        ],
+        whenToSeekHelp:
+          "If anxiety feels constant, stops you from doing things you care about, or you feel out of control, please talk to a trusted adult or mental health professional."
+      }
+    ];
+
+    /**************************************************
+     * 2. Local storage helpers (can be swapped with backend)
+     **************************************************/
+    const STORAGE_KEY = "symptomTrackerHistory";
+
+    function loadHistory() {
+      // TODO: Replace with real backend GET call in a real app
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return [];
+      try {
+        return JSON.parse(raw);
+      } catch (e) {
+        console.error("Error parsing history", e);
+        return [];
+      }
+    }
+
+    function saveHistory(entries) {
+      // TODO: Replace with real backend POST/PUT call in a real app
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+    }
+
+    /**************************************************
+     * 3. Rendering functions
+     **************************************************/
+    function renderHistory() {
+      const container = document.getElementById("historyList");
+      const history = loadHistory().sort(
+        (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+      );
+
+      if (history.length === 0) {
+        container.innerHTML = "<p class='tiny'>No entries yet. Log a symptom to get started.</p>";
+        return;
+      }
+
+      container.innerHTML = history
+        .map(entry => {
+          const dbInfo = findSymptomInfo(entry.symptomName);
+          return `
+            <div class="history-item">
+              <div><span class="highlight">${escapeHtml(entry.symptomName)}</span> – severity
+                <span class="highlight">${entry.severity}</span></div>
+              <div class="history-meta">
+                ${new Date(entry.timestamp).toLocaleString()} • Duration: ${escapeHtml(entry.duration || "n/a")}
+              </div>
+              ${
+                entry.notes
+                  ? `<div class="tiny">Notes: ${escapeHtml(entry.notes)}</div>`
+                  : ""
+              }
+              ${
+                dbInfo
+                  ? `<div class="tiny">Category: <span class="badge">${escapeHtml(
+                      dbInfo.category
+                    )}</span></div>`
+                  : ""
+              }
+            </div>
+          `;
+        })
+        .join("");
+    }
+
+    function renderAiMessages() {
+      const container = document.getElementById("aiMessages");
+      const history = loadHistory().sort(
+        (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+      );
+
+      if (history.length === 0) {
+        container.innerHTML = `
+          <div class="ai-bubble">
+            <div>Hi! I’ll send gentle check-in messages after you log symptoms here.</div>
+            <div class="time">System message</div>
+          </div>`;
+        return;
+      }
+
+      const bubbles = history.slice(0, 8).map(entry => {
+        const aiText = generateAiFollowup(entry);
+        return `
+          <div class="ai-bubble">
+            <div>${aiText}</div>
+            <div class="time">${new Date(entry.timestamp).toLocaleString()}</div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = bubbles.join("");
+    }
+
+    function renderSearchResults(term) {
+      const container = document.getElementById("searchResults");
+      const history = loadHistory();
+      const q = term.trim().toLowerCase();
+
+      if (!q) {
+        container.innerHTML = "<p class='tiny'>Type something and hit search.</p>";
+        return;
+      }
+
+      // Search history
+      const matchedHistory = history.filter(entry =>
+        entry.symptomName.toLowerCase().includes(q)
+      );
+
+      // Search DB
+      const matchedSymptom = SYMPTOM_DB.find(s =>
+        s.name.toLowerCase().includes(q) || s.id.includes(q)
+      );
+
+      let html = "";
+
+      html += `<div class="section-title">Matching history</div>`;
+      if (matchedHistory.length === 0) {
+        html += `<p class="tiny">No history entries found for "<span class="highlight">${escapeHtml(
+          term
+        )}</span>".</p>`;
+      } else {
+        html += matchedHistory
+          .map(entry => {
+            return `
+              <div class="history-item">
+                <div><span class="highlight">${escapeHtml(entry.symptomName)}</span> – severity ${entry.severity}</div>
+                <div class="history-meta">
+                  ${new Date(entry.timestamp).toLocaleString()} • Duration: ${escapeHtml(
+              entry.duration || "n/a"
+            )}
+                </div>
+                ${
+                  entry.notes
+                    ? `<div class="tiny">Notes: ${escapeHtml(entry.notes)}</div>`
+                    : ""
+                }
+              </div>
+            `;
+          })
+          .join("");
+      }
+
+      // Solutions + suggestions section
+      html += `<div class="section-title" style="margin-top:0.75rem;">Solutions & Suggestions</div>`;
+      if (!matchedSymptom) {
+        html += `<p class="tiny">No specific symptom info found. You can add this symptom to the database later.</p>`;
+      } else {
+        html += `
+          <div class="tiny" style="margin-bottom:0.25rem;">
+            Symptom: <span class="highlight">${escapeHtml(matchedSymptom.name)}</span>
+            <span class="badge">${escapeHtml(matchedSymptom.category)}</span>
+          </div>
+          <div class="tiny"><b>Common possible triggers:</b></div>
+          <div>${matchedSymptom.commonTriggers
+            .map(t => `<span class="pill">${escapeHtml(t)}</span>`)
+            .join("")}</div>
+
+          <div class="tiny" style="margin-top:0.4rem;"><b>Self-care ideas (not medical advice):</b></div>
+          <ul class="tiny">
+            ${matchedSymptom.selfCareIdeas
+              .map(i => `<li>${escapeHtml(i)}</li>`)
+              .join("")}
+          </ul>
+
+          <div class="tiny" style="margin-top:0.4rem;"><b>When to seek help:</b></div>
+          <p class="tiny">${escapeHtml(matchedSymptom.whenToSeekHelp)}</p>
+        `;
+      }
+
+      container.innerHTML = html;
+    }
+
+    /**************************************************
+     * 4. Logic helpers
+     **************************************************/
+    function findSymptomInfo(name) {
+      if (!name) return null;
+      const lower = name.toLowerCase();
+      return (
+        SYMPTOM_DB.find(
+          s =>
+            s.name.toLowerCase() === lower ||
+            s.id === lower ||
+            s.name.toLowerCase().includes(lower)
+        ) || null
+      );
+    }
+
+    function generateAiFollowup(entry) {
+      const dbInfo = findSymptomInfo(entry.symptomName);
+      const severity = Number(entry.severity) || 0;
+      const baseSymptom = dbInfo ? dbInfo.name : entry.symptomName;
+
+      let message = `You logged <b>${escapeHtml(
+        baseSymptom
+      )}</b> (severity <b>${severity}</b>)`;
+
+      if (entry.duration) {
+        message += ` lasting about <b>${escapeHtml(entry.duration)}</b>.`;
+      } else {
+        message += `.`;
+      }
+
+      // Suggestion tone based on severity (non-medical, very general)
+      if (severity >= 8) {
+        message +=
+          ` This sounds quite strong. Please consider telling a trusted adult or doctor about how you feel.`;
+      } else if (severity >= 5) {
+        message +=
+          ` This is in the middle-to-high range. Keep an eye on it and talk to someone if it doesn’t improve or feels worrying.`;
+      } else {
+        message +=
+          ` It’s on the milder side, but still important to notice. Tracking it over time can help you see patterns.`;
+      }
+
+      if (dbInfo) {
+        message += ` You can also look at the <b>self-care ideas</b> for ${escapeHtml(
+          dbInfo.name
+        )} in the solutions section.`;
+      }
+
+      message += ` Remember: this app can’t diagnose you. If you’re worried, ask a trusted adult or health professional.`;
+
+      return message;
+    }
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    /**************************************************
+     * 5. Event listeners
+     **************************************************/
+    document.getElementById("symptomForm").addEventListener("submit", e => {
+      e.preventDefault();
+
+      const symptomName = document.getElementById("symptomName").value.trim();
+      const severity = document.getElementById("severity").value;
+      const duration = document.getElementById("duration").value.trim();
+      const notes = document.getElementById("notes").value.trim();
+
+      if (!symptomName) {
+        alert("Please enter a symptom.");
+        return;
+      }
+
+      const entry = {
+        id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
+        symptomName,
+        severity,
+        duration,
+        notes,
+        timestamp: new Date().toISOString()
+      };
+
+      const history = loadHistory();
+      history.push(entry);
+      saveHistory(history);
+
+      // Clear form
+      document.getElementById("symptomForm").reset();
+      document.getElementById("severity").value = 5;
+
+      // Update UI
+      renderHistory();
+      renderAiMessages();
+      alert("Symptom entry saved.");
+    });
+
+    document.getElementById("searchBtn").addEventListener("click", () => {
+      const term = document.getElementById("searchInput").value;
+      renderSearchResults(term);
+    });
+
+    document
+      .getElementById("searchInput")
+      .addEventListener("keypress", e => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          const term = document.getElementById("searchInput").value;
+          renderSearchResults(term);
+        }
+      });
+
+    /**************************************************
+     * 6. Initial render on page load
+     **************************************************/
+    renderHistory();
+    renderAiMessages();
+  </script>
+</body>
+</html>
