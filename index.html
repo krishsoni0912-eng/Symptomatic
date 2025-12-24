@@ -2,650 +2,1643 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Symptom Tracker App</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Symptomatic — Symptom Tracker</title>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
   <style>
-    * {
-      box-sizing: border-box;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    :root{
+      --bg: #0b1220;
+      --panel: rgba(255,255,255,0.06);
+      --panel2: rgba(255,255,255,0.08);
+      --stroke: rgba(255,255,255,0.12);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.68);
+      --muted2: rgba(255,255,255,0.55);
+      --brand: #7c5cff;
+      --brand2:#35d2ff;
+      --good:#25d366;
+      --warn:#ffb020;
+      --bad:#ff4d6d;
+      --shadow: 0 18px 60px rgba(0,0,0,.45);
+      --radius: 18px;
+      --radius2: 24px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
     }
 
-    body {
-      margin: 0;
-      padding: 0;
-      background: #f4f4f8;
-      color: #111827;
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: var(--sans);
+      background:
+        radial-gradient(1200px 800px at 15% 10%, rgba(124,92,255,0.35), transparent 55%),
+        radial-gradient(900px 700px at 80% 30%, rgba(53,210,255,0.25), transparent 60%),
+        radial-gradient(1000px 800px at 50% 100%, rgba(255,77,109,0.12), transparent 60%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
     }
 
-    header {
-      background: #4f46e5;
-      color: white;
-      padding: 1rem 1.5rem;
+    a{ color: var(--brand2); text-decoration:none; }
+    a:hover{ text-decoration:underline; }
+
+    .wrap{
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 26px 18px 70px;
     }
 
-    header h1 {
-      margin: 0;
-      font-size: 1.4rem;
+    /* Header */
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom: 18px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width: 260px;
+    }
+    .logo{
+      width:46px;height:46px;border-radius:16px;
+      background:
+        radial-gradient(16px 16px at 25% 25%, rgba(255,255,255,0.9), transparent 55%),
+        linear-gradient(135deg, var(--brand), var(--brand2));
+      box-shadow: 0 18px 40px rgba(124,92,255,.25);
+    }
+    .brand h1{
+      font-size: 16px;
+      margin:0;
+      letter-spacing: .2px;
+    }
+    .brand p{
+      margin:2px 0 0;
+      color: var(--muted);
+      font-size: 12px;
     }
 
-    header p {
-      margin: 0.25rem 0 0;
-      font-size: 0.9rem;
-      opacity: 0.9;
-    }
-
-    .container {
-      padding: 1rem;
-      display: grid;
-      grid-template-columns: minmax(0, 2fr) minmax(0, 1.5fr);
-      gap: 1rem;
-    }
-
-    @media (max-width: 900px) {
-      .container {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .card {
-      background: white;
-      border-radius: 0.75rem;
-      padding: 1rem;
-      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
-    }
-
-    .card h2 {
-      margin-top: 0;
-      font-size: 1.1rem;
-    }
-
-    label {
-      font-size: 0.9rem;
-      display: block;
-      margin-bottom: 0.25rem;
-      font-weight: 500;
-    }
-
-    input[type="text"],
-    input[type="number"],
-    select,
-    textarea {
-      width: 100%;
-      padding: 0.5rem 0.6rem;
-      border-radius: 0.5rem;
-      border: 1px solid #d1d5db;
-      font-size: 0.9rem;
-      margin-bottom: 0.7rem;
-    }
-
-    textarea {
-      min-height: 60px;
-      resize: vertical;
-    }
-
-    button {
-      border-radius: 999px;
-      border: none;
-      padding: 0.5rem 1rem;
-      font-size: 0.9rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
-    }
-
-    button.primary {
-      background: #4f46e5;
-      color: white;
-      box-shadow: 0 6px 14px rgba(79, 70, 229, 0.3);
-    }
-
-    button.primary:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 10px 20px rgba(79, 70, 229, 0.35);
-    }
-
-    button.secondary {
-      background: #e5e7eb;
-      color: #111827;
-    }
-
-    .row {
-      display: flex;
-      gap: 0.5rem;
+    .nav{
+      display:flex;
+      gap:10px;
       flex-wrap: wrap;
+      justify-content:flex-end;
     }
-
-    .row > * {
-      flex: 1;
-      min-width: 120px;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 0.15rem 0.5rem;
+    .tab{
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      padding:10px 12px;
       border-radius: 999px;
-      font-size: 0.7rem;
-      background: #eef2ff;
-      color: #4338ca;
-      margin-right: 0.25rem;
+      cursor:pointer;
+      font-size: 13px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      transition: .2s ease;
+    }
+    .tab:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.06);
+    }
+    .tab.active{
+      background: linear-gradient(135deg, rgba(124,92,255,0.35), rgba(53,210,255,0.22));
+      border-color: rgba(255,255,255,0.20);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.25);
     }
 
-    .history-item {
-      border-bottom: 1px solid #e5e7eb;
-      padding: 0.5rem 0;
-      font-size: 0.85rem;
+    /* Layout */
+    .grid{
+      display:grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 16px;
+      align-items: start;
     }
 
-    .history-item:last-child {
-      border-bottom: none;
+    @media (max-width: 980px){
+      .grid{ grid-template-columns: 1fr; }
+      .brand{ min-width:auto; }
     }
 
-    .history-meta {
-      font-size: 0.7rem;
-      color: #6b7280;
+    .card{
+      background: linear-gradient(180deg, var(--panel), rgba(255,255,255,0.03));
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius2);
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+    .card h2{
+      margin: 0 0 10px;
+      font-size: 14px;
+      letter-spacing:.2px;
+    }
+    .sub{
+      color: var(--muted);
+      font-size: 12px;
+      margin-top:-6px;
+      margin-bottom: 10px;
+      line-height: 1.45;
     }
 
-    .section-title {
-      font-size: 0.9rem;
+    .row{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      flex: 1 1 170px;
+      min-width: 170px;
+    }
+    label{
+      font-size: 12px;
+      color: var(--muted);
+    }
+    input, textarea, select{
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--stroke);
+      border-radius: 14px;
+      color: var(--text);
+      padding: 10px 12px;
+      outline:none;
+      font-size: 13px;
+      transition: .15s ease;
+    }
+    textarea{ min-height: 86px; resize: vertical; }
+    input:focus, textarea:focus, select:focus{
+      border-color: rgba(53,210,255,0.35);
+      box-shadow: 0 0 0 4px rgba(53,210,255,0.08);
+    }
+
+    .btn{
+      background: linear-gradient(135deg, rgba(124,92,255,0.9), rgba(53,210,255,0.75));
+      border: 0;
+      color: white;
+      font-weight: 650;
+      padding: 11px 14px;
+      border-radius: 14px;
+      cursor:pointer;
+      transition: .2s ease;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+    }
+    .btn:hover{ transform: translateY(-1px); filter: brightness(1.05); }
+    .btn.secondary{
+      background: rgba(255,255,255,0.07);
+      border: 1px solid var(--stroke);
+      color: var(--text);
       font-weight: 600;
-      margin: 0.5rem 0 0.25rem;
+    }
+    .btn.ghost{
+      background: transparent;
+      border: 1px solid var(--stroke);
+      color: var(--text);
+    }
+    .btn.danger{
+      background: rgba(255,77,109,0.14);
+      border: 1px solid rgba(255,77,109,0.35);
+      color: rgba(255,255,255,0.92);
     }
 
-    .pill {
-      display: inline-block;
-      font-size: 0.75rem;
-      padding: 0.2rem 0.45rem;
+    .pill{
+      font-size: 12px;
+      padding: 6px 10px;
       border-radius: 999px;
-      background: #f3f4f6;
-      margin: 0.1rem 0.1rem 0.1rem 0;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,0.05);
+      color: var(--muted);
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
     }
 
-    .search-bar {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 0.5rem;
+    .split{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap:wrap;
     }
 
-    .search-bar input {
-      margin-bottom: 0;
+    .divider{
+      height:1px;
+      background: rgba(255,255,255,0.08);
+      margin: 14px 0;
     }
 
-    .ai-messages {
-      max-height: 260px;
-      overflow-y: auto;
-      border-radius: 0.75rem;
-      background: #f9fafb;
-      padding: 0.5rem 0.75rem;
-      font-size: 0.85rem;
+    /* Lists */
+    .list{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .item{
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+    .item .top{
+      display:flex;
+      align-items:flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .item h3{
+      margin:0;
+      font-size: 13px;
+      letter-spacing: .2px;
+    }
+    .meta{
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 3px;
+      line-height: 1.35;
     }
 
-    .ai-bubble {
-      background: #e0f2fe;
-      padding: 0.5rem 0.75rem;
-      border-radius: 0.75rem;
-      margin-bottom: 0.4rem;
+    .tiny-disclaimer{
+      margin-top: 10px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.55);
+      border-top: 1px dashed rgba(255,255,255,0.14);
+      padding-top: 8px;
     }
 
-    .ai-bubble .time {
-      font-size: 0.7rem;
-      color: #6b7280;
-      margin-top: 0.15rem;
+    /* Library */
+    .chipbar{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top: 8px;
+    }
+    .chip{
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.82);
+      cursor:pointer;
+      font-size: 12px;
+      transition: .15s ease;
+      user-select:none;
+    }
+    .chip:hover{
+      transform: translateY(-1px);
+      border-color: rgba(53,210,255,0.30);
+      background: rgba(53,210,255,0.08);
     }
 
-    .tiny {
-      font-size: 0.7rem;
-      color: #6b7280;
+    /* Disorders */
+    .cards{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    @media (max-width: 980px){
+      .cards{ grid-template-columns: 1fr; }
+    }
+    .dcard{
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background:
+        radial-gradient(500px 200px at 10% 10%, rgba(124,92,255,0.14), transparent 55%),
+        rgba(255,255,255,0.04);
+      cursor:pointer;
+      transition: .2s ease;
+      min-height: 92px;
+    }
+    .dcard:hover{
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,0.18);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+    }
+    .dcard h3{ margin:0 0 6px; font-size: 13px; }
+    .dcard p{ margin:0; color: var(--muted); font-size: 12px; line-height: 1.4; }
+
+    /* Modal */
+    .modalBack{
+      position: fixed;
+      inset:0;
+      background: rgba(0,0,0,0.6);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 18px;
+      z-index: 50;
+    }
+    .modal{
+      width: min(980px, 100%);
+      max-height: 88vh;
+      overflow:auto;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background:
+        radial-gradient(900px 400px at 20% 10%, rgba(53,210,255,0.12), transparent 60%),
+        radial-gradient(900px 400px at 85% 20%, rgba(124,92,255,0.18), transparent 60%),
+        rgba(11,18,32,0.92);
+      box-shadow: 0 40px 90px rgba(0,0,0,0.6);
+      padding: 16px;
+    }
+    .modalHeader{
+      display:flex;
+      align-items:flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .modalHeader h2{ margin:0; font-size: 16px; }
+    .close{
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 8px 10px;
+      cursor:pointer;
+    }
+    .cols{
+      display:grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 14px;
+    }
+    @media (max-width: 980px){ .cols{ grid-template-columns: 1fr; } }
+    .kvs{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top: 6px;
+    }
+    .kv{
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.78);
     }
 
-    .highlight {
-      font-weight: 600;
+    .callout{
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.86);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .muted{ color: var(--muted); }
+
+    /* Views */
+    .view{ display:none; }
+    .view.active{ display:block; }
+
+    footer{
+      margin-top: 18px;
+      color: rgba(255,255,255,0.55);
+      font-size: 12px;
+      line-height: 1.45;
     }
   </style>
 </head>
+
 <body>
-  <header>
-    <h1>Symptom Tracker (Prototype)</h1>
-    <p>For tracking only – not medical advice. Always talk to a doctor or trusted adult if you feel unwell.</p>
-  </header>
-
-  <div class="container">
-    <!-- LEFT COLUMN: Questionnaire + Search -->
-    <div class="left">
-      <div class="card">
-        <h2>Log a Symptom</h2>
-        <form id="symptomForm">
-          <label for="symptomName">Symptom</label>
-          <input
-            type="text"
-            id="symptomName"
-            placeholder="e.g., headache, nausea, tired, anxious"
-            required
-          />
-
-          <div class="row">
-            <div>
-              <label for="severity">Severity (1–10)</label>
-              <input
-                type="number"
-                id="severity"
-                min="1"
-                max="10"
-                value="5"
-                required
-              />
-            </div>
-            <div>
-              <label for="duration">Duration</label>
-              <input
-                type="text"
-                id="duration"
-                placeholder="e.g., 2 hours, 3 days"
-              />
-            </div>
-          </div>
-
-          <label for="notes">Extra notes (optional)</label>
-          <textarea
-            id="notes"
-            placeholder="When did it start? Anything that might have triggered it?"
-          ></textarea>
-
-          <button type="submit" class="primary">Save Symptom Entry</button>
-        </form>
-        <p class="tiny" style="margin-top:0.5rem;">
-          Your data is currently stored only in this browser (localStorage).
-          To use a real backend, connect the saved entries to your server or database.
-        </p>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          <h1>Symptomatic</h1>
+          <p>Track symptoms, view trends, and explore common conditions — <span class="muted">educational only</span>.</p>
+        </div>
       </div>
 
-      <div class="card" style="margin-top:1rem;">
-        <h2>Search Symptoms</h2>
-        <div class="search-bar">
-          <input
-            type="text"
-            id="searchInput"
-            placeholder="Search (e.g., headache, sleep, mood)..."
-          />
-          <button id="searchBtn" class="secondary">Search</button>
-        </div>
-        <div id="searchResults"></div>
+      <div class="nav">
+        <button class="tab active" data-view="logView">📝 Log</button>
+        <button class="tab" data-view="libraryView">📚 Symptom Library</button>
+        <button class="tab" data-view="disordersView">🧠 Common Disorders</button>
+        <button class="tab" data-view="insightsView">📈 Insights</button>
       </div>
     </div>
 
-    <!-- RIGHT COLUMN: History + AI Messenger -->
-    <div class="right">
+    <!-- LOG VIEW -->
+    <div id="logView" class="view active">
+      <div class="grid">
+        <div class="card">
+          <div class="split">
+            <div>
+              <h2>New symptom entry</h2>
+              <div class="sub">Log what you’re feeling. You’ll get informational “possible causes” phrased as <b>You MAY have X</b> (not a diagnosis).</div>
+            </div>
+            <span class="pill">Autosaved to local storage</span>
+          </div>
+
+          <form id="symptomForm">
+            <div class="row">
+              <div class="field">
+                <label for="symptomName">Symptom</label>
+                <input id="symptomName" placeholder="e.g., headache, nausea, sore throat" autocomplete="off"/>
+              </div>
+
+              <div class="field">
+                <label for="severity">Severity (1–10)</label>
+                <select id="severity">
+                  <option value="1">1 (very mild)</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5" selected>5 (moderate)</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10 (severe)</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="duration">Duration</label>
+                <input id="duration" placeholder="e.g., 2 hours, since yesterday" autocomplete="off"/>
+              </div>
+            </div>
+
+            <div class="row" style="margin-top:10px;">
+              <div class="field" style="flex: 1 1 100%;">
+                <label for="notes">Notes (optional)</label>
+                <textarea id="notes" placeholder="Triggers, what helped, other symptoms, context..."></textarea>
+              </div>
+            </div>
+
+            <div class="row" style="margin-top:12px; justify-content:space-between;">
+              <div class="row" style="gap:10px;">
+                <button type="submit" class="btn">💾 Save entry</button>
+                <button type="button" id="quickFromLibrary" class="btn secondary">➕ Pick from library</button>
+              </div>
+              <button type="button" id="clearAll" class="btn danger">🗑️ Clear all data</button>
+            </div>
+          </form>
+
+          <div class="divider"></div>
+
+          <div class="split">
+            <div>
+              <h2 style="margin-bottom:6px;">Your history</h2>
+              <div class="sub">Newest first. Click an entry for quick actions.</div>
+            </div>
+            <div class="row">
+              <span class="pill" id="countPill">0 entries</span>
+            </div>
+          </div>
+
+          <div id="historyList" class="list"></div>
+        </div>
+
+        <div class="card">
+          <div class="split">
+            <div>
+              <h2>Info suggestions (educational)</h2>
+              <div class="sub">Based on your recent logs. For urgent symptoms, seek professional help.</div>
+            </div>
+            <button id="refreshAi" class="btn ghost">🔄 Refresh</button>
+          </div>
+
+          <div id="aiList" class="list"></div>
+
+          <footer>
+            <b>Important:</b> This app is for educational tracking only and is not medical advice. If you have severe symptoms, sudden chest pain, trouble breathing, fainting, one-sided weakness, or symptoms you’re worried about — seek medical care immediately.
+          </footer>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIBRARY VIEW -->
+    <div id="libraryView" class="view">
+      <div class="grid">
+        <div class="card">
+          <div class="split">
+            <div>
+              <h2>Symptom library</h2>
+              <div class="sub">Search ~110 common symptoms and add them to your log in one click.</div>
+            </div>
+            <span class="pill">Tip: type “fev” → fever</span>
+          </div>
+
+          <div class="row" style="margin-top:8px;">
+            <div class="field" style="flex:1 1 100%;">
+              <label for="librarySearch">Search symptoms</label>
+              <input id="librarySearch" placeholder="Start typing..." autocomplete="off"/>
+            </div>
+          </div>
+
+          <div class="chipbar" id="libraryChips"></div>
+
+          <div class="divider"></div>
+
+          <div class="callout">
+            <b>Quick add flow:</b> click a symptom → choose severity + duration → it saves to your log.
+            <div class="tiny-disclaimer">This is not real medical advice.</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Library quick add</h2>
+          <div class="sub">Pick a symptom from the left to fill this panel.</div>
+
+          <div id="libraryAddPanel" class="item">
+            <div class="meta">Select a symptom to begin.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DISORDERS VIEW -->
+    <div id="disordersView" class="view">
       <div class="card">
-        <h2>History</h2>
-        <div id="historyList"></div>
+        <div class="split">
+          <div>
+            <h2>Common disorders</h2>
+            <div class="sub">Click a condition to see an overview, typical symptoms, and treatment options <span class="muted">(educational summaries + trusted sources)</span>.</div>
+          </div>
+
+          <div class="row">
+            <div class="field" style="min-width:260px; flex:0 1 320px;">
+              <label for="disorderSearch">Search conditions</label>
+              <input id="disorderSearch" placeholder="e.g., migraine, GERD, UTI" autocomplete="off"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <div id="disorderCards" class="cards"></div>
+      </div>
+    </div>
+
+    <!-- INSIGHTS VIEW -->
+    <div id="insightsView" class="view">
+      <div class="grid">
+        <div class="card">
+          <div class="split">
+            <div>
+              <h2>Severity over time</h2>
+              <div class="sub">Uses your saved entries. Shows trends so you can spot patterns.</div>
+            </div>
+            <button id="rebuildCharts" class="btn ghost">🔁 Rebuild charts</button>
+          </div>
+
+          <div class="item">
+            <canvas id="severityChart" height="110"></canvas>
+            <div class="tiny-disclaimer">This is not real medical advice.</div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="callout">
+            <b>How to use this:</b> Look for spikes and what happened around them (sleep, stress, food, workouts, etc.).
+            If symptoms are frequent or worsening, consider talking to a clinician.
+            <div class="tiny-disclaimer">This is not real medical advice.</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Treatment “effectiveness” chart</h2>
+          <div class="sub">Pick a disorder (from the Disorders page) to compare general options.</div>
+
+          <div class="item">
+            <div class="split">
+              <span class="pill" id="selectedDisorderPill">No disorder selected</span>
+              <button id="pickDisorderFromInsights" class="btn secondary">🧠 Pick a disorder</button>
+            </div>
+
+            <div style="margin-top:12px;">
+              <canvas id="effectivenessChart" height="130"></canvas>
+            </div>
+
+            <div class="tiny-disclaimer">Effectiveness ratings are informational summaries and vary by person. This is not real medical advice.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Modal for disorders -->
+  <div id="modalBack" class="modalBack">
+    <div class="modal">
+      <div class="modalHeader">
+        <div>
+          <h2 id="modalTitle">Condition</h2>
+          <div class="kvs" id="modalTags"></div>
+        </div>
+        <button class="close" id="closeModal">✕</button>
       </div>
 
-      <div class="card" style="margin-top:1rem;">
-        <h2>AI Messenger (Prototype)</h2>
-        <div class="ai-messages" id="aiMessages"></div>
-        <p class="tiny">
-          This “AI” is rule-based right now (no real medical AI).
-          In a real app, you’d connect this to a trusted AI backend **with safety filters** and adult review.
-        </p>
+      <div class="cols">
+        <div>
+          <div class="item">
+            <h3 style="margin:0 0 6px;">Overview</h3>
+            <div class="meta" id="modalOverview"></div>
+          </div>
+
+          <div class="item" style="margin-top:12px;">
+            <h3 style="margin:0 0 6px;">Common symptoms</h3>
+            <div class="meta" id="modalSymptoms"></div>
+          </div>
+
+          <div class="item" style="margin-top:12px;">
+            <h3 style="margin:0 0 6px;">What you can do (general)</h3>
+            <ul id="modalTreatments" style="margin:10px 0 0; padding-left: 18px; color: rgba(255,255,255,0.86); font-size: 13px; line-height: 1.5;"></ul>
+            <div class="tiny-disclaimer">This is not real medical advice.</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="item">
+            <h3 style="margin:0 0 6px;">Trusted sources</h3>
+            <div class="meta" id="modalSources"></div>
+          </div>
+
+          <div class="item" style="margin-top:12px;">
+            <h3 style="margin:0 0 6px;">Effectiveness chart (informational)</h3>
+            <div class="meta" style="margin-bottom:10px;">Compares general approaches. Ratings are approximate and vary widely.</div>
+            <canvas id="modalEffectivenessChart" height="180"></canvas>
+            <div class="tiny-disclaimer">This is not real medical advice.</div>
+          </div>
+
+          <div class="item" style="margin-top:12px;">
+            <h3 style="margin:0 0 6px;">Quick add a related symptom</h3>
+            <div class="meta" id="modalQuickAdd"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="callout">
+        <b>Reminder:</b> Seeing “You MAY have X” is not a diagnosis — it’s just educational context.
+        If symptoms are severe, persistent, or you’re concerned, seek professional care.
+        <div class="tiny-disclaimer">This is not real medical advice.</div>
       </div>
     </div>
   </div>
 
   <script>
     /**************************************************
-     * 1. Symptom "database"
-     * (You can expand this with more symptoms later)
+     * 1) Data: symptom library (~110 common symptoms)
      **************************************************/
-    const SYMPTOM_DB = [
+    const symptomLibrary = [
+      "Abdominal pain","Acid reflux/heartburn","Anxiety","Back pain","Bloating","Blood in stool",
+      "Body aches","Bruising easily","Burning urination","Chest tightness","Chills","Cold hands/feet",
+      "Confusion","Congestion","Constipation","Cough","Cramps","Decreased appetite","Dehydration signs",
+      "Depressed mood","Diarrhea","Difficulty breathing","Difficulty swallowing","Dizziness","Dry eyes",
+      "Dry mouth","Dry skin","Ear pain","Ear ringing (tinnitus)","Excessive thirst","Eye pain","Eye redness",
+      "Fainting","Fatigue","Fever","Frequent urination","Gas","Headache","Heart palpitations",
+      "Hoarseness","Hot flashes","Itchy eyes","Itchy skin","Jaw pain","Joint pain","Knee pain",
+      "Leg swelling","Light sensitivity","Loss of smell","Loss of taste","Low energy","Lower back pain",
+      "Menstrual cramps","Mood swings","Muscle cramps","Muscle weakness","Nasal drip","Nausea",
+      "Neck pain","Numbness/tingling","Painful swallowing","Panic feelings","Post-nasal drip","Rash",
+      "Runny nose","Shortness of breath","Shoulder pain","Sinus pressure","Sleep problems/insomnia",
+      "Sneezing","Sore throat","Stomach cramps","Sweating (excess)","Swollen glands","Swollen joints",
+      "Tremor","Trouble concentrating","Unexplained weight change","Vomiting","Wheezing",
+      "Blurred vision","Watery eyes","Constipation with pain","Loose stools","Indigestion",
+      "Sharp chest pain","Pressure in chest","Pelvic pain","Itching (general)","Hives",
+      "Skin dryness","Skin peeling","Mouth sores","Bleeding gums","Bad breath","Toothache",
+      "Nosebleed","Dark urine","Frequent headaches","Sensitivity to cold","Sensitivity to heat",
+      "Hair shedding","Brittle nails","Swollen ankles","Hand pain","Wrist pain","Hip pain",
+      "Heel pain","Foot pain","Shooting pain","Burning sensation","Pins and needles",
+      "Low-grade fever","High fever","Sputum/phlegm","Productive cough","Dry cough",
+      "Loss of appetite","Irritability","Restlessness","Night sweats","Snoring","Daytime sleepiness"
+    ];
+
+    /**************************************************
+     * 2) Data: common disorders library + trusted sources
+     *    (Educational summaries only)
+     **************************************************/
+    const disorders = [
       {
-        id: "headache",
-        name: "Headache",
-        category: "Pain",
-        commonTriggers: ["Dehydration", "Stress", "Too much screen time", "Lack of sleep"],
-        selfCareIdeas: [
-          "Drink water slowly and regularly.",
-          "Rest your eyes and take a break from screens.",
-          "Try relaxing in a quiet, dim room.",
-          "Track how many hours you’re sleeping."
+        id:"common-cold",
+        name:"Common cold",
+        tags:["Respiratory","Viral"],
+        overview:"A viral upper respiratory infection that typically causes congestion, sore throat, and cough. Most cases improve with time and supportive care.",
+        symptoms:["Runny nose","Congestion","Sore throat","Cough","Sneezing","Mild fever","Fatigue"],
+        treatments:[
+          { label:"Rest + hydration", score:5, note:"Supportive care helps recovery." },
+          { label:"Saline nasal rinse/spray", score:4, note:"Can ease congestion." },
+          { label:"Honey (for cough, age-appropriate)", score:4, note:"May soothe cough." },
+          { label:"OTC pain/fever reducers (if safe for you)", score:3, note:"Helps comfort; not a cure." },
+          { label:"Humidifier/steam", score:3, note:"May reduce throat/nasal irritation." }
         ],
-        whenToSeekHelp:
-          "If the headache is very strong, doesn’t improve, started after an injury, or you feel very sick (e.g., vomiting, confusion, vision changes), talk to a doctor or trusted adult immediately."
+        sources:[
+          { name:"CDC (Common cold)", url:"https://www.cdc.gov/antibiotic-use/colds.html" },
+          { name:"NHS (Common cold)", url:"https://www.nhs.uk/conditions/common-cold/" }
+        ]
       },
       {
-        id: "stomachache",
-        name: "Stomachache",
-        category: "Pain",
-        commonTriggers: ["Certain foods", "Stress/anxiety", "Eating too fast"],
-        selfCareIdeas: [
-          "Sip water and avoid very heavy or greasy foods for a while.",
-          "Rest and notice if certain foods make it worse.",
-          "Try gentle movement or stretching if it feels comfortable."
+        id:"influenza",
+        name:"Influenza (flu)",
+        tags:["Respiratory","Viral"],
+        overview:"A contagious respiratory illness that can cause fever, body aches, and fatigue. Some people are at higher risk for complications.",
+        symptoms:["Fever","Chills","Body aches","Cough","Sore throat","Fatigue","Headache"],
+        treatments:[
+          { label:"Rest + fluids", score:4, note:"Key for recovery." },
+          { label:"OTC fever/pain relief (if safe)", score:3, note:"Comfort measures." },
+          { label:"Seek care early if high-risk", score:5, note:"Antivirals may help for some people when started early." },
+          { label:"Isolation to reduce spread", score:5, note:"Protects others." }
         ],
-        whenToSeekHelp:
-          "If the pain is very strong, lasts a long time, you have fever, vomiting, or the pain is in one specific spot (like lower right), talk to a doctor or trusted adult right away."
+        sources:[
+          { name:"CDC (Flu)", url:"https://www.cdc.gov/flu/" },
+          { name:"MedlinePlus (Flu)", url:"https://medlineplus.gov/flu.html" }
+        ]
       },
       {
-        id: "tired",
-        name: "Tiredness / Low Energy",
-        category: "Energy",
-        commonTriggers: ["Not enough sleep", "Irregular sleep schedule", "Stress"],
-        selfCareIdeas: [
-          "Aim for a regular bedtime and wake-up time.",
-          "Limit screens at least 30–60 minutes before sleep.",
-          "Keep a short note of how you feel after different sleep amounts."
+        id:"allergic-rhinitis",
+        name:"Allergic rhinitis (seasonal allergies)",
+        tags:["Allergy","ENT"],
+        overview:"An allergic response causing sneezing, itchy eyes, and runny nose, often triggered by pollen, dust, or pets.",
+        symptoms:["Sneezing","Runny nose","Itchy eyes","Watery eyes","Congestion","Post-nasal drip"],
+        treatments:[
+          { label:"Avoid triggers (when possible)", score:4, note:"Reduces exposure." },
+          { label:"Saline rinse", score:3, note:"Helps wash out allergens." },
+          { label:"OTC antihistamines (if safe)", score:4, note:"Often helpful for itch/sneeze." },
+          { label:"Nasal steroid spray (if appropriate)", score:5, note:"Commonly effective for congestion." }
         ],
-        whenToSeekHelp:
-          "If you are always tired, even after sleeping, or if tiredness is affecting school or daily life a lot, talk to a doctor or trusted adult."
+        sources:[
+          { name:"NHS (Hay fever)", url:"https://www.nhs.uk/conditions/hay-fever/" },
+          { name:"Mayo Clinic (Allergic rhinitis)", url:"https://www.mayoclinic.org/diseases-conditions/hay-fever/symptoms-causes/syc-20373039" }
+        ]
       },
       {
-        id: "anxious",
-        name: "Anxious / Worried",
-        category: "Mood",
-        commonTriggers: ["Stressful events", "Overthinking", "Social pressure"],
-        selfCareIdeas: [
-          "Try slow, deep breathing (in through your nose, out through your mouth).",
-          "Write feelings in a journal or notes app.",
-          "Talk to someone you trust about what’s worrying you.",
-          "Take a short break to move around, stretch, or walk."
+        id:"migraine",
+        name:"Migraine",
+        tags:["Neurology","Headache"],
+        overview:"A type of headache that can be intense and may come with nausea, sensitivity to light/sound, and sometimes aura.",
+        symptoms:["Headache","Nausea","Light sensitivity","Sound sensitivity","Vision changes (aura)"],
+        treatments:[
+          { label:"Hydration + rest in a dark room", score:4, note:"Often helps symptom control." },
+          { label:"Identify triggers (sleep, stress, foods)", score:4, note:"Helps prevent future attacks." },
+          { label:"OTC pain relief (if safe)", score:3, note:"May help mild/moderate migraines." },
+          { label:"Prescription options (clinician-guided)", score:5, note:"Some medications are more migraine-specific." }
         ],
-        whenToSeekHelp:
-          "If anxiety feels constant, stops you from doing things you care about, or you feel out of control, please talk to a trusted adult or mental health professional."
+        sources:[
+          { name:"NIH MedlinePlus (Migraine)", url:"https://medlineplus.gov/migraine.html" },
+          { name:"Mayo Clinic (Migraine)", url:"https://www.mayoclinic.org/diseases-conditions/migraine-headache/symptoms-causes/syc-20360201" }
+        ]
+      },
+      {
+        id:"gerd",
+        name:"GERD (acid reflux)",
+        tags:["Digestive"],
+        overview:"A condition where stomach acid frequently flows back into the esophagus, causing heartburn and irritation.",
+        symptoms:["Heartburn","Acid reflux/heartburn","Chest discomfort","Sour taste","Worse after meals"],
+        treatments:[
+          { label:"Avoid trigger foods (spicy/fatty, caffeine)", score:4, note:"Commonly reduces symptoms." },
+          { label:"Smaller meals + avoid late eating", score:4, note:"Helps reflux control." },
+          { label:"Elevate head of bed", score:3, note:"Can reduce nighttime symptoms." },
+          { label:"OTC antacids (if safe)", score:3, note:"Short-term relief for some." },
+          { label:"Talk to a clinician if frequent", score:5, note:"Persistent symptoms warrant evaluation." }
+        ],
+        sources:[
+          { name:"NHS (Heartburn & acid reflux)", url:"https://www.nhs.uk/conditions/heartburn-and-acid-reflux/" },
+          { name:"Mayo Clinic (GERD)", url:"https://www.mayoclinic.org/diseases-conditions/gerd/symptoms-causes/syc-20361940" }
+        ]
+      },
+      {
+        id:"uti",
+        name:"Urinary tract infection (UTI)",
+        tags:["Urinary"],
+        overview:"An infection in the urinary system that can cause burning urination and frequent urges to pee. Some cases need medical treatment.",
+        symptoms:["Burning urination","Frequent urination","Lower abdominal pain","Cloudy urine"],
+        treatments:[
+          { label:"Hydration", score:3, note:"May help comfort; does not replace treatment if needed." },
+          { label:"Seek testing/treatment (often antibiotics)", score:5, note:"Important to prevent complications." },
+          { label:"Avoid irritants (caffeine/alcohol)", score:3, note:"May reduce bladder irritation." }
+        ],
+        sources:[
+          { name:"MedlinePlus (UTI)", url:"https://medlineplus.gov/urinarytractinfections.html" },
+          { name:"NHS (UTI)", url:"https://www.nhs.uk/conditions/urinary-tract-infections-utis/" }
+        ]
+      },
+      {
+        id:"gastroenteritis",
+        name:"Gastroenteritis (stomach bug)",
+        tags:["Digestive","Viral/Bacterial"],
+        overview:"Inflammation of the stomach and intestines that commonly causes diarrhea, vomiting, cramps, and dehydration risk.",
+        symptoms:["Diarrhea","Vomiting","Nausea","Stomach cramps","Fever","Dehydration signs"],
+        treatments:[
+          { label:"Oral rehydration (fluids/electrolytes)", score:5, note:"Key to prevent dehydration." },
+          { label:"Rest + bland foods when tolerated", score:4, note:"Supports recovery." },
+          { label:"Seek care if severe dehydration/blood", score:5, note:"Red flags need attention." }
+        ],
+        sources:[
+          { name:"CDC (Norovirus)", url:"https://www.cdc.gov/norovirus/" },
+          { name:"NHS (Diarrhoea and vomiting)", url:"https://www.nhs.uk/conditions/diarrhoea-and-vomiting/" }
+        ]
+      },
+      {
+        id:"anxiety",
+        name:"Anxiety (general)",
+        tags:["Mental health"],
+        overview:"Anxiety can show up as worry, restlessness, or physical symptoms like racing heart or trouble sleeping. Persistent anxiety may benefit from professional support.",
+        symptoms:["Anxiety","Panic feelings","Heart palpitations","Sleep problems/insomnia","Trouble concentrating"],
+        treatments:[
+          { label:"Breathing / grounding exercises", score:4, note:"Can reduce acute stress." },
+          { label:"Sleep routine + caffeine awareness", score:4, note:"Often improves baseline anxiety." },
+          { label:"Therapy (CBT etc.)", score:5, note:"Strong evidence for many." },
+          { label:"Clinician-guided medication options", score:4, note:"May be appropriate for some." }
+        ],
+        sources:[
+          { name:"NHS (Anxiety)", url:"https://www.nhs.uk/mental-health/conditions/anxiety/" },
+          { name:"NIH MedlinePlus (Anxiety)", url:"https://medlineplus.gov/anxiety.html" }
+        ]
+      },
+      {
+        id:"dehydration",
+        name:"Dehydration",
+        tags:["General"],
+        overview:"When your body doesn’t have enough fluids, you may feel dizzy, tired, or have dark urine. Severe dehydration can be dangerous.",
+        symptoms:["Dehydration signs","Dizziness","Dry mouth","Dark urine","Fatigue"],
+        treatments:[
+          { label:"Water + electrolytes", score:5, note:"Replaces fluids." },
+          { label:"Reduce heavy exertion temporarily", score:4, note:"Prevents worsening." },
+          { label:"Seek urgent care if severe", score:5, note:"Especially with confusion or fainting." }
+        ],
+        sources:[
+          { name:"MedlinePlus (Dehydration)", url:"https://medlineplus.gov/dehydration.html" },
+          { name:"NHS (Dehydration)", url:"https://www.nhs.uk/conditions/dehydration/" }
+        ]
+      },
+      {
+        id:"eczema",
+        name:"Eczema (atopic dermatitis)",
+        tags:["Skin"],
+        overview:"A chronic skin condition causing dry, itchy, inflamed patches. Triggers can include soaps, stress, and allergens.",
+        symptoms:["Itchy skin","Dry skin","Rash","Skin peeling"],
+        treatments:[
+          { label:"Moisturize regularly", score:5, note:"Core management." },
+          { label:"Avoid harsh soaps/fragrances", score:4, note:"Reduces flare risk." },
+          { label:"OTC anti-itch options (if safe)", score:3, note:"Symptom relief." },
+          { label:"Clinician-guided topical meds", score:5, note:"Often needed for flares." }
+        ],
+        sources:[
+          { name:"NHS (Atopic eczema)", url:"https://www.nhs.uk/conditions/atopic-eczema/" },
+          { name:"MedlinePlus (Eczema)", url:"https://medlineplus.gov/eczema.html" }
+        ]
       }
     ];
 
     /**************************************************
-     * 2. Local storage helpers (can be swapped with backend)
+     * 3) Storage helpers
      **************************************************/
-    const STORAGE_KEY = "symptomTrackerHistory";
+    const STORAGE_KEY = "symptomatic_history_v2";
+    const SETTINGS_KEY = "symptomatic_settings_v1";
+    const UI_KEY = "symptomatic_ui_v1";
 
-    function loadHistory() {
-      // TODO: Replace with real backend GET call in a real app
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return [];
-      try {
-        return JSON.parse(raw);
-      } catch (e) {
-        console.error("Error parsing history", e);
+    function loadHistory(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      }catch{
         return [];
       }
     }
+    function saveHistory(history){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+    }
 
-    function saveHistory(entries) {
-      // TODO: Replace with real backend POST/PUT call in a real app
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+    function prettyTime(iso){
+      const d = new Date(iso);
+      return d.toLocaleString(undefined, { year:"numeric", month:"short", day:"2-digit", hour:"2-digit", minute:"2-digit" });
+    }
+
+    function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
+
+    function normalizeText(s){
+      return String(s || "").toLowerCase().trim();
     }
 
     /**************************************************
-     * 3. Rendering functions
+     * 4) Lightweight “possible causes” engine
+     *    (Educational only; uses "You MAY have X" phrasing)
      **************************************************/
-    function renderHistory() {
-      const container = document.getElementById("historyList");
-      const history = loadHistory().sort(
-        (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
-      );
+    const symptomToDisorders = [
+      { keys:["runny nose","congestion","sneezing","sore throat"], may:["Common cold","Allergic rhinitis (seasonal allergies)"] },
+      { keys:["fever","chills","body aches"], may:["Influenza (flu)","Gastroenteritis (stomach bug)"] },
+      { keys:["heartburn","acid reflux"], may:["GERD (acid reflux)"] },
+      { keys:["nausea","vomiting","diarrhea","stomach cramps"], may:["Gastroenteritis (stomach bug)","Food intolerance"] },
+      { keys:["headache","light sensitivity"], may:["Migraine","Tension headache"] },
+      { keys:["burning urination","frequent urination"], may:["Urinary tract infection (UTI)"] },
+      { keys:["itchy skin","rash","dry skin","hives"], may:["Eczema (atopic dermatitis)","Allergic reaction"] },
+      { keys:["anxiety","panic","palpitations","insomnia"], may:["Anxiety (general)","Stress-related symptoms"] },
+      { keys:["dizziness","dry mouth","dark urine","dehydration"], may:["Dehydration"] }
+    ];
 
-      if (history.length === 0) {
-        container.innerHTML = "<p class='tiny'>No entries yet. Log a symptom to get started.</p>";
-        return;
+    function getPossibleCausesFromHistory(history){
+      // Uses last 8 entries to infer educational “may have” suggestions
+      const recent = history.slice(-8);
+      const bag = recent.map(e => normalizeText(e.symptomName)).join(" | ");
+
+      const found = new Set();
+      for (const map of symptomToDisorders){
+        const match = map.keys.some(k => bag.includes(normalizeText(k)));
+        if (match){
+          map.may.forEach(m => found.add(m));
+        }
       }
-
-      container.innerHTML = history
-        .map(entry => {
-          const dbInfo = findSymptomInfo(entry.symptomName);
-          return `
-            <div class="history-item">
-              <div><span class="highlight">${escapeHtml(entry.symptomName)}</span> – severity
-                <span class="highlight">${entry.severity}</span></div>
-              <div class="history-meta">
-                ${new Date(entry.timestamp).toLocaleString()} • Duration: ${escapeHtml(entry.duration || "n/a")}
-              </div>
-              ${
-                entry.notes
-                  ? `<div class="tiny">Notes: ${escapeHtml(entry.notes)}</div>`
-                  : ""
-              }
-              ${
-                dbInfo
-                  ? `<div class="tiny">Category: <span class="badge">${escapeHtml(
-                      dbInfo.category
-                    )}</span></div>`
-                  : ""
-              }
-            </div>
-          `;
-        })
-        .join("");
+      // If none found, provide safe generic context
+      const causes = Array.from(found);
+      if (causes.length === 0){
+        return [
+          "You MAY have a mild, self-limited issue (like a common viral illness or minor strain).",
+          "You MAY have symptoms linked to sleep, stress, hydration, or diet changes."
+        ];
+      }
+      return causes.map(c => `You MAY have ${c}.`);
     }
 
-    function renderAiMessages() {
-      const container = document.getElementById("aiMessages");
-      const history = loadHistory().sort(
-        (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
-      );
+    function generalSafetyNotes(){
+      return [
+        "If symptoms are severe, sudden, worsening, or you’re worried — consider contacting a clinician.",
+        "Urgent red flags can include trouble breathing, severe chest pain, fainting, confusion, one-sided weakness, or coughing/vomiting blood."
+      ];
+    }
 
-      if (history.length === 0) {
-        container.innerHTML = `
-          <div class="ai-bubble">
-            <div>Hi! I’ll send gentle check-in messages after you log symptoms here.</div>
-            <div class="time">System message</div>
-          </div>`;
+    function getGeneralSolutionsForSymptom(symptom){
+      const s = normalizeText(symptom);
+      const base = [
+        { label:"Rest and monitor", score:3, note:"Useful for many mild symptoms." },
+        { label:"Hydration", score:4, note:"Often helps overall comfort." },
+        { label:"Track triggers (sleep, stress, food)", score:3, note:"Can reveal patterns." }
+      ];
+
+      if (s.includes("headache")) return [
+        ...base,
+        { label:"Dark/quiet room", score:4, note:"Can help if sensitivity present." },
+        { label:"Gentle neck/shoulder stretch", score:3, note:"May help tension-related headaches." }
+      ];
+      if (s.includes("heartburn") || s.includes("reflux")) return [
+        ...base,
+        { label:"Smaller meals + avoid late eating", score:4, note:"Often reduces reflux." },
+        { label:"Avoid triggers (spicy/fatty, caffeine)", score:4, note:"Common reflux trigger set." }
+      ];
+      if (s.includes("sore throat")) return [
+        ...base,
+        { label:"Warm fluids", score:3, note:"Soothes throat irritation." },
+        { label:"Salt-water gargle", score:3, note:"Some people find relief." }
+      ];
+      if (s.includes("nausea")) return [
+        ...base,
+        { label:"Bland foods when tolerated", score:3, note:"Small amounts can help." },
+        { label:"Electrolytes if vomiting/diarrhea", score:4, note:"Helps prevent dehydration." }
+      ];
+
+      return base;
+    }
+
+    /**************************************************
+     * 5) UI rendering: history + AI messages + library + disorders
+     **************************************************/
+    const historyList = document.getElementById("historyList");
+    const aiList = document.getElementById("aiList");
+    const countPill = document.getElementById("countPill");
+
+    function severityLabel(n){
+      n = Number(n);
+      if (n <= 3) return { text:"mild", tone:"good" };
+      if (n <= 6) return { text:"moderate", tone:"warn" };
+      return { text:"severe", tone:"bad" };
+    }
+
+    function renderHistory(){
+      const history = loadHistory().slice().reverse(); // newest first
+      countPill.textContent = `${history.length} ${history.length === 1 ? "entry" : "entries"}`;
+      historyList.innerHTML = "";
+
+      if (history.length === 0){
+        historyList.innerHTML = `<div class="item"><div class="meta">No entries yet. Add one above, or use the Symptom Library.</div></div>`;
         return;
       }
 
-      const bubbles = history.slice(0, 8).map(entry => {
-        const aiText = generateAiFollowup(entry);
-        return `
-          <div class="ai-bubble">
-            <div>${aiText}</div>
-            <div class="time">${new Date(entry.timestamp).toLocaleString()}</div>
+      for (const entry of history){
+        const sev = severityLabel(entry.severity);
+        const sevBadge =
+          sev.tone === "good" ? "🟢" :
+          sev.tone === "warn" ? "🟠" : "🔴";
+
+        const el = document.createElement("div");
+        el.className = "item";
+        el.innerHTML = `
+          <div class="top">
+            <div>
+              <h3>${sevBadge} ${escapeHtml(entry.symptomName)} <span class="pill" style="margin-left:8px;">Severity ${entry.severity}/10 • ${sev.text}</span></h3>
+              <div class="meta">
+                <b>Duration:</b> ${escapeHtml(entry.duration || "—")}<br/>
+                <b>Notes:</b> ${escapeHtml(entry.notes || "—")}<br/>
+                <span class="muted">Saved:</span> ${prettyTime(entry.timestamp)}
+              </div>
+            </div>
+            <div class="row" style="gap:8px; justify-content:flex-end;">
+              <button class="btn ghost" data-action="copy" data-id="${entry.id}">📋 Copy</button>
+              <button class="btn danger" data-action="delete" data-id="${entry.id}">🗑️ Delete</button>
+            </div>
           </div>
+          <div class="tiny-disclaimer">This is not real medical advice.</div>
         `;
+        historyList.appendChild(el);
+      }
+
+      // Attach handlers (event delegation)
+      historyList.querySelectorAll("button[data-action]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const action = btn.getAttribute("data-action");
+          const id = btn.getAttribute("data-id");
+          const raw = loadHistory();
+          const idx = raw.findIndex(x => x.id === id);
+          if (idx === -1) return;
+
+          if (action === "delete"){
+            raw.splice(idx,1);
+            saveHistory(raw);
+            renderHistory();
+            renderAiMessages();
+            rebuildCharts();
+          } else if (action === "copy"){
+            const e = raw[idx];
+            const txt = `Symptom: ${e.symptomName}\nSeverity: ${e.severity}/10\nDuration: ${e.duration || ""}\nNotes: ${e.notes || ""}\nSaved: ${e.timestamp}`;
+            navigator.clipboard?.writeText(txt);
+            alert("Copied entry to clipboard.");
+          }
+        });
+      });
+    }
+
+    function renderAiMessages(){
+      const history = loadHistory();
+      aiList.innerHTML = "";
+
+      if (history.length === 0){
+        aiList.innerHTML = `<div class="item"><div class="meta">Add a symptom to see educational suggestions and “You MAY have…” context.</div></div>`;
+        return;
+      }
+
+      const possible = getPossibleCausesFromHistory(history);
+
+      // Build a message pack based on last entry
+      const last = history[history.length - 1];
+      const solutions = getGeneralSolutionsForSymptom(last.symptomName);
+
+      const msg1 = document.createElement("div");
+      msg1.className = "item";
+      msg1.innerHTML = `
+        <div class="top">
+          <div>
+            <h3>🧩 Possible causes (educational)</h3>
+            <div class="meta">
+              Based on recent logs, here are some possibilities:
+              <ul style="margin:10px 0 0; padding-left: 18px; line-height:1.55;">
+                ${possible.slice(0,6).map(x => `<li>${escapeHtml(x)}</li>`).join("")}
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="tiny-disclaimer">This is not real medical advice.</div>
+      `;
+      aiList.appendChild(msg1);
+
+      const msg2 = document.createElement("div");
+      msg2.className = "item";
+      msg2.innerHTML = `
+        <div class="top">
+          <div>
+            <h3>🛠️ Things that may help (general)</h3>
+            <div class="meta">
+              For <b>${escapeHtml(last.symptomName)}</b>, these are common supportive steps:
+              <ul style="margin:10px 0 0; padding-left: 18px; line-height:1.55;">
+                ${solutions.map(s => `<li><b>${escapeHtml(s.label)}</b> — ${escapeHtml(s.note)} <span class="pill" style="margin-left:8px;">Effectiveness: ${s.score}/5</span></li>`).join("")}
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="tiny-disclaimer">This is not real medical advice.</div>
+      `;
+      aiList.appendChild(msg2);
+
+      const msg3 = document.createElement("div");
+      msg3.className = "item";
+      msg3.innerHTML = `
+        <div class="top">
+          <div>
+            <h3>🚨 When to get help</h3>
+            <div class="meta">
+              <ul style="margin:10px 0 0; padding-left: 18px; line-height:1.55;">
+                ${generalSafetyNotes().map(n => `<li>${escapeHtml(n)}</li>`).join("")}
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="tiny-disclaimer">This is not real medical advice.</div>
+      `;
+      aiList.appendChild(msg3);
+    }
+
+    /**************************************************
+     * 6) Symptom Library view
+     **************************************************/
+    const libraryChips = document.getElementById("libraryChips");
+    const librarySearch = document.getElementById("librarySearch");
+    const libraryAddPanel = document.getElementById("libraryAddPanel");
+
+    let selectedLibrarySymptom = null;
+
+    function renderLibrary(filter=""){
+      const q = normalizeText(filter);
+      libraryChips.innerHTML = "";
+
+      const list = symptomLibrary
+        .filter(s => normalizeText(s).includes(q))
+        .slice(0, 90); // show a lot but not infinite
+
+      if (list.length === 0){
+        libraryChips.innerHTML = `<div class="item" style="width:100%;"><div class="meta">No matches. Try a different term.</div></div>`;
+        return;
+      }
+
+      for (const s of list){
+        const chip = document.createElement("div");
+        chip.className = "chip";
+        chip.textContent = s;
+        chip.addEventListener("click", () => {
+          selectedLibrarySymptom = s;
+          renderLibraryAddPanel();
+        });
+        libraryChips.appendChild(chip);
+      }
+    }
+
+    function renderLibraryAddPanel(){
+      if (!selectedLibrarySymptom){
+        libraryAddPanel.innerHTML = `<div class="meta">Select a symptom to begin.</div>`;
+        return;
+      }
+
+      libraryAddPanel.innerHTML = `
+        <div class="top">
+          <div>
+            <h3>➕ Add: ${escapeHtml(selectedLibrarySymptom)}</h3>
+            <div class="meta">Choose severity + duration. Notes optional.</div>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:10px;">
+          <div class="field">
+            <label>Severity (1–10)</label>
+            <select id="libSeverity">
+              ${Array.from({length:10},(_,i)=>i+1).map(n => `<option value="${n}" ${n===5?"selected":""}>${n}${n===1?" (very mild)":n===10?" (severe)":""}</option>`).join("")}
+            </select>
+          </div>
+          <div class="field">
+            <label>Duration</label>
+            <input id="libDuration" placeholder="e.g., 3 days" />
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:10px;">
+          <div class="field" style="flex: 1 1 100%;">
+            <label>Notes</label>
+            <textarea id="libNotes" placeholder="Optional context..."></textarea>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:12px;">
+          <button class="btn" id="libAddBtn">💾 Save to log</button>
+          <button class="btn secondary" id="libFillMainBtn">📝 Fill log form</button>
+        </div>
+
+        <div class="tiny-disclaimer">This is not real medical advice.</div>
+      `;
+
+      document.getElementById("libAddBtn").addEventListener("click", () => {
+        const sev = Number(document.getElementById("libSeverity").value);
+        const dur = document.getElementById("libDuration").value.trim();
+        const notes = document.getElementById("libNotes").value.trim();
+        addEntry(selectedLibrarySymptom, sev, dur, notes);
+        alert("Symptom entry saved.");
       });
 
-      container.innerHTML = bubbles.join("");
+      document.getElementById("libFillMainBtn").addEventListener("click", () => {
+        document.getElementById("symptomName").value = selectedLibrarySymptom;
+        switchTo("logView");
+      });
     }
 
-    function renderSearchResults(term) {
-      const container = document.getElementById("searchResults");
-      const history = loadHistory();
-      const q = term.trim().toLowerCase();
+    /**************************************************
+     * 7) Disorders view
+     **************************************************/
+    const disorderCards = document.getElementById("disorderCards");
+    const disorderSearch = document.getElementById("disorderSearch");
 
-      if (!q) {
-        container.innerHTML = "<p class='tiny'>Type something and hit search.</p>";
+    function renderDisorders(filter=""){
+      const q = normalizeText(filter);
+      const list = disorders.filter(d =>
+        normalizeText(d.name).includes(q) ||
+        (d.tags || []).some(t => normalizeText(t).includes(q)) ||
+        (d.symptoms || []).some(s => normalizeText(s).includes(q))
+      );
+
+      disorderCards.innerHTML = "";
+      if (list.length === 0){
+        disorderCards.innerHTML = `<div class="item"><div class="meta">No matches. Try “migraine”, “GERD”, “UTI”, “cold”, etc.</div></div>`;
         return;
       }
 
-      // Search history
-      const matchedHistory = history.filter(entry =>
-        entry.symptomName.toLowerCase().includes(q)
-      );
-
-      // Search DB
-      const matchedSymptom = SYMPTOM_DB.find(s =>
-        s.name.toLowerCase().includes(q) || s.id.includes(q)
-      );
-
-      let html = "";
-
-      html += `<div class="section-title">Matching history</div>`;
-      if (matchedHistory.length === 0) {
-        html += `<p class="tiny">No history entries found for "<span class="highlight">${escapeHtml(
-          term
-        )}</span>".</p>`;
-      } else {
-        html += matchedHistory
-          .map(entry => {
-            return `
-              <div class="history-item">
-                <div><span class="highlight">${escapeHtml(entry.symptomName)}</span> – severity ${entry.severity}</div>
-                <div class="history-meta">
-                  ${new Date(entry.timestamp).toLocaleString()} • Duration: ${escapeHtml(
-              entry.duration || "n/a"
-            )}
-                </div>
-                ${
-                  entry.notes
-                    ? `<div class="tiny">Notes: ${escapeHtml(entry.notes)}</div>`
-                    : ""
-                }
-              </div>
-            `;
-          })
-          .join("");
-      }
-
-      // Solutions + suggestions section
-      html += `<div class="section-title" style="margin-top:0.75rem;">Solutions & Suggestions</div>`;
-      if (!matchedSymptom) {
-        html += `<p class="tiny">No specific symptom info found. You can add this symptom to the database later.</p>`;
-      } else {
-        html += `
-          <div class="tiny" style="margin-bottom:0.25rem;">
-            Symptom: <span class="highlight">${escapeHtml(matchedSymptom.name)}</span>
-            <span class="badge">${escapeHtml(matchedSymptom.category)}</span>
+      for (const d of list){
+        const el = document.createElement("div");
+        el.className = "dcard";
+        el.innerHTML = `
+          <h3>${escapeHtml(d.name)}</h3>
+          <p>${escapeHtml(d.overview)}</p>
+          <div class="kvs" style="margin-top:10px;">
+            ${(d.tags||[]).slice(0,4).map(t => `<span class="kv">${escapeHtml(t)}</span>`).join("")}
           </div>
-          <div class="tiny"><b>Common possible triggers:</b></div>
-          <div>${matchedSymptom.commonTriggers
-            .map(t => `<span class="pill">${escapeHtml(t)}</span>`)
-            .join("")}</div>
-
-          <div class="tiny" style="margin-top:0.4rem;"><b>Self-care ideas (not medical advice):</b></div>
-          <ul class="tiny">
-            ${matchedSymptom.selfCareIdeas
-              .map(i => `<li>${escapeHtml(i)}</li>`)
-              .join("")}
-          </ul>
-
-          <div class="tiny" style="margin-top:0.4rem;"><b>When to seek help:</b></div>
-          <p class="tiny">${escapeHtml(matchedSymptom.whenToSeekHelp)}</p>
         `;
+        el.addEventListener("click", () => openDisorderModal(d.id));
+        disorderCards.appendChild(el);
       }
-
-      container.innerHTML = html;
     }
 
     /**************************************************
-     * 4. Logic helpers
+     * 8) Modal + effectiveness charts
      **************************************************/
-    function findSymptomInfo(name) {
-      if (!name) return null;
-      const lower = name.toLowerCase();
-      return (
-        SYMPTOM_DB.find(
-          s =>
-            s.name.toLowerCase() === lower ||
-            s.id === lower ||
-            s.name.toLowerCase().includes(lower)
-        ) || null
+    const modalBack = document.getElementById("modalBack");
+    const closeModalBtn = document.getElementById("closeModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalTags = document.getElementById("modalTags");
+    const modalOverview = document.getElementById("modalOverview");
+    const modalSymptoms = document.getElementById("modalSymptoms");
+    const modalTreatments = document.getElementById("modalTreatments");
+    const modalSources = document.getElementById("modalSources");
+    const modalQuickAdd = document.getElementById("modalQuickAdd");
+
+    let modalEffChart = null;
+    let selectedDisorderForInsights = null;
+
+    function openDisorderModal(id){
+      const d = disorders.find(x => x.id === id);
+      if (!d) return;
+
+      modalTitle.textContent = d.name;
+      modalTags.innerHTML = (d.tags||[]).map(t => `<span class="kv">${escapeHtml(t)}</span>`).join("");
+      modalOverview.textContent = d.overview;
+      modalSymptoms.textContent = (d.symptoms||[]).join(", ");
+
+      // treatments
+      modalTreatments.innerHTML = "";
+      (d.treatments||[]).forEach(t => {
+        const li = document.createElement("li");
+        li.innerHTML = `<b>${escapeHtml(t.label)}</b> — ${escapeHtml(t.note)} <span class="pill" style="margin-left:8px;">Effectiveness: ${t.score}/5</span>`;
+        modalTreatments.appendChild(li);
+      });
+
+      // sources
+      modalSources.innerHTML = (d.sources||[]).map(s =>
+        `• <a href="${s.url}" target="_blank" rel="noopener noreferrer">${escapeHtml(s.name)}</a>`
+      ).join("<br/>");
+
+      // quick add
+      const pick = (d.symptoms || []).slice(0,6);
+      modalQuickAdd.innerHTML = `
+        <div class="chipbar">
+          ${pick.map(s => `<span class="chip" data-sym="${escapeHtml(s)}">${escapeHtml(s)}</span>`).join("")}
+        </div>
+        <div class="meta" style="margin-top:10px;">Click a symptom to add it to your log.</div>
+        <div class="tiny-disclaimer">This is not real medical advice.</div>
+      `;
+      modalQuickAdd.querySelectorAll(".chip").forEach(ch => {
+        ch.addEventListener("click", () => {
+          const sym = ch.getAttribute("data-sym");
+          addEntry(sym, 5, "", `Added from disorder: ${d.name}`);
+          alert("Added to log.");
+        });
+      });
+
+      // render modal chart
+      renderEffectivenessChart("modalEffectivenessChart", d.treatments || [], () => { modalEffChart = null; }, (chart) => { modalEffChart = chart; });
+
+      // also set selected for insights
+      selectedDisorderForInsights = d.id;
+      persistSelectedDisorder(d.id);
+      updateSelectedDisorderPill();
+      rebuildEffectivenessChart();
+
+      modalBack.style.display = "flex";
+    }
+
+    function closeModal(){
+      modalBack.style.display = "none";
+      // destroy modal chart to prevent overlap
+      if (modalEffChart){
+        modalEffChart.destroy();
+        modalEffChart = null;
+      }
+    }
+    closeModalBtn.addEventListener("click", closeModal);
+    modalBack.addEventListener("click", (e) => {
+      if (e.target === modalBack) closeModal();
+    });
+
+    /**************************************************
+     * 9) Charts (Insights)
+     **************************************************/
+    let severityChart = null;
+    let effectivenessChart = null;
+
+    function renderSeverityChart(){
+      const history = loadHistory();
+      const canvas = document.getElementById("severityChart");
+
+      // prepare data (sorted by time)
+      const sorted = history.slice().sort((a,b)=>new Date(a.timestamp)-new Date(b.timestamp));
+      const labels = sorted.map(e => new Date(e.timestamp).toLocaleDateString(undefined,{month:"short", day:"2-digit"}));
+      const data = sorted.map(e => Number(e.severity));
+
+      if (severityChart){
+        severityChart.destroy();
+        severityChart = null;
+      }
+
+      severityChart = new Chart(canvas, {
+        type: "line",
+        data: {
+          labels,
+          datasets: [{
+            label: "Severity (1–10)",
+            data,
+            tension: 0.35,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: true },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => `Severity: ${ctx.parsed.y}/10`
+              }
+            }
+          },
+          scales: {
+            y: {
+              min: 0,
+              max: 10,
+              ticks: { stepSize: 1 }
+            }
+          }
+        }
+      });
+    }
+
+    function renderEffectivenessChart(canvasId, treatments, beforeDestroy, afterCreate){
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+
+      // destroy existing chart if any (for the specific chart variable)
+      if (beforeDestroy) beforeDestroy();
+
+      const labels = treatments.map(t => t.label);
+      const data = treatments.map(t => Number(t.score));
+
+      const chart = new Chart(canvas, {
+        type: "bar",
+        data: {
+          labels,
+          datasets: [{
+            label: "Effectiveness (1–5, informational)",
+            data
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: true },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => `Rating: ${ctx.parsed.y}/5`
+              }
+            }
+          },
+          scales: {
+            y: {
+              min: 0,
+              max: 5,
+              ticks: { stepSize: 1 }
+            }
+          }
+        }
+      });
+
+      if (afterCreate) afterCreate(chart);
+      return chart;
+    }
+
+    function rebuildCharts(){
+      renderSeverityChart();
+      rebuildEffectivenessChart();
+    }
+
+    function rebuildEffectivenessChart(){
+      const pill = document.getElementById("selectedDisorderPill");
+      const id = getPersistedSelectedDisorder();
+      const d = disorders.find(x => x.id === id);
+
+      if (!d){
+        // If none selected, show empty chart
+        if (effectivenessChart){
+          effectivenessChart.destroy();
+          effectivenessChart = null;
+        }
+        pill.textContent = "No disorder selected";
+        return;
+      }
+
+      renderEffectivenessChart(
+        "effectivenessChart",
+        d.treatments || [],
+        () => { if(effectivenessChart){ effectivenessChart.destroy(); effectivenessChart = null; } },
+        (chart) => { effectivenessChart = chart; }
       );
     }
 
-    function generateAiFollowup(entry) {
-      const dbInfo = findSymptomInfo(entry.symptomName);
-      const severity = Number(entry.severity) || 0;
-      const baseSymptom = dbInfo ? dbInfo.name : entry.symptomName;
-
-      let message = `You logged <b>${escapeHtml(
-        baseSymptom
-      )}</b> (severity <b>${severity}</b>)`;
-
-      if (entry.duration) {
-        message += ` lasting about <b>${escapeHtml(entry.duration)}</b>.`;
-      } else {
-        message += `.`;
-      }
-
-      // Suggestion tone based on severity (non-medical, very general)
-      if (severity >= 8) {
-        message +=
-          ` This sounds quite strong. Please consider telling a trusted adult or doctor about how you feel.`;
-      } else if (severity >= 5) {
-        message +=
-          ` This is in the middle-to-high range. Keep an eye on it and talk to someone if it doesn’t improve or feels worrying.`;
-      } else {
-        message +=
-          ` It’s on the milder side, but still important to notice. Tracking it over time can help you see patterns.`;
-      }
-
-      if (dbInfo) {
-        message += ` You can also look at the <b>self-care ideas</b> for ${escapeHtml(
-          dbInfo.name
-        )} in the solutions section.`;
-      }
-
-      message += ` Remember: this app can’t diagnose you. If you’re worried, ask a trusted adult or health professional.`;
-
-      return message;
-    }
-
-    function escapeHtml(str) {
-      if (!str) return "";
-      return str
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-    }
-
     /**************************************************
-     * 5. Event listeners
+     * 10) Add entry helper
      **************************************************/
-    document.getElementById("symptomForm").addEventListener("submit", e => {
-      e.preventDefault();
-
-      const symptomName = document.getElementById("symptomName").value.trim();
-      const severity = document.getElementById("severity").value;
-      const duration = document.getElementById("duration").value.trim();
-      const notes = document.getElementById("notes").value.trim();
-
-      if (!symptomName) {
+    function addEntry(symptomName, severity=5, duration="", notes=""){
+      const name = String(symptomName || "").trim();
+      if (!name){
         alert("Please enter a symptom.");
         return;
       }
-
       const entry = {
-        id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
-        symptomName,
-        severity,
-        duration,
-        notes,
+        id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + "_" + Math.random().toString(16).slice(2),
+        symptomName: name,
+        severity: clamp(Number(severity)||5, 1, 10),
+        duration: String(duration||"").trim(),
+        notes: String(notes||"").trim(),
         timestamp: new Date().toISOString()
       };
-
       const history = loadHistory();
       history.push(entry);
       saveHistory(history);
 
-      // Clear form
+      renderHistory();
+      renderAiMessages();
+      rebuildCharts();
+    }
+
+    /**************************************************
+     * 11) Navigation + persistence
+     **************************************************/
+    function switchTo(viewId){
+      document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+      document.getElementById(viewId).classList.add("active");
+
+      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll(`.tab[data-view="${viewId}"]`).forEach(t => t.classList.add("active"));
+
+      // persist UI state
+      localStorage.setItem(UI_KEY, JSON.stringify({ viewId }));
+    }
+
+    document.querySelectorAll(".tab").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const v = btn.getAttribute("data-view");
+        switchTo(v);
+        if (v === "insightsView") rebuildCharts();
+      });
+    });
+
+    function persistSelectedDisorder(id){
+      try{
+        const raw = localStorage.getItem(SETTINGS_KEY);
+        const obj = raw ? JSON.parse(raw) : {};
+        obj.selectedDisorderId = id;
+        localStorage.setItem(SETTINGS_KEY, JSON.stringify(obj));
+      }catch{}
+    }
+    function getPersistedSelectedDisorder(){
+      try{
+        const raw = localStorage.getItem(SETTINGS_KEY);
+        const obj = raw ? JSON.parse(raw) : {};
+        return obj.selectedDisorderId || null;
+      }catch{
+        return null;
+      }
+    }
+    function updateSelectedDisorderPill(){
+      const pill = document.getElementById("selectedDisorderPill");
+      const id = getPersistedSelectedDisorder();
+      const d = disorders.find(x => x.id === id);
+      pill.textContent = d ? `Selected: ${d.name}` : "No disorder selected";
+    }
+
+    /**************************************************
+     * 12) Utilities
+     **************************************************/
+    function escapeHtml(str){
+      return String(str ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    /**************************************************
+     * 13) Event listeners
+     **************************************************/
+    document.getElementById("symptomForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const symptomName = document.getElementById("symptomName").value.trim();
+      const severity = Number(document.getElementById("severity").value);
+      const duration = document.getElementById("duration").value.trim();
+      const notes = document.getElementById("notes").value.trim();
+      addEntry(symptomName, severity, duration, notes);
+
+      // clear form
       document.getElementById("symptomForm").reset();
       document.getElementById("severity").value = 5;
 
-      // Update UI
-      renderHistory();
-      renderAiMessages();
       alert("Symptom entry saved.");
     });
 
-    document.getElementById("searchBtn").addEventListener("click", () => {
-      const term = document.getElementById("searchInput").value;
-      renderSearchResults(term);
+    document.getElementById("refreshAi").addEventListener("click", () => renderAiMessages());
+
+    document.getElementById("clearAll").addEventListener("click", () => {
+      const ok = confirm("Clear all saved symptom history? This cannot be undone.");
+      if (!ok) return;
+      localStorage.removeItem(STORAGE_KEY);
+      renderHistory();
+      renderAiMessages();
+      rebuildCharts();
     });
 
-    document
-      .getElementById("searchInput")
-      .addEventListener("keypress", e => {
-        if (e.key === "Enter") {
-          e.preventDefault();
-          const term = document.getElementById("searchInput").value;
-          renderSearchResults(term);
-        }
-      });
+    // Jump to library from log
+    document.getElementById("quickFromLibrary").addEventListener("click", () => {
+      switchTo("libraryView");
+      setTimeout(() => librarySearch.focus(), 50);
+    });
+
+    librarySearch.addEventListener("input", () => {
+      renderLibrary(librarySearch.value);
+    });
+
+    disorderSearch.addEventListener("input", () => {
+      renderDisorders(disorderSearch.value);
+    });
+
+    document.getElementById("rebuildCharts").addEventListener("click", rebuildCharts);
+
+    document.getElementById("pickDisorderFromInsights").addEventListener("click", () => {
+      switchTo("disordersView");
+      setTimeout(() => disorderSearch.focus(), 50);
+    });
 
     /**************************************************
-     * 6. Initial render on page load
+     * 14) Initial render on page load
      **************************************************/
-    renderHistory();
-    renderAiMessages();
+    function boot(){
+      // restore last view
+      try{
+        const raw = localStorage.getItem(UI_KEY);
+        const obj = raw ? JSON.parse(raw) : {};
+        if (obj.viewId && document.getElementById(obj.viewId)){
+          switchTo(obj.viewId);
+        }
+      }catch{}
+
+      renderHistory();
+      renderAiMessages();
+
+      renderLibrary("");
+      renderLibraryAddPanel();
+
+      renderDisorders("");
+      updateSelectedDisorderPill();
+
+      // Build charts if on insights view, else lazy
+      if (document.getElementById("insightsView").classList.contains("active")){
+        rebuildCharts();
+      }
+    }
+
+    boot();
   </script>
 </body>
 </html>
