@@ -1,1639 +1,889 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Symptomatic — Symptom Tracker</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PEPTIDE — Research-Grade Peptides & Supplies</title>
+<meta name="description" content="Research-grade peptides, syringes, alcohol prep pads and bacteriostatic water. Sold individually and in kits. Third-party tested for purity." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05060d;
+  --bg2:#0a0d1c;
+  --panel:rgba(255,255,255,.04);
+  --panel2:rgba(255,255,255,.07);
+  --stroke:rgba(255,255,255,.10);
+  --text:rgba(255,255,255,.94);
+  --muted:rgba(255,255,255,.62);
+  --muted2:rgba(255,255,255,.40);
+  --c1:#00f0ff;   /* cyan */
+  --c2:#7c4dff;   /* violet */
+  --c3:#ff2e88;   /* magenta */
+  --c4:#39ff88;   /* lime */
+  --muscle:#ff5e3a;
+  --lean:#39ff88;
+  --aesthetic:#ff2e88;
+  --radius:18px;
+  --radius2:26px;
+  --display:"Orbitron", ui-sans-serif, system-ui, sans-serif;
+  --sans:"Space Grotesk", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);
+  overflow-x:hidden;line-height:1.5;-webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+img{max-width:100%}
+::selection{background:var(--c2);color:#fff}
 
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+/* ---------- animated background ---------- */
+#bg-canvas{position:fixed;inset:0;z-index:0;opacity:.55}
+.mesh{position:fixed;inset:0;z-index:-1;overflow:hidden;background:
+  radial-gradient(1200px 800px at 15% -10%, rgba(124,77,255,.25), transparent 60%),
+  radial-gradient(1000px 700px at 90% 10%, rgba(0,240,255,.18), transparent 55%),
+  radial-gradient(900px 900px at 50% 120%, rgba(255,46,136,.16), transparent 60%),
+  var(--bg);}
+.mesh::after{content:"";position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:54px 54px;mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000 40%,transparent 100%);
+  animation:gridmove 26s linear infinite}
+@keyframes gridmove{to{background-position:0 540px,540px 0}}
 
-  <style>
-    :root{
-      --bg: #0b1220;
-      --panel: rgba(255,255,255,0.06);
-      --panel2: rgba(255,255,255,0.08);
-      --stroke: rgba(255,255,255,0.12);
-      --text: rgba(255,255,255,0.92);
-      --muted: rgba(255,255,255,0.68);
-      --muted2: rgba(255,255,255,0.52);
-      --brand: #7c5cff;
-      --brand2:#35d2ff;
-      --good:#25d366;
-      --warn:#ffb020;
-      --bad:#ff4d6d;
-      --shadow: 0 18px 60px rgba(0,0,0,.45);
-      --radius: 18px;
-      --radius2: 24px;
-      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-    }
+/* ---------- layout ---------- */
+.wrap{max-width:1240px;margin:0 auto;padding:0 22px;position:relative;z-index:2}
+section{position:relative;z-index:2}
+.eyebrow{font:600 12px/1 var(--sans);letter-spacing:.32em;text-transform:uppercase;color:var(--c1);
+  display:inline-flex;align-items:center;gap:10px;margin-bottom:18px}
+.eyebrow::before{content:"";width:30px;height:1px;background:linear-gradient(90deg,var(--c1),transparent)}
+h2.title{font-family:var(--display);font-weight:800;font-size:clamp(28px,5vw,52px);margin:.1em 0 .5em;line-height:1.04;letter-spacing:-.5px}
+.section-head{max-width:680px;margin-bottom:46px}
+.section-head p{color:var(--muted);font-size:17px}
 
-    *{ box-sizing:border-box; }
-    body{
-      margin:0;
-      font-family: var(--sans);
-      background:
-        radial-gradient(1200px 800px at 15% 10%, rgba(124,92,255,0.22), transparent 55%),
-        radial-gradient(900px 700px at 80% 30%, rgba(53,210,255,0.18), transparent 60%),
-        radial-gradient(900px 700px at 50% 105%, rgba(255,77,109,0.10), transparent 60%),
-        var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
-    a{ color: var(--brand2); text-decoration:none; }
-    a:hover{ text-decoration:underline; }
+/* ---------- nav ---------- */
+header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);
+  background:linear-gradient(to bottom,rgba(5,6,13,.82),rgba(5,6,13,.35));
+  border-bottom:1px solid var(--stroke)}
+.nav{display:flex;align-items:center;gap:26px;height:70px}
+.logo{font-family:var(--display);font-weight:900;font-size:20px;letter-spacing:3px;display:flex;align-items:center;gap:10px}
+.logo .hex{width:26px;height:26px;display:inline-block;background:conic-gradient(from 0deg,var(--c1),var(--c2),var(--c3),var(--c1));
+  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);animation:spin 9s linear infinite;filter:drop-shadow(0 0 8px var(--c2))}
+@keyframes spin{to{transform:rotate(360deg)}}
+.logo small{font:600 9px/1 var(--sans);letter-spacing:2px;color:var(--muted2);align-self:flex-end;margin-bottom:3px}
+.nav-links{display:flex;gap:6px;margin-left:auto}
+.nav-links a{padding:9px 14px;border-radius:10px;font-size:14px;color:var(--muted);transition:.25s;position:relative}
+.nav-links a:hover{color:var(--text);background:var(--panel)}
+.cart-btn{display:flex;align-items:center;gap:9px;padding:10px 18px;border-radius:12px;border:1px solid var(--stroke);
+  background:var(--panel);color:var(--text);font-weight:600;font-size:14px;transition:.25s}
+.cart-btn:hover{border-color:var(--c1);box-shadow:0 0 22px rgba(0,240,255,.25);transform:translateY(-1px)}
+.cart-count{min-width:22px;height:22px;padding:0 6px;border-radius:11px;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--c1),var(--c2));color:#04060f;font-weight:700;font-size:12px}
+.menu-toggle{display:none;background:none;border:1px solid var(--stroke);border-radius:10px;color:var(--text);padding:9px 12px;font-size:18px}
 
-    .wrap{ max-width: 1120px; margin: 0 auto; padding: 22px 16px 70px; }
+/* ---------- hero ---------- */
+.hero{padding:90px 0 70px;text-align:center;position:relative}
+.badge-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:30px}
+.pill{font-size:12px;font-weight:600;letter-spacing:.05em;padding:8px 15px;border-radius:999px;border:1px solid var(--stroke);
+  background:var(--panel);color:var(--muted);display:inline-flex;gap:7px;align-items:center}
+.pill .dot{width:7px;height:7px;border-radius:50%;background:var(--c4);box-shadow:0 0 10px var(--c4)}
+.hero h1{font-family:var(--display);font-weight:900;font-size:clamp(40px,9vw,104px);line-height:.92;letter-spacing:-2px;margin:0 0 6px}
+.hero h1 .grad{background:linear-gradient(110deg,var(--c1),var(--c2) 45%,var(--c3));-webkit-background-clip:text;background-clip:text;color:transparent;
+  background-size:200% auto;animation:shine 6s linear infinite}
+@keyframes shine{to{background-position:200% center}}
+.hero h1 .glitch{position:relative;display:inline-block}
+.hero p.lead{max-width:600px;margin:24px auto 36px;font-size:19px;color:var(--muted)}
+.cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn{padding:15px 30px;border-radius:14px;font-weight:700;font-size:15px;border:1px solid transparent;transition:.28s;letter-spacing:.02em}
+.btn-primary{background:linear-gradient(135deg,var(--c1),var(--c2));color:#04060f;
+  box-shadow:0 10px 40px rgba(0,240,255,.35)}
+.btn-primary:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 18px 60px rgba(124,77,255,.5)}
+.btn-ghost{background:var(--panel);border-color:var(--stroke);color:var(--text)}
+.btn-ghost:hover{border-color:var(--c1);transform:translateY(-3px)}
 
-    /* Header */
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      margin-bottom: 14px;
-    }
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-width: 240px;
-    }
-    .logo{
-      width:44px;height:44px;border-radius:16px;
-      background:
-        radial-gradient(16px 16px at 25% 25%, rgba(255,255,255,0.85), transparent 55%),
-        linear-gradient(135deg, var(--brand), var(--brand2));
-      box-shadow: 0 18px 40px rgba(124,92,255,.18);
-    }
-    .brand h1{ font-size: 16px; margin:0; letter-spacing:.2px; }
-    .brand p{ margin:2px 0 0; color: var(--muted); font-size: 12px; line-height:1.35; }
+/* floating vials */
+.vial-field{position:absolute;inset:0;pointer-events:none;z-index:1}
+.vial{position:absolute;animation:float 7s ease-in-out infinite}
+.vial:nth-child(1){left:6%;top:30%;animation-delay:0s}
+.vial:nth-child(2){right:7%;top:22%;animation-delay:-2s}
+.vial:nth-child(3){left:13%;bottom:6%;animation-delay:-4s}
+.vial:nth-child(4){right:14%;bottom:10%;animation-delay:-1s}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-26px) rotate(4deg)}}
+.svial{width:46px;height:96px;filter:drop-shadow(0 8px 24px rgba(0,240,255,.4))}
 
-    .nav{ display:flex; gap:8px; flex-wrap: wrap; justify-content:flex-end; }
-    .tab{
-      border:1px solid var(--stroke);
-      background: rgba(255,255,255,0.04);
-      color: var(--text);
-      padding:10px 12px;
-      border-radius: 999px;
-      cursor:pointer;
-      font-size: 13px;
-      display:flex;
-      align-items:center;
-      gap:8px;
-      transition: .18s ease;
-      user-select:none;
-    }
-    .tab:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,0.18); background: rgba(255,255,255,0.06); }
-    .tab.active{
-      background: linear-gradient(135deg, rgba(124,92,255,0.28), rgba(53,210,255,0.18));
-      border-color: rgba(255,255,255,0.20);
-      box-shadow: 0 16px 40px rgba(0,0,0,0.22);
-    }
+/* marquee */
+.marquee{border-block:1px solid var(--stroke);background:rgba(255,255,255,.02);overflow:hidden;padding:16px 0;margin-top:40px;z-index:2;position:relative}
+.marquee-track{display:flex;gap:50px;white-space:nowrap;animation:scrolln 22s linear infinite;font-family:var(--display);font-weight:800;font-size:22px;letter-spacing:2px}
+.marquee-track span{color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.35);display:inline-flex;align-items:center;gap:50px}
+.marquee-track span::after{content:"◆";-webkit-text-stroke:0;color:var(--c1);font-size:14px}
+@keyframes scrolln{to{transform:translateX(-50%)}}
 
-    /* Layout */
-    .grid{
-      display:grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 14px;
-      align-items:start;
-    }
-    @media (max-width: 980px){ .grid{ grid-template-columns: 1fr; } .brand{ min-width:auto; } }
+/* ---------- goal selector ---------- */
+.goals{padding:90px 0 30px}
+.goal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.goal-card{position:relative;border-radius:var(--radius2);padding:34px 28px;overflow:hidden;cursor:pointer;
+  border:1px solid var(--stroke);background:var(--panel);transition:.4s;min-height:230px;display:flex;flex-direction:column;justify-content:flex-end}
+.goal-card::before{content:"";position:absolute;inset:0;opacity:.16;transition:.4s}
+.goal-card:hover{transform:translateY(-8px);border-color:var(--accent)}
+.goal-card:hover::before{opacity:.32}
+.goal-card[data-goal=muscle]{--accent:var(--muscle)}
+.goal-card[data-goal=muscle]::before{background:radial-gradient(circle at 70% 20%,var(--muscle),transparent 60%)}
+.goal-card[data-goal=lean]{--accent:var(--lean)}
+.goal-card[data-goal=lean]::before{background:radial-gradient(circle at 70% 20%,var(--lean),transparent 60%)}
+.goal-card[data-goal=aesthetics]{--accent:var(--aesthetic)}
+.goal-card[data-goal=aesthetics]::before{background:radial-gradient(circle at 70% 20%,var(--aesthetic),transparent 60%)}
+.goal-card .gicon{font-size:40px;position:absolute;top:26px;left:26px;filter:drop-shadow(0 0 12px var(--accent))}
+.goal-card h3{font-family:var(--display);font-weight:800;font-size:26px;margin:0 0 6px;letter-spacing:1px}
+.goal-card p{color:var(--muted);font-size:14px;margin:0 0 4px;position:relative;z-index:2}
+.goal-card .tag{position:relative;z-index:2;margin-top:14px;font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--accent);text-transform:uppercase}
 
-    .card{
-      background: linear-gradient(180deg, var(--panel), rgba(255,255,255,0.03));
-      border: 1px solid var(--stroke);
-      border-radius: var(--radius2);
-      box-shadow: var(--shadow);
-      padding: 15px;
-    }
-    .card h2{ margin: 0 0 10px; font-size: 14px; letter-spacing:.2px; }
-    .sub{
-      color: var(--muted);
-      font-size: 12px;
-      margin-top:-6px;
-      margin-bottom: 10px;
-      line-height: 1.45;
-    }
+/* ---------- shop ---------- */
+.shop{padding:80px 0}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:34px}
+.chip{padding:10px 18px;border-radius:999px;border:1px solid var(--stroke);background:var(--panel);
+  color:var(--muted);font-size:13px;font-weight:600;transition:.25s;letter-spacing:.02em}
+.chip:hover{color:var(--text);border-color:rgba(255,255,255,.25)}
+.chip.active{background:linear-gradient(135deg,var(--c1),var(--c2));color:#04060f;border-color:transparent}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:22px}
+.card{position:relative;border-radius:var(--radius2);border:1px solid var(--stroke);background:var(--panel);
+  overflow:hidden;transition:transform .3s,box-shadow .3s,border-color .3s;display:flex;flex-direction:column;transform-style:preserve-3d}
+.card:hover{transform:translateY(-6px);border-color:rgba(0,240,255,.5);box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.card-media{height:200px;position:relative;overflow:hidden;display:grid;place-items:center;
+  background:radial-gradient(circle at 50% 35%,rgba(124,77,255,.25),rgba(5,6,13,.2))}
+.card-media .glow{position:absolute;width:160px;height:160px;border-radius:50%;filter:blur(46px);opacity:.55;transition:.5s}
+.card:hover .card-media .glow{transform:scale(1.4);opacity:.8}
+.card-media svg{position:relative;z-index:2;transition:transform .5s ease}
+.card:hover .card-media svg{transform:scale(1.12) rotate(-3deg)}
+.goal-badges{position:absolute;top:12px;left:12px;display:flex;gap:6px;z-index:3;flex-wrap:wrap;max-width:80%}
+.gb{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:5px 9px;border-radius:7px;backdrop-filter:blur(6px)}
+.gb.muscle{background:rgba(255,94,58,.18);color:var(--muscle);border:1px solid rgba(255,94,58,.4)}
+.gb.lean{background:rgba(57,255,136,.15);color:var(--lean);border:1px solid rgba(57,255,136,.4)}
+.gb.aesthetics{background:rgba(255,46,136,.16);color:var(--aesthetic);border:1px solid rgba(255,46,136,.4)}
+.purity-tag{position:absolute;top:12px;right:12px;z-index:3;font-size:11px;font-weight:700;padding:5px 10px;border-radius:8px;
+  background:rgba(5,6,13,.7);border:1px solid rgba(57,255,136,.4);color:var(--lean);backdrop-filter:blur(6px)}
+.card-body{padding:18px 18px 20px;display:flex;flex-direction:column;gap:8px;flex:1}
+.card-body h3{font-size:17px;font-weight:700;margin:0;letter-spacing:.01em}
+.card-body .desc{font-size:13px;color:var(--muted);flex:1}
+.card-meta{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--muted2)}
+.coa-link{font-size:11px;color:var(--c1);font-weight:600;cursor:pointer;display:inline-flex;gap:4px;align-items:center}
+.coa-link:hover{text-decoration:underline}
+.card-foot{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
+.price{font-family:var(--display);font-weight:700;font-size:22px}
+.price small{font-size:12px;color:var(--muted2);font-family:var(--sans);font-weight:500}
+.add-btn{padding:10px 16px;border-radius:11px;border:1px solid var(--stroke);background:var(--panel2);color:var(--text);
+  font-weight:700;font-size:13px;transition:.25s;display:inline-flex;gap:6px;align-items:center}
+.add-btn:hover{background:linear-gradient(135deg,var(--c1),var(--c2));color:#04060f;border-color:transparent}
+.add-btn.added{background:var(--c4);color:#04060f;border-color:transparent}
 
-    .row{ display:flex; gap:12px; flex-wrap:wrap; }
-    .field{
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      flex: 1 1 170px;
-      min-width: 170px;
-    }
-    label{ font-size: 12px; color: var(--muted); }
+/* kit ribbon */
+.card.kit{border-color:rgba(124,77,255,.45)}
+.kit-ribbon{position:absolute;top:14px;right:-32px;background:linear-gradient(135deg,var(--c2),var(--c3));color:#fff;
+  font-size:10px;font-weight:800;letter-spacing:.1em;padding:5px 36px;transform:rotate(45deg);z-index:4}
+.kit-contents{font-size:12px;color:var(--muted);background:var(--panel);border:1px solid var(--stroke);border-radius:10px;padding:10px 12px;margin-top:4px}
+.kit-contents li{margin:2px 0}
 
-    input, textarea, select{
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--stroke);
-      border-radius: 14px;
-      color: var(--text);
-      padding: 10px 12px;
-      outline:none;
-      font-size: 13px;
-      transition: .15s ease;
-    }
-    textarea{ min-height: 78px; resize: vertical; }
-    input:focus, textarea:focus, select:focus{
-      border-color: rgba(53,210,255,0.32);
-      box-shadow: 0 0 0 4px rgba(53,210,255,0.08);
-    }
+/* ---------- purity ---------- */
+.purity{padding:90px 0;border-top:1px solid var(--stroke)}
+.purity-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:50px;align-items:center}
+.stat-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.stat{border:1px solid var(--stroke);border-radius:var(--radius);background:var(--panel);padding:24px;position:relative;overflow:hidden}
+.stat .num{font-family:var(--display);font-weight:800;font-size:40px;background:linear-gradient(135deg,var(--c1),var(--c4));-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat .lab{font-size:13px;color:var(--muted);margin-top:4px}
+.cert-list{list-style:none;padding:0;margin:22px 0 0}
+.cert-list li{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--stroke);font-size:15px}
+.cert-list .ck{width:26px;height:26px;flex:none;border-radius:8px;display:grid;place-items:center;
+  background:rgba(57,255,136,.14);color:var(--c4);font-weight:800;border:1px solid rgba(57,255,136,.4)}
+.coa-preview{border:1px solid var(--stroke);border-radius:var(--radius2);background:linear-gradient(160deg,rgba(124,77,255,.12),rgba(0,240,255,.06));padding:30px;position:relative;overflow:hidden}
+.coa-preview::before{content:"COA";position:absolute;font-family:var(--display);font-weight:900;font-size:160px;color:rgba(255,255,255,.03);top:-30px;right:-10px}
+.coa-row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px dashed var(--stroke);font-size:14px}
+.coa-row span:first-child{color:var(--muted)}
+.coa-row span:last-child{font-weight:700;color:var(--c4)}
 
-    .split{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
-    .divider{ height:1px; background: rgba(255,255,255,0.08); margin: 12px 0; }
+/* ---------- dashboard ---------- */
+.dash{padding:90px 0;border-top:1px solid var(--stroke)}
+.dash-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.dash-card{border:1px solid var(--stroke);border-radius:var(--radius);background:var(--panel);padding:22px}
+.dash-card .k{font-size:12px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.dash-card .v{font-family:var(--display);font-weight:800;font-size:32px;margin-top:8px}
+.dash-table{width:100%;border-collapse:collapse;border:1px solid var(--stroke);border-radius:var(--radius);overflow:hidden}
+.dash-table th,.dash-table td{text-align:left;padding:13px 16px;font-size:14px;border-bottom:1px solid var(--stroke)}
+.dash-table th{background:var(--panel2);color:var(--muted);font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:600}
+.dash-table tr:last-child td{border-bottom:none}
+.empty{padding:30px;text-align:center;color:var(--muted2)}
+.status-tag{font-size:11px;font-weight:700;padding:4px 10px;border-radius:7px;background:rgba(0,240,255,.12);color:var(--c1);border:1px solid rgba(0,240,255,.3)}
 
-    .pill{
-      font-size: 12px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border:1px solid var(--stroke);
-      background: rgba(255,255,255,0.05);
-      color: var(--muted);
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-    }
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--stroke);padding:50px 0 40px;margin-top:30px;background:rgba(5,6,13,.6)}
+.foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px;margin-bottom:34px}
+.foot-grid p{color:var(--muted);font-size:14px;max-width:340px}
+.foot-col h4{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);margin:0 0 14px}
+.foot-col a{display:block;color:var(--muted);font-size:14px;padding:5px 0;transition:.2s}
+.foot-col a:hover{color:var(--c1)}
+.disclaimer{border:1px solid rgba(255,94,58,.3);background:rgba(255,94,58,.06);border-radius:var(--radius);padding:18px 20px;
+  font-size:13px;color:var(--muted);margin-bottom:26px;line-height:1.6}
+.disclaimer strong{color:var(--muscle)}
+.foot-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;color:var(--muted2);font-size:13px;padding-top:22px;border-top:1px solid var(--stroke)}
 
-    /* Buttons */
-    .btn{
-      background: linear-gradient(135deg, rgba(124,92,255,0.90), rgba(53,210,255,0.70));
-      border: 0;
-      color: white;
-      font-weight: 650;
-      padding: 11px 14px;
-      border-radius: 14px;
-      cursor:pointer;
-      transition: .18s ease;
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      position: relative;
-      user-select:none;
-    }
-    .btn:hover{ transform: translateY(-1px); filter: brightness(1.04); }
-    .btn.secondary{
-      background: rgba(255,255,255,0.07);
-      border: 1px solid var(--stroke);
-      color: var(--text);
-      font-weight: 600;
-    }
-    .btn.ghost{
-      background: transparent;
-      border: 1px solid var(--stroke);
-      color: var(--text);
-      font-weight: 600;
-    }
-    .btn.danger{
-      background: rgba(255,77,109,0.14);
-      border: 1px solid rgba(255,77,109,0.35);
-      color: rgba(255,255,255,0.92);
-    }
-    .btn.small{ padding: 8px 10px; border-radius: 12px; font-size: 12px; }
-    .btn[disabled]{ opacity:0.65; cursor:not-allowed; transform:none !important; }
+/* ---------- cart drawer ---------- */
+.overlay{position:fixed;inset:0;background:rgba(2,3,8,.6);backdrop-filter:blur(4px);z-index:90;opacity:0;pointer-events:none;transition:.3s}
+.overlay.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100%;width:420px;max-width:92vw;z-index:100;
+  background:linear-gradient(180deg,var(--bg2),var(--bg));border-left:1px solid var(--stroke);
+  transform:translateX(105%);transition:transform .4s cubic-bezier(.6,.05,.1,1);display:flex;flex-direction:column}
+.drawer.open{transform:translateX(0)}
+.drawer-head{padding:22px;border-bottom:1px solid var(--stroke);display:flex;align-items:center;justify-content:space-between}
+.drawer-head h3{font-family:var(--display);font-size:20px;margin:0;letter-spacing:1px}
+.x{background:none;border:1px solid var(--stroke);border-radius:9px;color:var(--text);width:36px;height:36px;font-size:18px}
+.x:hover{border-color:var(--c3)}
+.cart-items{flex:1;overflow-y:auto;padding:14px 18px}
+.ci{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--stroke)}
+.ci-thumb{width:54px;height:54px;border-radius:11px;background:radial-gradient(circle at 40% 30%,rgba(124,77,255,.4),rgba(5,6,13,.4));display:grid;place-items:center;flex:none}
+.ci-info{flex:1;min-width:0}
+.ci-info h4{font-size:14px;margin:0 0 3px;font-weight:600}
+.ci-info .p{font-size:13px;color:var(--c1);font-weight:700}
+.qty{display:flex;align-items:center;gap:8px;margin-top:8px}
+.qty button{width:26px;height:26px;border-radius:7px;border:1px solid var(--stroke);background:var(--panel);color:var(--text);font-size:15px;line-height:1}
+.qty span{font-size:14px;min-width:20px;text-align:center}
+.ci-rm{background:none;border:none;color:var(--muted2);font-size:12px;margin-top:4px}
+.ci-rm:hover{color:var(--c3)}
+.drawer-foot{padding:20px 22px;border-top:1px solid var(--stroke)}
+.drawer-foot .tot{display:flex;justify-content:space-between;font-size:18px;font-weight:700;margin-bottom:6px}
+.drawer-foot .tot .price{font-family:var(--display);color:var(--c1)}
+.ship-note{font-size:12px;color:var(--muted2);margin-bottom:16px}
+.checkout-btn{width:100%;padding:16px;border-radius:13px;border:none;font-weight:800;font-size:15px;letter-spacing:.03em;
+  background:linear-gradient(135deg,var(--c1),var(--c2));color:#04060f;transition:.25s}
+.checkout-btn:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,240,255,.4)}
+.checkout-btn:disabled{opacity:.4;transform:none;box-shadow:none;cursor:not-allowed}
 
-    /* Loading state */
-    .btn.loading{
-      pointer-events:none;
-      opacity:0.9;
-    }
-    .btn.loading::after{
-      content:"";
-      width: 14px; height:14px;
-      border-radius: 999px;
-      border: 2px solid rgba(255,255,255,0.45);
-      border-top-color: rgba(255,255,255,0.95);
-      display:inline-block;
-      margin-left: 2px;
-      animation: spin .8s linear infinite;
-    }
-    @keyframes spin{ to{ transform: rotate(360deg);} }
+/* ---------- modal ---------- */
+.modal{position:fixed;inset:0;z-index:120;display:none;place-items:center;padding:20px;background:rgba(2,3,8,.7);backdrop-filter:blur(6px)}
+.modal.open{display:grid}
+.modal-box{width:100%;max-width:480px;background:linear-gradient(180deg,var(--bg2),var(--bg));border:1px solid var(--stroke);
+  border-radius:var(--radius2);padding:30px;position:relative;max-height:90vh;overflow-y:auto}
+.modal-box h3{font-family:var(--display);font-size:22px;margin:0 0 6px;letter-spacing:.5px}
+.modal-box .sub{color:var(--muted);font-size:14px;margin-bottom:22px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;letter-spacing:.04em}
+.field input,.field select{width:100%;padding:13px 14px;border-radius:11px;border:1px solid var(--stroke);background:var(--panel);color:var(--text);font-family:inherit;font-size:14px}
+.field input:focus,.field select:focus{outline:none;border-color:var(--c1)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.modal .close{position:absolute;top:18px;right:18px}
+.success{text-align:center;padding:10px 0}
+.success .check{width:70px;height:70px;border-radius:50%;margin:0 auto 18px;display:grid;place-items:center;font-size:34px;
+  background:rgba(57,255,136,.14);border:1px solid rgba(57,255,136,.5);color:var(--c4);animation:pop .5s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{0%{transform:scale(0)}100%{transform:scale(1)}}
 
-    /* “unloaded” buttons (skeleton) */
-    .ghost-skeleton{
-      border-radius: 14px;
-      padding: 11px 14px;
-      border: 1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.035);
-      color: rgba(255,255,255,0.40);
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      user-select:none;
-      position: relative;
-      overflow:hidden;
-    }
-    .ghost-skeleton::before{
-      content:"";
-      position:absolute; inset:0;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.10), transparent);
-      transform: translateX(-100%);
-      animation: shimmer 1.2s infinite;
-    }
-    @keyframes shimmer{
-      100%{ transform: translateX(100%); }
-    }
+/* age gate */
+.agegate{position:fixed;inset:0;z-index:200;background:rgba(2,3,8,.92);backdrop-filter:blur(10px);display:grid;place-items:center;padding:20px}
+.agegate.hidden{display:none}
+.agegate-box{max-width:460px;text-align:center;border:1px solid var(--stroke);border-radius:var(--radius2);padding:42px 34px;background:linear-gradient(180deg,var(--bg2),var(--bg))}
+.agegate-box h2{font-family:var(--display);font-size:26px;margin:0 0 12px}
+.agegate-box p{color:var(--muted);font-size:14px;margin-bottom:26px;line-height:1.6}
+.agegate-box .btn{margin:0 6px}
 
-    /* Lists */
-    .list{ display:flex; flex-direction:column; gap:10px; }
-    .item{
-      padding: 12px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.10);
-    }
-    .item .top{ display:flex; align-items:flex-start; justify-content:space-between; gap: 12px; }
-    .item h3{ margin:0; font-size: 13px; letter-spacing:.2px; }
-    .meta{ color: var(--muted); font-size: 12px; margin-top: 3px; line-height: 1.35; }
-    .tiny-disclaimer{
-      margin-top: 10px;
-      font-size: 11px;
-      color: rgba(255,255,255,0.55);
-      border-top: 1px dashed rgba(255,255,255,0.14);
-      padding-top: 8px;
-    }
+/* reveal animation */
+.reveal{opacity:0;transform:translateY(34px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
+.reveal.in{opacity:1;transform:none}
 
-    /* Chips */
-    .chipbar{ display:flex; gap:8px; flex-wrap:wrap; margin-top: 8px; }
-    .chip{
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.14);
-      background: rgba(255,255,255,0.04);
-      color: rgba(255,255,255,0.82);
-      cursor:pointer;
-      font-size: 12px;
-      transition: .14s ease;
-      user-select:none;
-      position: relative;
-    }
-    .chip:hover{
-      transform: translateY(-1px);
-      border-color: rgba(53,210,255,0.28);
-      background: rgba(53,210,255,0.06);
-    }
-    .chip.active{
-      border-color: rgba(53,210,255,0.38);
-      background: rgba(53,210,255,0.10);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.22);
-    }
-
-    /* Disorders grid */
-    .cards{
-      display:grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-    }
-    @media (max-width: 980px){ .cards{ grid-template-columns: 1fr; } }
-    .dcard{
-      padding: 14px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background:
-        radial-gradient(500px 200px at 10% 10%, rgba(124,92,255,0.12), transparent 55%),
-        rgba(255,255,255,0.04);
-      cursor:pointer;
-      transition: .18s ease;
-      min-height: 92px;
-    }
-    .dcard:hover{
-      transform: translateY(-2px);
-      border-color: rgba(255,255,255,0.18);
-      box-shadow: 0 24px 60px rgba(0,0,0,0.32);
-    }
-    .dcard h3{ margin:0 0 6px; font-size: 13px; }
-    .dcard p{ margin:0; color: var(--muted); font-size: 12px; line-height: 1.4; }
-
-    /* Modal */
-    .modalBack{
-      position: fixed; inset:0;
-      background: rgba(0,0,0,0.6);
-      display:none;
-      align-items:center; justify-content:center;
-      padding: 18px;
-      z-index: 50;
-    }
-    .modal{
-      width: min(980px, 100%);
-      max-height: 88vh;
-      overflow:auto;
-      border-radius: 22px;
-      border: 1px solid rgba(255,255,255,0.16);
-      background:
-        radial-gradient(900px 400px at 20% 10%, rgba(53,210,255,0.10), transparent 60%),
-        radial-gradient(900px 400px at 85% 20%, rgba(124,92,255,0.16), transparent 60%),
-        rgba(11,18,32,0.92);
-      box-shadow: 0 40px 90px rgba(0,0,0,0.58);
-      padding: 16px;
-    }
-    .modalHeader{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-    .modalHeader h2{ margin:0; font-size: 16px; }
-    .close{
-      border: 1px solid rgba(255,255,255,0.16);
-      background: rgba(255,255,255,0.06);
-      color: var(--text);
-      border-radius: 12px;
-      padding: 8px 10px;
-      cursor:pointer;
-    }
-
-    .cols{ display:grid; grid-template-columns: 1.2fr 0.8fr; gap: 14px; }
-    @media (max-width: 980px){ .cols{ grid-template-columns: 1fr; } }
-
-    .kvs{ display:flex; gap:8px; flex-wrap:wrap; margin-top: 6px; }
-    .kv{
-      font-size: 12px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
-      color: rgba(255,255,255,0.78);
-    }
-
-    /* Views */
-    .view{ display:none; }
-    .view.active{ display:block; }
-
-    footer{
-      margin-top: 14px;
-      color: rgba(255,255,255,0.55);
-      font-size: 12px;
-      line-height: 1.45;
-    }
-
-    .softTitle{ font-size: 12px; color: rgba(255,255,255,0.80); margin: 0 0 6px; letter-spacing:.2px; }
-    .helpBox{
-      padding: 12px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.05);
-      color: rgba(255,255,255,0.86);
-      font-size: 12px;
-      line-height: 1.55;
-    }
-
-    .lockRow{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-      flex-wrap:wrap;
-      margin-top: 8px;
-    }
-    .lockedBadge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      font-size: 12px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.04);
-      color: rgba(255,255,255,0.72);
-    }
-    .premiumCard{
-      border: 1px solid rgba(124,92,255,0.22);
-      background:
-        radial-gradient(500px 200px at 10% 10%, rgba(124,92,255,0.10), transparent 55%),
-        rgba(255,255,255,0.04);
-    }
-  </style>
+/* responsive */
+@media(max-width:900px){
+  .purity-grid{grid-template-columns:1fr}
+  .dash-cards{grid-template-columns:1fr 1fr}
+  .goal-grid{grid-template-columns:1fr}
+  .foot-grid{grid-template-columns:1fr;gap:26px}
+}
+@media(max-width:720px){
+  .nav-links{display:none;position:absolute;top:70px;left:0;right:0;flex-direction:column;background:var(--bg2);
+    border-bottom:1px solid var(--stroke);padding:14px;gap:4px}
+  .nav-links.open{display:flex}
+  .menu-toggle{display:block}
+  .stat-cards{grid-template-columns:1fr}
+}
+</style>
 </head>
-
 <body>
+
+<!-- age gate -->
+<div class="agegate" id="agegate">
+  <div class="agegate-box">
+    <div class="logo" style="justify-content:center;margin-bottom:20px"><span class="hex"></span> PEPTIDE</div>
+    <h2>Age & Use Verification</h2>
+    <p>All products on this site are sold strictly for <strong>laboratory and research use only</strong> — not for human or veterinary consumption. You must be 21+ to enter.</p>
+    <button class="btn btn-primary" onclick="enterSite()">I am 21+ &amp; agree</button>
+    <button class="btn btn-ghost" onclick="location.href='https://www.google.com'">Exit</button>
+  </div>
+</div>
+
+<div class="mesh"></div>
+<canvas id="bg-canvas"></canvas>
+
+<!-- nav -->
+<header>
+  <div class="wrap nav">
+    <a href="#top" class="logo"><span class="hex"></span> PEPTIDE <small>RESEARCH&nbsp;CO.</small></a>
+    <nav class="nav-links" id="navlinks">
+      <a href="#goals" onclick="closeMenu()">Shop by Goal</a>
+      <a href="#shop" onclick="closeMenu()">All Products</a>
+      <a href="#kits" onclick="closeMenu()">Kits</a>
+      <a href="#purity" onclick="closeMenu()">Purity &amp; COA</a>
+      <a href="#dashboard" onclick="closeMenu()">Sales</a>
+    </nav>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <button class="cart-btn" onclick="openCart()">
+      🛒 Cart <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</header>
+
+<a id="top"></a>
+
+<!-- hero -->
+<section class="hero">
+  <div class="vial-field" aria-hidden="true">
+    <div class="vial"><svg class="svial" viewBox="0 0 46 96" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="hv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7c4dff"/><stop offset="1" stop-color="#00f0ff"/></linearGradient></defs><rect x="14" y="2" width="18" height="7" rx="2" fill="#cfd8ff"/><path d="M10 9h26v68a10 10 0 0 1-10 10H20a10 10 0 0 1-10-10Z" fill="rgba(255,255,255,.07)" stroke="rgba(255,255,255,.3)"/><path d="M12 46h22v31a8 8 0 0 1-8 8H20a8 8 0 0 1-8-8Z" fill="url(#hv)"/></svg></div>
+    <div class="vial"><svg class="svial" viewBox="0 0 46 96" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="hv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7c4dff"/><stop offset="1" stop-color="#00f0ff"/></linearGradient></defs><rect x="14" y="2" width="18" height="7" rx="2" fill="#cfd8ff"/><path d="M10 9h26v68a10 10 0 0 1-10 10H20a10 10 0 0 1-10-10Z" fill="rgba(255,255,255,.07)" stroke="rgba(255,255,255,.3)"/><path d="M12 46h22v31a8 8 0 0 1-8 8H20a8 8 0 0 1-8-8Z" fill="url(#hv)"/></svg></div>
+    <div class="vial"><svg class="svial" viewBox="0 0 46 96" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="hv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7c4dff"/><stop offset="1" stop-color="#00f0ff"/></linearGradient></defs><rect x="14" y="2" width="18" height="7" rx="2" fill="#cfd8ff"/><path d="M10 9h26v68a10 10 0 0 1-10 10H20a10 10 0 0 1-10-10Z" fill="rgba(255,255,255,.07)" stroke="rgba(255,255,255,.3)"/><path d="M12 46h22v31a8 8 0 0 1-8 8H20a8 8 0 0 1-8-8Z" fill="url(#hv)"/></svg></div>
+    <div class="vial"><svg class="svial" viewBox="0 0 46 96" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="hv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7c4dff"/><stop offset="1" stop-color="#00f0ff"/></linearGradient></defs><rect x="14" y="2" width="18" height="7" rx="2" fill="#cfd8ff"/><path d="M10 9h26v68a10 10 0 0 1-10 10H20a10 10 0 0 1-10-10Z" fill="rgba(255,255,255,.07)" stroke="rgba(255,255,255,.3)"/><path d="M12 46h22v31a8 8 0 0 1-8 8H20a8 8 0 0 1-8-8Z" fill="url(#hv)"/></svg></div>
+  </div>
   <div class="wrap">
-    <div class="topbar">
-      <div class="brand">
-        <div class="logo"></div>
-        <div>
-          <h1>Symptomatic</h1>
-          <p>A clean, private symptom tracker with gentle insights. <span style="color:var(--muted2)">Educational only.</span></p>
-        </div>
-      </div>
-
-      <div class="nav">
-        <button class="tab active" data-view="logView">📝 Log</button>
-        <button class="tab" data-view="libraryView">📚 Library</button>
-        <button class="tab" data-view="disordersView">🧠 Conditions</button>
-        <button class="tab" data-view="insightsView">📈 Trends</button>
-      </div>
+    <div class="badge-row reveal">
+      <span class="pill"><span class="dot"></span> Third-Party Tested</span>
+      <span class="pill"><span class="dot"></span> 99%+ Purity</span>
+      <span class="pill"><span class="dot"></span> Fast Discreet Shipping</span>
     </div>
-
-    <!-- LOG VIEW -->
-    <div id="logView" class="view active">
-      <div class="grid">
-        <div class="card">
-          <div class="split">
-            <div>
-              <h2>How are you feeling today?</h2>
-              <div class="sub">Log a quick entry. You’ll get a few <b>possible matches</b> + <b>comfort suggestions</b>.</div>
-            </div>
-            <span class="pill">Saved locally</span>
-          </div>
-
-          <form id="symptomForm">
-            <div class="row">
-              <div class="field">
-                <label for="symptomName">Symptom</label>
-                <input id="symptomName" placeholder="e.g., sore throat, headache, nausea" autocomplete="off"/>
-              </div>
-
-              <div class="field">
-                <label for="severity">Severity</label>
-                <select id="severity">
-                  <option value="1">1 (very mild)</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5" selected>5 (moderate)</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  <option value="8">8</option>
-                  <option value="9">9</option>
-                  <option value="10">10 (severe)</option>
-                </select>
-              </div>
-
-              <div class="field">
-                <label for="duration">Duration</label>
-                <input id="duration" placeholder="e.g., 2 hours, since yesterday" autocomplete="off"/>
-              </div>
-            </div>
-
-            <div class="divider"></div>
-
-            <!-- NEW: What happened before -->
-            <div>
-              <div class="softTitle">What happened before this started?</div>
-              <div class="sub" style="margin-top:0">Tap anything that applies — it helps you spot patterns later.</div>
-              <div class="chipbar" id="triggerChips"></div>
-
-              <div class="row" style="margin-top:10px;">
-                <div class="field" style="flex:1 1 100%;">
-                  <label for="notes">Notes (optional)</label>
-                  <textarea id="notes" placeholder="Anything else? (meds you took, what helped, other symptoms...)"></textarea>
-                </div>
-              </div>
-            </div>
-
-            <div class="row" style="margin-top:12px; justify-content:space-between;">
-              <div class="row" style="gap:10px;">
-                <button type="submit" class="btn" id="saveBtn">💾 Save</button>
-                <button type="button" id="quickFromLibrary" class="btn secondary">➕ Pick from library</button>
-
-                <!-- intentionally “unloaded” looking buttons -->
-                <div class="ghost-skeleton">✨ Smart mode</div>
-                <div class="ghost-skeleton">🧾 Export</div>
-              </div>
-
-              <button type="button" id="clearAll" class="btn danger">🗑️ Clear all</button>
-            </div>
-          </form>
-
-          <div class="divider"></div>
-
-          <div class="split">
-            <div>
-              <h2 style="margin-bottom:6px;">Your history</h2>
-              <div class="sub">Newest first. Click buttons to copy or delete.</div>
-            </div>
-            <div class="row">
-              <span class="pill" id="countPill">0 entries</span>
-            </div>
-          </div>
-
-          <div id="historyList" class="list"></div>
-        </div>
-
-        <!-- Suggestions -->
-        <div class="card">
-          <div class="split">
-            <div>
-              <h2>Helpful suggestions</h2>
-              <div class="sub">Based on your recent entries. Keep it simple — and trust your gut.</div>
-            </div>
-            <button id="refreshAi" class="btn ghost">🔄 Refresh</button>
-          </div>
-
-          <div id="aiList" class="list"></div>
-
-          <footer>
-            <b>Small note:</b> This app is educational and not medical advice. If symptoms are severe, sudden, or worrying — get professional care.
-          </footer>
-        </div>
-      </div>
-
-      <!-- Premium Photo Insights -->
-      <div class="card premiumCard" style="margin-top:14px;">
-        <div class="split">
-          <div>
-            <h2>Photo insights</h2>
-            <div class="sub">Upload a photo (like a rash, bruise, swelling) for pattern-based info. <span style="color:var(--muted2)">Not a diagnosis.</span></div>
-          </div>
-          <span class="pill" id="premiumPill">🔒 Premium locked</span>
-        </div>
-
-        <div id="premiumLocked" class="helpBox">
-          <div class="lockRow">
-            <span class="lockedBadge">🔒 Unlock for $5</span>
-            <button class="btn small" id="unlockPremiumBtn">Unlock</button>
-          </div>
-          <div class="tiny-disclaimer">
-            This unlock is a local demo (no real payment is processed here). This is not real medical advice.
-          </div>
-        </div>
-
-        <div id="premiumUnlocked" style="display:none;">
-          <div class="row" style="align-items:flex-end;">
-            <div class="field" style="flex:1 1 320px;">
-              <label for="photoInput">Add photo</label>
-              <input type="file" id="photoInput" accept="image/*" />
-            </div>
-            <button class="btn secondary" id="analyzePhotoBtn">🔍 Check photo</button>
-          </div>
-
-          <div class="divider"></div>
-
-          <div class="item" id="photoResult">
-            <h3>📷 Photo notes</h3>
-            <div class="meta">Upload an image to see general pattern-based possibilities.</div>
-            <div class="tiny-disclaimer">This is not real medical advice.</div>
-          </div>
-        </div>
-      </div>
+    <h1 class="reveal">ENGINEER<br><span class="grad">YOUR LIMITS</span></h1>
+    <p class="lead reveal">Research-grade peptides and everything you need to run them — syringes, alcohol prep pads, and bacteriostatic water. Sold individually or in ready-to-go kits. Shop by what you're chasing: <strong>muscle</strong>, <strong>lean</strong>, or a <strong>pretty face</strong>.</p>
+    <div class="cta-row reveal">
+      <a href="#goals" class="btn btn-primary">Shop by Goal →</a>
+      <a href="#shop" class="btn btn-ghost">Browse Everything</a>
     </div>
-
-    <!-- LIBRARY VIEW -->
-    <div id="libraryView" class="view">
-      <div class="grid">
-        <div class="card">
-          <div class="split">
-            <div>
-              <h2>Symptom library</h2>
-              <div class="sub">Search common symptoms and add them quickly.</div>
-            </div>
-            <span class="pill">Tip: type “fev” → fever</span>
-          </div>
-
-          <div class="row" style="margin-top:8px;">
-            <div class="field" style="flex:1 1 100%;">
-              <label for="librarySearch">Search</label>
-              <input id="librarySearch" placeholder="Start typing..." autocomplete="off"/>
-            </div>
-          </div>
-
-          <div class="chipbar" id="libraryChips"></div>
-
-          <div class="divider"></div>
-
-          <div class="helpBox">
-            <b>Quick flow:</b> click a symptom → choose severity + duration → save.
-            <div class="tiny-disclaimer">This is not real medical advice.</div>
-          </div>
-        </div>
-
-        <div class="card">
-          <h2>Quick add</h2>
-          <div class="sub">Pick a symptom on the left to fill this panel.</div>
-          <div id="libraryAddPanel" class="item">
-            <div class="meta">Select a symptom to begin.</div>
-          </div>
-        </div>
-      </div>
+  </div>
+  <div class="marquee">
+    <div class="marquee-track">
+      <span>GET SHREDDED</span><span>GET JACKED</span><span>STAY LEAN</span><span>PRETTY FACE</span><span>RECOVER FASTER</span>
+      <span>GET SHREDDED</span><span>GET JACKED</span><span>STAY LEAN</span><span>PRETTY FACE</span><span>RECOVER FASTER</span>
     </div>
+  </div>
+</section>
 
-    <!-- DISORDERS VIEW -->
-    <div id="disordersView" class="view">
-      <div class="card">
-        <div class="split">
-          <div>
-            <h2>Common conditions</h2>
-            <div class="sub">Click a condition to see what it usually looks like and what people commonly do.</div>
-          </div>
-          <div class="row">
-            <div class="field" style="min-width:260px; flex:0 1 320px;">
-              <label for="disorderSearch">Search</label>
-              <input id="disorderSearch" placeholder="e.g., migraine, GERD, UTI" autocomplete="off"/>
-            </div>
-          </div>
-        </div>
-        <div class="divider"></div>
-        <div id="disorderCards" class="cards"></div>
-      </div>
+<!-- goal selector -->
+<section class="goals" id="goals">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Pick Your Mission</div>
+      <h2 class="title">What are you chasing?</h2>
+      <p>Every peptide is tagged by what it's researched for. Tap a goal to filter the shop instantly.</p>
     </div>
-
-    <!-- INSIGHTS VIEW -->
-    <div id="insightsView" class="view">
-      <div class="grid">
-        <div class="card">
-          <div class="split">
-            <div>
-              <h2>Severity over time</h2>
-              <div class="sub">A quick view to spot patterns.</div>
-            </div>
-            <button id="rebuildCharts" class="btn ghost">🔁 Rebuild</button>
-          </div>
-          <div class="item">
-            <canvas id="severityChart" height="110"></canvas>
-            <div class="tiny-disclaimer">This is not real medical advice.</div>
-          </div>
-
-          <div class="divider"></div>
-
-          <div class="helpBox">
-            <b>Tip:</b> if you see spikes, check what happened before them (sleep, stress, being around sick people, foods, workouts).
-            <div class="tiny-disclaimer">This is not real medical advice.</div>
-          </div>
-        </div>
-
-        <div class="card">
-          <h2>What usually helps (informational)</h2>
-          <div class="sub">Pick a condition to see general options people commonly try.</div>
-          <div class="item">
-            <div class="split">
-              <span class="pill" id="selectedDisorderPill">No condition selected</span>
-              <button id="pickDisorderFromInsights" class="btn secondary">🧠 Pick</button>
-            </div>
-            <div style="margin-top:12px;">
-              <canvas id="effectivenessChart" height="130"></canvas>
-            </div>
-            <div class="tiny-disclaimer">Ratings vary by person. This is not real medical advice.</div>
-          </div>
-        </div>
+    <div class="goal-grid">
+      <div class="goal-card reveal" data-goal="muscle" onclick="filterGoal('muscle')">
+        <div class="gicon">💪</div>
+        <h3>GET JACKED</h3>
+        <p>Mass, strength &amp; growth-focused research compounds.</p>
+        <div class="tag">Muscle →</div>
       </div>
-    </div>
-
-    <!-- Modal for disorders -->
-    <div id="modalBack" class="modalBack">
-      <div class="modal">
-        <div class="modalHeader">
-          <div>
-            <h2 id="modalTitle">Condition</h2>
-            <div class="kvs" id="modalTags"></div>
-          </div>
-          <button class="close" id="closeModal">✕</button>
-        </div>
-
-        <div class="cols">
-          <div>
-            <div class="item">
-              <h3 style="margin:0 0 6px;">Overview</h3>
-              <div class="meta" id="modalOverview"></div>
-            </div>
-
-            <div class="item" style="margin-top:12px;">
-              <h3 style="margin:0 0 6px;">Common symptoms</h3>
-              <div class="meta" id="modalSymptoms"></div>
-            </div>
-
-            <div class="item" style="margin-top:12px;">
-              <h3 style="margin:0 0 6px;">What people usually do (general)</h3>
-              <ul id="modalTreatments" style="margin:10px 0 0; padding-left: 18px; color: rgba(255,255,255,0.86); font-size: 13px; line-height: 1.5;"></ul>
-              <div class="tiny-disclaimer">This is not real medical advice.</div>
-            </div>
-          </div>
-
-          <div>
-            <div class="item">
-              <h3 style="margin:0 0 6px;">Trusted sources</h3>
-              <div class="meta" id="modalSources"></div>
-            </div>
-
-            <div class="item" style="margin-top:12px;">
-              <h3 style="margin:0 0 6px;">Effectiveness chart (informational)</h3>
-              <div class="meta" style="margin-bottom:10px;">Approximate ratings. Varies widely.</div>
-              <canvas id="modalEffectivenessChart" height="180"></canvas>
-              <div class="tiny-disclaimer">This is not real medical advice.</div>
-            </div>
-
-            <div class="item" style="margin-top:12px;">
-              <h3 style="margin:0 0 6px;">Quick add a related symptom</h3>
-              <div class="meta" id="modalQuickAdd"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="divider"></div>
-        <div class="helpBox">
-          <b>Reminder:</b> These are informational patterns — not a diagnosis. If anything feels severe or “off,” get care.
-          <div class="tiny-disclaimer">This is not real medical advice.</div>
-        </div>
+      <div class="goal-card reveal" data-goal="lean" onclick="filterGoal('lean')">
+        <div class="gicon">🔥</div>
+        <h3>GET SHREDDED</h3>
+        <p>Metabolic &amp; fat-loss focused research compounds.</p>
+        <div class="tag">Lean →</div>
+      </div>
+      <div class="goal-card reveal" data-goal="aesthetics" onclick="filterGoal('aesthetics')">
+        <div class="gicon">✨</div>
+        <h3>PRETTY FACE</h3>
+        <p>Skin, glow &amp; aesthetic-focused research compounds.</p>
+        <div class="tag">Aesthetics →</div>
       </div>
     </div>
   </div>
+</section>
 
-  <script>
-    /**************************************************
-     * Storage
-     **************************************************/
-    const STORAGE_KEY = "symptomatic_history_v3";
-    const SETTINGS_KEY = "symptomatic_settings_v2";
-    const UI_KEY = "symptomatic_ui_v2";
-    const PREMIUM_KEY = "symptomatic_premium_v1";
+<!-- shop -->
+<section class="shop" id="shop">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">The Catalog</div>
+      <h2 class="title">Shop Everything</h2>
+      <p>Individual vials and supplies. Filter by goal or category.</p>
+    </div>
+    <div class="filters" id="filters"></div>
+    <div class="grid" id="productGrid"></div>
+  </div>
+</section>
 
-    function loadHistory(){
-      try{ return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); }catch{ return []; }
-    }
-    function saveHistory(h){ localStorage.setItem(STORAGE_KEY, JSON.stringify(h)); }
-    function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
-    function normalizeText(s){ return String(s || "").toLowerCase().trim(); }
-    function prettyTime(iso){
-      const d = new Date(iso);
-      return d.toLocaleString(undefined, { year:"numeric", month:"short", day:"2-digit", hour:"2-digit", minute:"2-digit" });
-    }
-    function escapeHtml(str){
-      return String(str ?? "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-    }
+<!-- kits -->
+<section class="shop" id="kits" style="padding-top:20px">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Done-For-You</div>
+      <h2 class="title">Ready-To-Run Kits</h2>
+      <p>Everything bundled — peptide, syringes, prep pads &amp; bacteriostatic water. One click, one box.</p>
+    </div>
+    <div class="grid" id="kitGrid"></div>
+  </div>
+</section>
 
-    /**************************************************
-     * Trigger chips (NEW)
-     **************************************************/
-    const triggerOptions = [
-      "🥶 Was out in the cold",
-      "🤧 Near someone coughing / sick",
-      "😴 Slept poorly",
-      "😓 Stress / anxiety day",
-      "🍔 Ate something unusual",
-      "🏋️ Worked out harder than usual",
-      "✈️ Traveled recently",
-      "🥤 Maybe dehydrated",
-      "🌿 Allergens / dust / pets",
-      "🧼 New soap / skincare / detergent",
-      "🤕 Minor injury / strain",
-      "❓ Not sure"
-    ];
+<!-- purity -->
+<section class="purity" id="purity">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Trust The Lab</div>
+      <h2 class="title">Purity &amp; Certification</h2>
+      <p>Every batch is independently tested by a third-party laboratory. We publish a Certificate of Analysis (COA) for each product.</p>
+    </div>
+    <div class="purity-grid">
+      <div class="reveal">
+        <div class="stat-cards">
+          <div class="stat"><div class="num" data-count="99.4" data-suffix="%">0</div><div class="lab">Avg. measured purity</div></div>
+          <div class="stat"><div class="num" data-count="100" data-suffix="%">0</div><div class="lab">Batches lab-tested</div></div>
+          <div class="stat"><div class="num" data-count="3" data-suffix="rd">0</div><div class="lab">Party HPLC verification</div></div>
+          <div class="stat"><div class="num" data-count="48" data-suffix="h">0</div><div class="lab">Avg. dispatch time</div></div>
+        </div>
+        <ul class="cert-list">
+          <li><span class="ck">✓</span> <div><strong>HPLC &amp; Mass Spec tested</strong> — identity and purity confirmed for every lot.</div></li>
+          <li><span class="ck">✓</span> <div><strong>Downloadable COA</strong> — scan the lot number on each vial to pull its certificate.</div></li>
+          <li><span class="ck">✓</span> <div><strong>Endotoxin &amp; sterility screening</strong> on applicable products.</div></li>
+          <li><span class="ck">✓</span> <div><strong>Tamper-evident packaging</strong> with batch + expiry printed on label.</div></li>
+        </ul>
+      </div>
+      <div class="coa-preview reveal">
+        <div class="eyebrow" style="margin-bottom:20px">Sample Certificate</div>
+        <div class="coa-row"><span>Product</span><span>Research Peptide</span></div>
+        <div class="coa-row"><span>Lot No.</span><span>RC-2026-0042</span></div>
+        <div class="coa-row"><span>Method</span><span>RP-HPLC</span></div>
+        <div class="coa-row"><span>Purity</span><span>99.41%</span></div>
+        <div class="coa-row"><span>Appearance</span><span>White lyophilized powder</span></div>
+        <div class="coa-row"><span>Result</span><span>PASS ✓</span></div>
+        <button class="btn btn-ghost" style="width:100%;margin-top:22px" onclick="openCoa('Research Peptide','RC-2026-0042','99.41%')">View Full COA</button>
+      </div>
+    </div>
+  </div>
+</section>
 
-    const triggerChipsEl = document.getElementById("triggerChips");
-    let selectedTriggers = new Set();
+<!-- dashboard -->
+<section class="dash" id="dashboard">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Owner View</div>
+      <h2 class="title">Sales Dashboard</h2>
+      <p>Live tally of orders placed through the store. (Demo tracking stored in your browser — connect a payment processor to make it real. See notes below.)</p>
+    </div>
+    <div class="dash-cards reveal">
+      <div class="dash-card"><div class="k">Total Revenue</div><div class="v" id="dRevenue">$0</div></div>
+      <div class="dash-card"><div class="k">Orders</div><div class="v" id="dOrders">0</div></div>
+      <div class="dash-card"><div class="k">Units Sold</div><div class="v" id="dUnits">0</div></div>
+      <div class="dash-card"><div class="k">Avg. Order</div><div class="v" id="dAov">$0</div></div>
+    </div>
+    <table class="dash-table reveal">
+      <thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th></tr></thead>
+      <tbody id="orderRows"><tr><td colspan="5" class="empty">No orders yet — place a test order to see it appear here.</td></tr></tbody>
+    </table>
+    <p style="margin-top:14px;font-size:12px;color:var(--muted2)">
+      Tip: clear demo data anytime — <a href="#" onclick="clearSales();return false" style="color:var(--c1)">reset dashboard</a>.
+    </p>
+  </div>
+</section>
 
-    function renderTriggerChips(){
-      triggerChipsEl.innerHTML = "";
-      triggerOptions.forEach(t => {
-        const el = document.createElement("div");
-        el.className = "chip" + (selectedTriggers.has(t) ? " active" : "");
-        el.textContent = t;
-        el.addEventListener("click", () => {
-          if (selectedTriggers.has(t)) selectedTriggers.delete(t);
-          else selectedTriggers.add(t);
-          renderTriggerChips();
-        });
-        triggerChipsEl.appendChild(el);
-      });
-    }
+<!-- footer -->
+<footer>
+  <div class="wrap">
+    <div class="disclaimer">
+      <strong>RESEARCH USE ONLY.</strong> Products listed are intended exclusively for in-vitro laboratory research and development. They are <strong>not</strong> drugs, foods, cosmetics, or dietary supplements, and are <strong>not</strong> for human or animal consumption, diagnosis, treatment, or prevention of any disease. Statements have not been evaluated by any regulatory authority. Buyer assumes all responsibility for proper handling and lawful use.
+    </div>
+    <div class="foot-grid">
+      <div class="foot-col">
+        <div class="logo" style="margin-bottom:14px"><span class="hex"></span> PEPTIDE</div>
+        <p>Research-grade peptides and lab supplies, third-party tested for purity. Shipped fast and discreet. Brand name to be finalized.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Shop</h4>
+        <a href="#goals">Shop by Goal</a>
+        <a href="#shop">All Products</a>
+        <a href="#kits">Kits</a>
+        <a href="#shop">Supplies</a>
+      </div>
+      <div class="foot-col">
+        <h4>Info</h4>
+        <a href="#purity">Purity &amp; COA</a>
+        <a href="#dashboard">Sales Dashboard</a>
+        <a href="#">Shipping &amp; Returns</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Peptide Research Co. (placeholder brand). All rights reserved.</span>
+      <span>Must be 21+ · Research use only</span>
+    </div>
+  </div>
+</footer>
 
-    /**************************************************
-     * Symptom library (~100+)
-     **************************************************/
-    const symptomLibrary = [
-      "Abdominal pain","Acid reflux/heartburn","Anxiety","Back pain","Bloating","Blood in stool",
-      "Body aches","Bruising easily","Burning urination","Chest tightness","Chills","Congestion",
-      "Constipation","Cough","Cramps","Decreased appetite","Dehydration signs","Diarrhea",
-      "Difficulty breathing","Difficulty swallowing","Dizziness","Dry eyes","Dry mouth","Dry skin",
-      "Ear pain","Ear ringing (tinnitus)","Excessive thirst","Eye pain","Eye redness","Fainting",
-      "Fatigue","Fever","Frequent urination","Gas","Headache","Heart palpitations","Hoarseness",
-      "Hot flashes","Itchy eyes","Itchy skin","Joint pain","Leg swelling","Light sensitivity",
-      "Loss of smell","Loss of taste","Low energy","Lower back pain","Menstrual cramps","Mood swings",
-      "Muscle cramps","Muscle weakness","Nasal drip","Nausea","Neck pain","Numbness/tingling",
-      "Painful swallowing","Panic feelings","Post-nasal drip","Rash","Runny nose","Shortness of breath",
-      "Sinus pressure","Sleep problems/insomnia","Sneezing","Sore throat","Stomach cramps",
-      "Sweating (excess)","Swollen glands","Swollen joints","Tremor","Trouble concentrating",
-      "Unexplained weight change","Vomiting","Wheezing","Blurred vision","Watery eyes",
-      "Indigestion","Pelvic pain","Hives","Skin peeling","Mouth sores","Bleeding gums","Toothache",
-      "Nosebleed","Dark urine","Hair shedding","Brittle nails","Swollen ankles","Hand pain",
-      "Wrist pain","Hip pain","Foot pain","Burning sensation","Pins and needles","Night sweats",
-      "Snoring","Daytime sleepiness"
-    ];
+<!-- cart drawer -->
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h3>Your Cart</h3>
+    <button class="x" onclick="closeCart()">×</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="drawer-foot">
+    <div class="tot"><span>Subtotal</span><span class="price" id="cartTotal">$0</span></div>
+    <div class="ship-note">Shipping &amp; tax calculated at checkout · Free shipping over $150</div>
+    <button class="checkout-btn" id="checkoutBtn" onclick="openCheckout()">Checkout</button>
+  </div>
+</aside>
 
-    /**************************************************
-     * Common conditions (unchanged in spirit)
-     **************************************************/
-    const disorders = [
-      {
-        id:"common-cold", name:"Common cold", tags:["Respiratory","Viral"],
-        overview:"A viral upper respiratory infection that often causes congestion, sore throat, and cough. Most cases improve with time and supportive care.",
-        symptoms:["Runny nose","Congestion","Sore throat","Cough","Sneezing","Mild fever","Fatigue"],
-        treatments:[
-          { label:"Rest + hydration", score:5, note:"Supportive care helps recovery." },
-          { label:"Saline nasal rinse/spray", score:4, note:"Can ease congestion." },
-          { label:"Honey (for cough, age-appropriate)", score:4, note:"May soothe cough." },
-          { label:"OTC pain/fever reducers (if safe for you)", score:3, note:"Helps comfort; not a cure." },
-          { label:"Humidifier/steam", score:3, note:"May reduce irritation." }
-        ],
-        sources:[
-          { name:"CDC (Common cold)", url:"https://www.cdc.gov/antibiotic-use/colds.html" },
-          { name:"NHS (Common cold)", url:"https://www.nhs.uk/conditions/common-cold/" }
-        ]
-      },
-      {
-        id:"influenza", name:"Influenza (flu)", tags:["Respiratory","Viral"],
-        overview:"A contagious respiratory illness that can cause fever, body aches, and fatigue. Some people are at higher risk for complications.",
-        symptoms:["Fever","Chills","Body aches","Cough","Sore throat","Fatigue","Headache"],
-        treatments:[
-          { label:"Rest + fluids", score:4, note:"Key for recovery." },
-          { label:"OTC fever/pain relief (if safe)", score:3, note:"Comfort measures." },
-          { label:"Seek care early if high-risk", score:5, note:"Antivirals may help some people when started early." },
-          { label:"Isolation to reduce spread", score:5, note:"Protects others." }
-        ],
-        sources:[
-          { name:"CDC (Flu)", url:"https://www.cdc.gov/flu/" },
-          { name:"MedlinePlus (Flu)", url:"https://medlineplus.gov/flu.html" }
-        ]
-      },
-      {
-        id:"allergic-rhinitis", name:"Seasonal allergies", tags:["Allergy","ENT"],
-        overview:"An allergic response that can cause sneezing, itchy eyes, and runny nose, often triggered by pollen, dust, or pets.",
-        symptoms:["Sneezing","Runny nose","Itchy eyes","Watery eyes","Congestion","Post-nasal drip"],
-        treatments:[
-          { label:"Avoid triggers (when possible)", score:4, note:"Reduces exposure." },
-          { label:"Saline rinse", score:3, note:"Helps wash out allergens." },
-          { label:"OTC antihistamines (if safe)", score:4, note:"Often helpful for itch/sneeze." },
-          { label:"Nasal steroid spray (if appropriate)", score:5, note:"Commonly effective for congestion." }
-        ],
-        sources:[
-          { name:"NHS (Hay fever)", url:"https://www.nhs.uk/conditions/hay-fever/" },
-          { name:"Mayo Clinic (Allergic rhinitis)", url:"https://www.mayoclinic.org/diseases-conditions/hay-fever/symptoms-causes/syc-20373039" }
-        ]
-      },
-      {
-        id:"migraine", name:"Migraine", tags:["Neurology","Headache"],
-        overview:"A type of headache that can be intense and may come with nausea, sensitivity to light/sound, and sometimes aura.",
-        symptoms:["Headache","Nausea","Light sensitivity","Sound sensitivity","Vision changes (aura)"],
-        treatments:[
-          { label:"Hydration + rest in a dark room", score:4, note:"Often helps symptom control." },
-          { label:"Identify triggers (sleep, stress, foods)", score:4, note:"Helps prevent future attacks." },
-          { label:"OTC pain relief (if safe)", score:3, note:"May help mild/moderate migraines." },
-          { label:"Prescription options (clinician-guided)", score:5, note:"Some meds are migraine-specific." }
-        ],
-        sources:[
-          { name:"NIH MedlinePlus (Migraine)", url:"https://medlineplus.gov/migraine.html" },
-          { name:"Mayo Clinic (Migraine)", url:"https://www.mayoclinic.org/diseases-conditions/migraine-headache/symptoms-causes/syc-20360201" }
-        ]
-      },
-      {
-        id:"gerd", name:"GERD (acid reflux)", tags:["Digestive"],
-        overview:"A condition where stomach acid flows back into the esophagus, causing heartburn and irritation.",
-        symptoms:["Heartburn","Acid reflux/heartburn","Chest discomfort","Sour taste","Worse after meals"],
-        treatments:[
-          { label:"Avoid trigger foods (spicy/fatty, caffeine)", score:4, note:"Commonly reduces symptoms." },
-          { label:"Smaller meals + avoid late eating", score:4, note:"Helps reflux control." },
-          { label:"Elevate head of bed", score:3, note:"Can reduce nighttime symptoms." },
-          { label:"OTC antacids (if safe)", score:3, note:"Short-term relief for some." },
-          { label:"Talk to a clinician if frequent", score:5, note:"Persistent symptoms warrant evaluation." }
-        ],
-        sources:[
-          { name:"NHS (Acid reflux)", url:"https://www.nhs.uk/conditions/heartburn-and-acid-reflux/" },
-          { name:"Mayo Clinic (GERD)", url:"https://www.mayoclinic.org/diseases-conditions/gerd/symptoms-causes/syc-20361940" }
-        ]
-      },
-      {
-        id:"uti", name:"Urinary tract infection (UTI)", tags:["Urinary"],
-        overview:"An infection in the urinary system that can cause burning urination and frequent urges. Some cases need medical treatment.",
-        symptoms:["Burning urination","Frequent urination","Lower abdominal pain","Cloudy urine"],
-        treatments:[
-          { label:"Hydration", score:3, note:"May help comfort; does not replace treatment if needed." },
-          { label:"Seek testing/treatment (often antibiotics)", score:5, note:"Important to prevent complications." },
-          { label:"Avoid irritants (caffeine/alcohol)", score:3, note:"May reduce bladder irritation." }
-        ],
-        sources:[
-          { name:"MedlinePlus (UTI)", url:"https://medlineplus.gov/urinarytractinfections.html" },
-          { name:"NHS (UTI)", url:"https://www.nhs.uk/conditions/urinary-tract-infections-utis/" }
-        ]
-      },
-      {
-        id:"gastroenteritis", name:"Stomach bug (gastroenteritis)", tags:["Digestive","Viral/Bacterial"],
-        overview:"Inflammation of the stomach and intestines that often causes diarrhea, vomiting, cramps, and dehydration risk.",
-        symptoms:["Diarrhea","Vomiting","Nausea","Stomach cramps","Fever","Dehydration signs"],
-        treatments:[
-          { label:"Oral rehydration (fluids/electrolytes)", score:5, note:"Key to prevent dehydration." },
-          { label:"Rest + bland foods when tolerated", score:4, note:"Supports recovery." },
-          { label:"Seek care if severe dehydration/blood", score:5, note:"Red flags need attention." }
-        ],
-        sources:[
-          { name:"CDC (Norovirus)", url:"https://www.cdc.gov/norovirus/" },
-          { name:"NHS (Diarrhoea & vomiting)", url:"https://www.nhs.uk/conditions/diarrhoea-and-vomiting/" }
-        ]
-      }
-    ];
+<!-- checkout modal -->
+<div class="modal" id="checkoutModal">
+  <div class="modal-box">
+    <button class="x close" onclick="closeModal('checkoutModal')">×</button>
+    <div id="checkoutForm">
+      <h3>Checkout</h3>
+      <div class="sub">Ships to your door. Demo checkout — no real card is charged.</div>
+      <div class="field"><label>Full name</label><input id="coName" placeholder="Alex Rivera"></div>
+      <div class="field"><label>Email</label><input id="coEmail" type="email" placeholder="you@email.com"></div>
+      <div class="field"><label>Shipping address</label><input id="coAddr" placeholder="123 Lab St"></div>
+      <div class="row2">
+        <div class="field"><label>City</label><input id="coCity" placeholder="Austin"></div>
+        <div class="field"><label>ZIP</label><input id="coZip" placeholder="78701"></div>
+      </div>
+      <div class="field"><label>Card number</label><input id="coCard" placeholder="4242 4242 4242 4242" inputmode="numeric"></div>
+      <div class="row2">
+        <div class="field"><label>Expiry</label><input id="coExp" placeholder="12/28"></div>
+        <div class="field"><label>CVC</label><input id="coCvc" placeholder="123" inputmode="numeric"></div>
+      </div>
+      <button class="checkout-btn" style="margin-top:8px" onclick="placeOrder()">Pay <span id="payAmt">$0</span> &amp; Ship</button>
+    </div>
+    <div id="checkoutSuccess" style="display:none">
+      <div class="success">
+        <div class="check">✓</div>
+        <h3>Order Confirmed!</h3>
+        <div class="sub" id="successMsg">Your order is on the way.</div>
+        <button class="btn btn-primary" onclick="closeModal('checkoutModal')">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-    /**************************************************
-     * Mapping: symptom → possible matches (NEW phrasing)
-     **************************************************/
-    const symptomToDisorders = [
-      { keys:["runny nose","congestion","sneezing","sore throat","cough"], may:["Common cold","Seasonal allergies"] },
-      { keys:["fever","chills","body aches"], may:["Influenza (flu)","Stomach bug (gastroenteritis)"] },
-      { keys:["heartburn","acid reflux"], may:["GERD (acid reflux)"] },
-      { keys:["nausea","vomiting","diarrhea","stomach cramps"], may:["Stomach bug (gastroenteritis)","Food intolerance"] },
-      { keys:["headache","light sensitivity"], may:["Migraine","Tension headache"] },
-      { keys:["burning urination","frequent urination"], may:["Urinary tract infection (UTI)"] },
-      { keys:["itchy skin","rash","dry skin","hives"], may:["Skin irritation (eczema/allergy)","Allergic reaction"] },
-      { keys:["anxiety","panic","palpitations","insomnia"], may:["Stress / anxiety symptoms"] },
-      { keys:["dizziness","dry mouth","dark urine","dehydration"], may:["Dehydration"] }
-    ];
+<!-- coa modal -->
+<div class="modal" id="coaModal">
+  <div class="modal-box">
+    <button class="x close" onclick="closeModal('coaModal')">×</button>
+    <h3>Certificate of Analysis</h3>
+    <div class="sub">Third-party HPLC verification</div>
+    <div class="coa-row"><span>Product</span><span id="coaProd">—</span></div>
+    <div class="coa-row"><span>Lot No.</span><span id="coaLot">—</span></div>
+    <div class="coa-row"><span>Test Method</span><span>RP-HPLC / MS</span></div>
+    <div class="coa-row"><span>Measured Purity</span><span id="coaPur">—</span></div>
+    <div class="coa-row"><span>Appearance</span><span>White lyophilized powder</span></div>
+    <div class="coa-row"><span>Heavy Metals</span><span>PASS ✓</span></div>
+    <div class="coa-row"><span>Sterility</span><span>PASS ✓</span></div>
+    <div class="coa-row"><span>Overall</span><span>RELEASED ✓</span></div>
+    <p style="font-size:12px;color:var(--muted2);margin-top:18px">This is a representative sample document. Live COAs are generated per lot and matched to the batch number printed on each vial.</p>
+  </div>
+</div>
 
-    function getPossibleMatches(history){
-      const recent = history.slice(-8);
-      const bag = recent.map(e => normalizeText(e.symptomName)).join(" | ");
-      const found = new Set();
+<script>
+/* ---------------- product data ---------------- */
+const VIAL = `<svg width="100" height="148" viewBox="0 0 100 148" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="vg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7c4dff"/><stop offset="1" stop-color="#00f0ff"/></linearGradient></defs><rect x="32" y="4" width="36" height="11" rx="3" fill="#cfd8ff"/><rect x="36" y="1" width="28" height="7" rx="3" fill="#aab4e8"/><path d="M26 16h48v100a14 14 0 0 1-14 14H40a14 14 0 0 1-14-14Z" fill="rgba(255,255,255,.07)" stroke="rgba(255,255,255,.28)" stroke-width="1.5"/><path d="M30 68h40v48a12 12 0 0 1-12 12H42a12 12 0 0 1-12-12Z" fill="url(#vg)"/><rect x="37" y="76" width="26" height="32" rx="5" fill="rgba(255,255,255,.16)"/><rect x="41" y="82" width="18" height="3.5" rx="1.75" fill="rgba(255,255,255,.55)"/><rect x="41" y="90" width="13" height="3" rx="1.5" fill="rgba(255,255,255,.35)"/></svg>`;
+const SYRINGE = `<svg width="170" height="120" viewBox="0 0 170 120" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#00f0ff"/><stop offset="1" stop-color="#7c4dff"/></linearGradient></defs><g transform="rotate(-18 85 60)"><rect x="20" y="50" width="96" height="22" rx="6" fill="rgba(255,255,255,.10)" stroke="rgba(255,255,255,.3)"/><rect x="24" y="54" width="52" height="14" rx="3" fill="url(#sg)" opacity=".7"/><line x1="34" y1="50" x2="34" y2="72" stroke="rgba(255,255,255,.3)"/><line x1="50" y1="50" x2="50" y2="72" stroke="rgba(255,255,255,.3)"/><line x1="66" y1="50" x2="66" y2="72" stroke="rgba(255,255,255,.3)"/><rect x="10" y="46" width="12" height="30" rx="3" fill="#cfd8ff"/><rect x="116" y="56" width="20" height="10" rx="3" fill="#aab4e8"/><rect x="136" y="59.5" width="30" height="3" rx="1.5" fill="#cfd8ff"/></g></svg>`;
+const PADS = `<svg width="130" height="130" viewBox="0 0 130 130" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#39ff88" stop-opacity=".5"/><stop offset="1" stop-color="#00f0ff" stop-opacity=".5"/></linearGradient></defs><g transform="rotate(-8 65 65)"><rect x="22" y="30" width="86" height="70" rx="6" fill="url(#pg)" stroke="rgba(255,255,255,.35)" stroke-width="1.5"/><rect x="22" y="30" width="86" height="14" fill="rgba(255,255,255,.18)"/><path d="M22 100l86 0" stroke="rgba(255,255,255,.3)" stroke-dasharray="3 4"/><text x="65" y="74" font-family="Orbitron,sans-serif" font-size="20" font-weight="800" fill="rgba(255,255,255,.85)" text-anchor="middle">70%</text><text x="65" y="90" font-family="Space Grotesk,sans-serif" font-size="9" fill="rgba(255,255,255,.6)" text-anchor="middle" letter-spacing="2">ALCOHOL PAD</text></g></svg>`;
+const WATER = `<svg width="100" height="148" viewBox="0 0 100 148" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="wg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#00f0ff" stop-opacity=".85"/><stop offset="1" stop-color="#39ff88" stop-opacity=".55"/></linearGradient></defs><rect x="32" y="4" width="36" height="11" rx="3" fill="#cfd8ff"/><rect x="36" y="1" width="28" height="7" rx="3" fill="#aab4e8"/><path d="M26 16h48v100a14 14 0 0 1-14 14H40a14 14 0 0 1-14-14Z" fill="rgba(255,255,255,.07)" stroke="rgba(255,255,255,.28)" stroke-width="1.5"/><path d="M30 56h40v60a12 12 0 0 1-12 12H42a12 12 0 0 1-12-12Z" fill="url(#wg)"/><circle cx="44" cy="84" r="3" fill="rgba(255,255,255,.5)"/><circle cx="56" cy="98" r="2.4" fill="rgba(255,255,255,.4)"/><circle cx="50" cy="74" r="2" fill="rgba(255,255,255,.45)"/><rect x="37" y="64" width="26" height="14" rx="4" fill="rgba(255,255,255,.14)"/><text x="50" y="74" font-family="Space Grotesk,sans-serif" font-size="7" fill="rgba(255,255,255,.7)" text-anchor="middle" letter-spacing="1">H2O</text></svg>`;
+const BOX = `<svg width="150" height="140" viewBox="0 0 150 140" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bx1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7c4dff"/><stop offset="1" stop-color="#ff2e88"/></linearGradient><linearGradient id="bx2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#00f0ff"/><stop offset="1" stop-color="#7c4dff"/></linearGradient></defs><path d="M75 18 L128 42 L75 66 L22 42 Z" fill="url(#bx2)" opacity=".9"/><path d="M22 42 L75 66 L75 122 L22 98 Z" fill="url(#bx1)" opacity=".75"/><path d="M128 42 L75 66 L75 122 L128 98 Z" fill="url(#bx1)" opacity=".5"/><path d="M75 18 L128 42 L75 66 L22 42 Z" fill="none" stroke="rgba(255,255,255,.4)"/><path d="M22 42 L75 66 L75 122 L22 98 Z" fill="none" stroke="rgba(255,255,255,.25)"/><path d="M128 42 L75 66 L75 122 L128 98 Z" fill="none" stroke="rgba(255,255,255,.25)"/><text x="49" y="92" font-family="Orbitron,sans-serif" font-size="13" font-weight="900" fill="rgba(255,255,255,.85)" text-anchor="middle" transform="skewY(24 49 92)">KIT</text></svg>`;
 
-      for (const map of symptomToDisorders){
-        const match = map.keys.some(k => bag.includes(normalizeText(k)));
-        if (match) map.may.forEach(m => found.add(m));
-      }
+const PRODUCTS = [
+  // muscle
+  {id:'p1', name:'Mass Builder GHRP-X', cat:'peptide', goals:['muscle'], purity:'99.3%', size:'10mg vial', price:54, art:VIAL, desc:'Growth-hormone-releasing research peptide. Studied for lean mass and recovery.'},
+  {id:'p2', name:'IGF Growth Factor', cat:'peptide', goals:['muscle'], purity:'99.1%', size:'1mg vial', price:89, art:VIAL, desc:'Insulin-like growth factor research compound for muscle-cell studies.'},
+  {id:'p3', name:'Recovery Peptide BPC', cat:'peptide', goals:['muscle','lean'], purity:'99.5%', size:'5mg vial', price:46, art:VIAL, desc:'Body-protection research peptide. Studied for tissue repair & recovery.'},
+  // lean
+  {id:'p4', name:'Lean-Shred Peptide', cat:'peptide', goals:['lean'], purity:'99.2%', size:'5mg vial', price:62, art:VIAL, desc:'Metabolic research peptide studied for fat-loss and body-composition.'},
+  {id:'p5', name:'Metabolic Burn 2.0', cat:'peptide', goals:['lean'], purity:'98.9%', size:'10mg vial', price:71, art:VIAL, desc:'Energy-expenditure research compound for metabolic studies.'},
+  {id:'p6', name:'Appetite Control Peptide', cat:'peptide', goals:['lean'], purity:'99.0%', size:'5mg vial', price:79, art:VIAL, desc:'Satiety-pathway research peptide for metabolic research.'},
+  // aesthetics
+  {id:'p7', name:'Glow & Tan Peptide', cat:'peptide', goals:['aesthetics'], purity:'99.4%', size:'10mg vial', price:58, art:VIAL, desc:'Melanocortin research peptide studied for pigmentation pathways.'},
+  {id:'p8', name:'Collagen Renewal Peptide', cat:'peptide', goals:['aesthetics'], purity:'99.6%', size:'5mg vial', price:52, art:VIAL, desc:'Skin & collagen research peptide for dermal-matrix studies.'},
+  {id:'p9', name:'Hair & Skin Peptide', cat:'peptide', goals:['aesthetics'], purity:'99.2%', size:'10mg vial', price:64, art:VIAL, desc:'Follicle & dermal research compound for aesthetic research.'},
+  // supplies
+  {id:'s1', name:'Insulin Syringes 29G · 0.5cc', cat:'supplies', goals:[], purity:'Sterile', size:'Box of 100', price:24, art:SYRINGE, desc:'Single-use sterile syringes with fixed needle. Individually wrapped.'},
+  {id:'s2', name:'Insulin Syringes 31G · 1cc', cat:'supplies', goals:[], purity:'Sterile', size:'Box of 100', price:26, art:SYRINGE, desc:'Fine-gauge sterile syringes, individually blister-packed.'},
+  {id:'s3', name:'Alcohol Prep Pads', cat:'supplies', goals:[], purity:'70% IPA', size:'Box of 200', price:12, art:PADS, desc:'Sterile 70% isopropyl alcohol prep pads. Individually sealed.'},
+  {id:'s4', name:'Bacteriostatic Water 30ml', cat:'supplies', goals:[], purity:'0.9% benzyl', size:'30ml vial', price:18, art:WATER, desc:'Bacteriostatic water for reconstitution. Multi-use sealed vial.'},
+  {id:'s5', name:'Bacteriostatic Water 10ml', cat:'supplies', goals:[], purity:'0.9% benzyl', size:'10ml vial', price:9, art:WATER, desc:'Bacteriostatic water for reconstitution. Single sealed vial.'},
+];
 
-      const causes = Array.from(found);
-      if (causes.length === 0){
-        return [
-          "You most likely may have something mild and temporary (like a small virus, irritation, or strain).",
-          "You most likely may have symptoms related to sleep, stress, hydration, or a recent routine change."
-        ];
-      }
-      return causes.map(c => `You most likely may have ${c}.`);
-    }
+const KITS = [
+  {id:'k1', name:'Starter Reconstitution Kit', cat:'kit', goals:[], purity:'Bundle', size:'Everything to start', price:99, art:BOX,
+    desc:'New to research peptides? This has the lot.', contents:['1× Research peptide (your pick at checkout)','1× Bacteriostatic Water 30ml','Box of 100 syringes','Box of 200 alcohol prep pads'], save:14},
+  {id:'k2', name:'SHREDDED Stack Kit', cat:'kit', goals:['lean'], purity:'Bundle', size:'Lean-focused', price:149, art:BOX,
+    desc:'Fat-loss focused research stack + all supplies.', contents:['Lean-Shred Peptide','Metabolic Burn 2.0','Bacteriostatic Water 30ml','100 syringes + 200 prep pads'], save:23},
+  {id:'k3', name:'JACKED Mass Kit', cat:'kit', goals:['muscle'], purity:'Bundle', size:'Muscle-focused', price:169, art:BOX,
+    desc:'Mass & recovery research stack + all supplies.', contents:['Mass Builder GHRP-X','Recovery Peptide BPC','Bacteriostatic Water 30ml','100 syringes + 200 prep pads'], save:26},
+  {id:'k4', name:'PRETTY FACE Aesthetics Kit', cat:'kit', goals:['aesthetics'], purity:'Bundle', size:'Aesthetic-focused', price:139, art:BOX,
+    desc:'Skin & glow research stack + all supplies.', contents:['Glow & Tan Peptide','Collagen Renewal Peptide','Bacteriostatic Water 30ml','100 syringes + 200 prep pads'], save:21},
+];
 
-    function generalSafetyNotes(){
-      return [
-        "If something feels severe, sudden, or gets worse fast — consider getting checked out.",
-        "Urgent red flags can include trouble breathing, severe chest pain, fainting, confusion, or one-sided weakness."
-      ];
-    }
+/* ---------------- cart state ---------------- */
+let cart = JSON.parse(localStorage.getItem('pep_cart')||'{}');
+let sales = JSON.parse(localStorage.getItem('pep_sales')||'[]');
+const $ = s=>document.querySelector(s);
+const money = n=>'$'+n.toLocaleString('en-US',{minimumFractionDigits:n%1?2:0,maximumFractionDigits:2});
+const ALL = [...PRODUCTS, ...KITS];
 
-    /**************************************************
-     * Foods + liquids suggestions (NEW)
-     **************************************************/
-    function getFoodAndFluids(symptomName){
-      const s = normalizeText(symptomName);
-      // default comfort
-      const fluids = ["Water", "Warm tea", "Electrolytes (if needed)"];
-      const foods = ["Soup/broth", "Rice/toast/crackers", "Banana or applesauce"];
+/* ---------------- render shop ---------------- */
+const FILTERS = [
+  {k:'all', label:'All'},
+  {k:'muscle', label:'💪 Muscle'},
+  {k:'lean', label:'🔥 Lean'},
+  {k:'aesthetics', label:'✨ Aesthetics'},
+  {k:'peptide', label:'Peptides'},
+  {k:'supplies', label:'Supplies'},
+];
+let activeFilter='all';
 
-      if (s.includes("sore throat") || s.includes("cough") || s.includes("congestion")){
-        return {
-          fluids: ["Warm tea (ginger/lemon)", "Warm water", "Honey in tea (if appropriate)", "Water"],
-          foods: ["Soup/broth", "Soft foods (oatmeal, yogurt)", "Warm foods (not spicy)"]
-        };
-      }
-      if (s.includes("nausea") || s.includes("vomit") || s.includes("diarrhea") || s.includes("stomach")){
-        return {
-          fluids: ["Oral rehydration / electrolytes", "Water (small sips)", "Warm ginger tea"],
-          foods: ["BRAT-style foods (banana, rice, toast)", "Plain crackers", "Light soup"]
-        };
-      }
-      if (s.includes("headache") || s.includes("migraine")){
-        return {
-          fluids: ["Water", "Electrolytes (if you haven’t eaten)", "Caffeine (small amount) if it helps you"],
-          foods: ["Light snack (toast, fruit)", "Something salty if dehydrated", "Easy carbs if nauseous"]
-        };
-      }
-      return { fluids, foods };
-    }
+function buildFilters(){
+  $('#filters').innerHTML = FILTERS.map(f=>
+    `<button class="chip ${f.k===activeFilter?'active':''}" data-k="${f.k}" onclick="setFilter('${f.k}')">${f.label}</button>`).join('');
+}
+function setFilter(k){activeFilter=k;buildFilters();renderProducts();}
+function filterGoal(g){activeFilter=g;buildFilters();renderProducts();document.getElementById('shop').scrollIntoView({behavior:'smooth'});}
 
-    /**************************************************
-     * UI: history + suggestions + library + disorders
-     **************************************************/
-    const historyList = document.getElementById("historyList");
-    const aiList = document.getElementById("aiList");
-    const countPill = document.getElementById("countPill");
+function matches(p){
+  if(activeFilter==='all') return true;
+  if(activeFilter==='peptide') return p.cat==='peptide';
+  if(activeFilter==='supplies') return p.cat==='supplies';
+  return p.goals.includes(activeFilter);
+}
 
-    function severityLabel(n){
-      n = Number(n);
-      if (n <= 3) return { text:"mild", tone:"good" };
-      if (n <= 6) return { text:"moderate", tone:"warn" };
-      return { text:"severe", tone:"bad" };
-    }
+function goalBadges(p){
+  return p.goals.map(g=>`<span class="gb ${g}">${g}</span>`).join('');
+}
 
-    function setLoading(btn, on=true){
-      if (!btn) return;
-      if (on) btn.classList.add("loading");
-      else btn.classList.remove("loading");
-    }
+function productCard(p){
+  return `<div class="card reveal" data-id="${p.id}">
+    <div class="card-media">
+      <div class="glow" style="background:var(--c2)"></div>
+      <div class="goal-badges">${goalBadges(p)}</div>
+      ${p.cat==='peptide'?`<span class="purity-tag">⬡ ${p.purity}</span>`:''}
+      ${p.art}
+    </div>
+    <div class="card-body">
+      <h3>${p.name}</h3>
+      <div class="desc">${p.desc}</div>
+      <div class="card-meta">
+        <span>${p.size}</span>
+        ${p.cat==='peptide'?`<span class="coa-link" onclick="openCoa('${p.name}','RC-2026-${Math.floor(Math.random()*9000+1000)}','${p.purity}')">📄 View COA</span>`:''}
+      </div>
+      <div class="card-foot">
+        <div class="price">${money(p.price)} <small>${p.cat==='supplies'?'':'/ vial'}</small></div>
+        <button class="add-btn" onclick="addToCart('${p.id}',this)">+ Add</button>
+      </div>
+    </div>
+  </div>`;
+}
 
-    function renderHistory(){
-      const history = loadHistory().slice().reverse();
-      countPill.textContent = `${history.length} ${history.length === 1 ? "entry" : "entries"}`;
-      historyList.innerHTML = "";
+function kitCard(p){
+  return `<div class="card kit reveal" data-id="${p.id}">
+    <div class="kit-ribbon">SAVE ${p.save}%</div>
+    <div class="card-media">
+      <div class="glow" style="background:var(--c3)"></div>
+      ${p.goals.length?`<div class="goal-badges">${goalBadges(p)}</div>`:''}
+      ${p.art}
+    </div>
+    <div class="card-body">
+      <h3>${p.name}</h3>
+      <div class="desc">${p.desc}</div>
+      <ul class="kit-contents">${p.contents.map(c=>`<li>• ${c}</li>`).join('')}</ul>
+      <div class="card-foot">
+        <div class="price">${money(p.price)}</div>
+        <button class="add-btn" onclick="addToCart('${p.id}',this)">+ Add Kit</button>
+      </div>
+    </div>
+  </div>`;
+}
 
-      if (history.length === 0){
-        historyList.innerHTML = `<div class="item"><div class="meta">No entries yet. Add one above, or use the Library.</div></div>`;
-        return;
-      }
+function renderProducts(){
+  $('#productGrid').innerHTML = PRODUCTS.filter(matches).map(productCard).join('') || '<p style="color:var(--muted)">Nothing in this category yet.</p>';
+  observeReveal();
+}
+function renderKits(){
+  $('#kitGrid').innerHTML = KITS.map(kitCard).join('');
+  observeReveal();
+}
 
-      for (const entry of history){
-        const sev = severityLabel(entry.severity);
-        const sevBadge = sev.tone === "good" ? "🟢" : sev.tone === "warn" ? "🟠" : "🔴";
-        const triggers = (entry.triggers && entry.triggers.length) ? entry.triggers.join(" • ") : "—";
+/* ---------------- cart logic ---------------- */
+function addToCart(id,btn){
+  cart[id]=(cart[id]||0)+1;
+  saveCart();updateCart();
+  if(btn){btn.classList.add('added');btn.textContent='✓ Added';setTimeout(()=>{btn.classList.remove('added');btn.textContent= id.startsWith('k')?'+ Add Kit':'+ Add';},1100);}
+}
+function changeQty(id,d){
+  cart[id]=(cart[id]||0)+d;
+  if(cart[id]<=0) delete cart[id];
+  saveCart();updateCart();
+}
+function removeItem(id){delete cart[id];saveCart();updateCart();}
+function saveCart(){localStorage.setItem('pep_cart',JSON.stringify(cart));}
 
-        const el = document.createElement("div");
-        el.className = "item";
-        el.innerHTML = `
-          <div class="top">
-            <div>
-              <h3>${sevBadge} ${escapeHtml(entry.symptomName)}
-                <span class="pill" style="margin-left:8px;">${entry.severity}/10 • ${sev.text}</span>
-              </h3>
-              <div class="meta">
-                <b>Duration:</b> ${escapeHtml(entry.duration || "—")}<br/>
-                <b>What happened before:</b> ${escapeHtml(triggers)}<br/>
-                <b>Notes:</b> ${escapeHtml(entry.notes || "—")}<br/>
-                <span style="color:var(--muted2)">Saved:</span> ${prettyTime(entry.timestamp)}
-              </div>
-            </div>
-            <div class="row" style="gap:8px; justify-content:flex-end;">
-              <button class="btn ghost small" data-action="copy" data-id="${entry.id}">📋 Copy</button>
-              <button class="btn danger small" data-action="delete" data-id="${entry.id}">🗑️ Delete</button>
-            </div>
+function cartTotal(){
+  return Object.entries(cart).reduce((s,[id,q])=>{const p=ALL.find(x=>x.id===id);return s+(p?p.price*q:0);},0);
+}
+function cartCount(){return Object.values(cart).reduce((a,b)=>a+b,0);}
+
+function updateCart(){
+  $('#cartCount').textContent=cartCount();
+  const items=Object.entries(cart);
+  if(!items.length){
+    $('#cartItems').innerHTML='<p style="color:var(--muted2);text-align:center;padding:50px 0">Your cart is empty.</p>';
+    $('#checkoutBtn').disabled=true;
+  } else {
+    $('#checkoutBtn').disabled=false;
+    $('#cartItems').innerHTML=items.map(([id,q])=>{
+      const p=ALL.find(x=>x.id===id);if(!p)return'';
+      return `<div class="ci">
+        <div class="ci-thumb">${(p.art||'').replace(/width="\d+"/,'width="34"').replace(/height="\d+"/,'height="34"')}</div>
+        <div class="ci-info">
+          <h4>${p.name}</h4>
+          <div class="p">${money(p.price)}</div>
+          <div class="qty">
+            <button onclick="changeQty('${id}',-1)">−</button><span>${q}</span><button onclick="changeQty('${id}',1)">+</button>
           </div>
-          <div class="tiny-disclaimer">This is not real medical advice.</div>
-        `;
-        historyList.appendChild(el);
-      }
-
-      historyList.querySelectorAll("button[data-action]").forEach(btn => {
-        btn.addEventListener("click", async () => {
-          const action = btn.getAttribute("data-action");
-          const id = btn.getAttribute("data-id");
-          const raw = loadHistory();
-          const idx = raw.findIndex(x => x.id === id);
-          if (idx === -1) return;
-
-          setLoading(btn, true);
-          await new Promise(r => setTimeout(r, 350));
-          setLoading(btn, false);
-
-          if (action === "delete"){
-            raw.splice(idx,1);
-            saveHistory(raw);
-            renderHistory();
-            renderSuggestions();
-            rebuildCharts();
-          } else if (action === "copy"){
-            const e = raw[idx];
-            const txt = `Symptom: ${e.symptomName}
-Severity: ${e.severity}/10
-Duration: ${e.duration || ""}
-What happened before: ${(e.triggers||[]).join(", ") || ""}
-Notes: ${e.notes || ""}
-Saved: ${e.timestamp}`;
-            try{ await navigator.clipboard.writeText(txt); }catch{}
-            alert("Copied.");
-          }
-        });
-      });
-    }
-
-    function renderSuggestions(){
-      const history = loadHistory();
-      aiList.innerHTML = "";
-
-      if (history.length === 0){
-        aiList.innerHTML = `<div class="item"><div class="meta">Add a symptom to see helpful suggestions.</div><div class="tiny-disclaimer">This is not real medical advice.</div></div>`;
-        return;
-      }
-
-      const last = history[history.length - 1];
-      const matches = getPossibleMatches(history);
-      const food = getFoodAndFluids(last.symptomName);
-
-      const triggersNote = (last.triggers && last.triggers.length)
-        ? `You mentioned: <b>${escapeHtml(last.triggers.join(" • "))}</b>.`
-        : `If you remember what happened before this started (cold exposure, being around someone sick, etc.), add it next time — it helps.`;
-
-      const card1 = document.createElement("div");
-      card1.className = "item";
-      card1.innerHTML = `
-        <h3>🧩 What this could line up with</h3>
-        <div class="meta">
-          ${triggersNote}
-          <ul style="margin:10px 0 0; padding-left: 18px; line-height:1.55;">
-            ${matches.slice(0,6).map(x => `<li>${escapeHtml(x)}</li>`).join("")}
-          </ul>
+          <button class="ci-rm" onclick="removeItem('${id}')">remove</button>
         </div>
-        <div class="tiny-disclaimer">This is not real medical advice.</div>
-      `;
-      aiList.appendChild(card1);
+        <div class="price" style="font-size:15px">${money(p.price*q)}</div>
+      </div>`;
+    }).join('');
+  }
+  $('#cartTotal').textContent=money(cartTotal());
+  $('#payAmt').textContent=money(cartTotal());
+}
 
-      const card2 = document.createElement("div");
-      card2.className = "item";
-      card2.innerHTML = `
-        <h3>🍵 Foods & liquids to try</h3>
-        <div class="meta">
-          <b>Liquids:</b> ${escapeHtml(food.fluids.join(", "))}<br/>
-          <b>Foods:</b> ${escapeHtml(food.foods.join(", "))}
-        </div>
-        <div class="tiny-disclaimer">This is not real medical advice.</div>
-      `;
-      aiList.appendChild(card2);
+function openCart(){$('#drawer').classList.add('open');$('#overlay').classList.add('open');}
+function closeCart(){$('#drawer').classList.remove('open');$('#overlay').classList.remove('open');}
 
-      const card3 = document.createElement("div");
-      card3.className = "item";
-      card3.innerHTML = `
-        <h3>🚨 When to get help</h3>
-        <div class="meta">
-          <ul style="margin:10px 0 0; padding-left: 18px; line-height:1.55;">
-            ${generalSafetyNotes().map(n => `<li>${escapeHtml(n)}</li>`).join("")}
-          </ul>
-        </div>
-        <div class="tiny-disclaimer">This is not real medical advice.</div>
-      `;
-      aiList.appendChild(card3);
-    }
+/* ---------------- checkout ---------------- */
+function openCheckout(){
+  if(!cartCount())return;
+  closeCart();
+  $('#checkoutForm').style.display='block';
+  $('#checkoutSuccess').style.display='none';
+  $('#checkoutModal').classList.add('open');
+}
+function placeOrder(){
+  const name=$('#coName').value.trim()||'Guest';
+  const email=$('#coEmail').value.trim();
+  if(!email){$('#coEmail').focus();$('#coEmail').style.borderColor='var(--c3)';return;}
+  const total=cartTotal();
+  const units=cartCount();
+  const order={
+    id:'#'+(1000+sales.length+1),
+    name, email,
+    items:Object.entries(cart).map(([id,q])=>{const p=ALL.find(x=>x.id===id);return{name:p.name,qty:q,price:p.price};}),
+    units, total, status:'Processing', date:new Date().toISOString()
+  };
+  sales.push(order);
+  localStorage.setItem('pep_sales',JSON.stringify(sales));
+  cart={};saveCart();updateCart();renderDashboard();
+  $('#checkoutForm').style.display='none';
+  $('#checkoutSuccess').style.display='block';
+  $('#successMsg').textContent=`Order ${order.id} for ${money(total)} confirmed — shipping to ${name}. Tracking sent to ${email}.`;
+}
 
-    /**************************************************
-     * Library view
-     **************************************************/
-    const libraryChips = document.getElementById("libraryChips");
-    const librarySearch = document.getElementById("librarySearch");
-    const libraryAddPanel = document.getElementById("libraryAddPanel");
-    let selectedLibrarySymptom = null;
+/* ---------------- dashboard ---------------- */
+function renderDashboard(){
+  const rev=sales.reduce((s,o)=>s+o.total,0);
+  const units=sales.reduce((s,o)=>s+o.units,0);
+  $('#dRevenue').textContent=money(rev);
+  $('#dOrders').textContent=sales.length;
+  $('#dUnits').textContent=units;
+  $('#dAov').textContent=money(sales.length?rev/sales.length:0);
+  const rows=$('#orderRows');
+  if(!sales.length){rows.innerHTML='<tr><td colspan="5" class="empty">No orders yet — place a test order to see it appear here.</td></tr>';return;}
+  rows.innerHTML=[...sales].reverse().map(o=>
+    `<tr><td>${o.id}</td><td>${o.name}</td><td>${o.units} item${o.units>1?'s':''}</td><td>${money(o.total)}</td><td><span class="status-tag">${o.status}</span></td></tr>`
+  ).join('');
+}
+function clearSales(){if(confirm('Clear all demo sales data?')){sales=[];localStorage.removeItem('pep_sales');renderDashboard();}}
 
-    function renderLibrary(filter=""){
-      const q = normalizeText(filter);
-      libraryChips.innerHTML = "";
-      const list = symptomLibrary.filter(s => normalizeText(s).includes(q)).slice(0, 90);
+/* ---------------- modals ---------------- */
+function openCoa(prod,lot,pur){
+  $('#coaProd').textContent=prod;$('#coaLot').textContent=lot;$('#coaPur').textContent=pur;
+  $('#coaModal').classList.add('open');
+}
+function closeModal(id){$('#'+id).classList.remove('open');}
 
-      if (list.length === 0){
-        libraryChips.innerHTML = `<div class="item" style="width:100%;"><div class="meta">No matches. Try a different term.</div></div>`;
-        return;
-      }
+/* ---------------- age gate ---------------- */
+function enterSite(){
+  document.getElementById('agegate').classList.add('hidden');
+  localStorage.setItem('pep_age','1');
+  document.body.style.overflow='';
+}
+if(localStorage.getItem('pep_age')){document.getElementById('agegate').classList.add('hidden');}
+else{document.body.style.overflow='hidden';}
 
-      for (const s of list){
-        const chip = document.createElement("div");
-        chip.className = "chip";
-        chip.textContent = s;
-        chip.addEventListener("click", () => {
-          selectedLibrarySymptom = s;
-          renderLibraryAddPanel();
-        });
-        libraryChips.appendChild(chip);
-      }
-    }
+/* ---------------- nav ---------------- */
+function toggleMenu(){$('#navlinks').classList.toggle('open');}
+function closeMenu(){$('#navlinks').classList.remove('open');}
 
-    function renderLibraryAddPanel(){
-      if (!selectedLibrarySymptom){
-        libraryAddPanel.innerHTML = `<div class="meta">Select a symptom to begin.</div>`;
-        return;
-      }
+/* ---------------- reveal on scroll ---------------- */
+let revealObs;
+function observeReveal(){
+  if(!revealObs){
+    revealObs=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');revealObs.unobserve(e.target);}});},{threshold:.12});
+  }
+  document.querySelectorAll('.reveal:not(.in)').forEach(el=>revealObs.observe(el));
+}
 
-      libraryAddPanel.innerHTML = `
-        <div class="top">
-          <div>
-            <h3>➕ Add: ${escapeHtml(selectedLibrarySymptom)}</h3>
-            <div class="meta">Choose severity + duration, then save.</div>
-          </div>
-        </div>
+/* ---------------- count up ---------------- */
+function countUp(){
+  document.querySelectorAll('[data-count]').forEach(el=>{
+    const target=parseFloat(el.dataset.count),suf=el.dataset.suffix||'';let cur=0;
+    const step=target/60;const dec=target%1!==0;
+    const t=setInterval(()=>{cur+=step;if(cur>=target){cur=target;clearInterval(t);}el.textContent=(dec?cur.toFixed(1):Math.floor(cur))+suf;},18);
+  });
+}
+const purityObs=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){countUp();purityObs.disconnect();}});},{threshold:.4});
 
-        <div class="row" style="margin-top:10px;">
-          <div class="field">
-            <label>Severity (1–10)</label>
-            <select id="libSeverity">
-              ${Array.from({length:10},(_,i)=>i+1).map(n => `<option value="${n}" ${n===5?"selected":""}>${n}${n===1?" (very mild)":n===10?" (severe)":""}</option>`).join("")}
-            </select>
-          </div>
-          <div class="field">
-            <label>Duration</label>
-            <input id="libDuration" placeholder="e.g., 3 days" />
-          </div>
-        </div>
-
-        <div class="row" style="margin-top:10px;">
-          <div class="field" style="flex: 1 1 100%;">
-            <label>Notes</label>
-            <textarea id="libNotes" placeholder="Optional context..."></textarea>
-          </div>
-        </div>
-
-        <div class="row" style="margin-top:12px;">
-          <button class="btn" id="libAddBtn">💾 Save to log</button>
-          <button class="btn secondary" id="libFillMainBtn">📝 Fill log form</button>
-        </div>
-
-        <div class="tiny-disclaimer">This is not real medical advice.</div>
-      `;
-
-      document.getElementById("libAddBtn").addEventListener("click", async () => {
-        const btn = document.getElementById("libAddBtn");
-        setLoading(btn, true);
-        await new Promise(r => setTimeout(r, 350));
-        setLoading(btn, false);
-
-        const sev = Number(document.getElementById("libSeverity").value);
-        const dur = document.getElementById("libDuration").value.trim();
-        const notes = document.getElementById("libNotes").value.trim();
-        addEntry(selectedLibrarySymptom, sev, dur, notes);
-        alert("Saved.");
-      });
-
-      document.getElementById("libFillMainBtn").addEventListener("click", () => {
-        document.getElementById("symptomName").value = selectedLibrarySymptom;
-        switchTo("logView");
-      });
-    }
-
-    /**************************************************
-     * Disorders view + modal
-     **************************************************/
-    const disorderCards = document.getElementById("disorderCards");
-    const disorderSearch = document.getElementById("disorderSearch");
-
-    const modalBack = document.getElementById("modalBack");
-    const closeModalBtn = document.getElementById("closeModal");
-    const modalTitle = document.getElementById("modalTitle");
-    const modalTags = document.getElementById("modalTags");
-    const modalOverview = document.getElementById("modalOverview");
-    const modalSymptoms = document.getElementById("modalSymptoms");
-    const modalTreatments = document.getElementById("modalTreatments");
-    const modalSources = document.getElementById("modalSources");
-    const modalQuickAdd = document.getElementById("modalQuickAdd");
-
-    let modalEffChart = null;
-
-    function renderDisorders(filter=""){
-      const q = normalizeText(filter);
-      const list = disorders.filter(d =>
-        normalizeText(d.name).includes(q) ||
-        (d.tags||[]).some(t => normalizeText(t).includes(q)) ||
-        (d.symptoms||[]).some(s => normalizeText(s).includes(q))
-      );
-
-      disorderCards.innerHTML = "";
-      if (list.length === 0){
-        disorderCards.innerHTML = `<div class="item"><div class="meta">No matches. Try “cold”, “GERD”, “migraine”, “UTI”, etc.</div></div>`;
-        return;
-      }
-
-      for (const d of list){
-        const el = document.createElement("div");
-        el.className = "dcard";
-        el.innerHTML = `
-          <h3>${escapeHtml(d.name)}</h3>
-          <p>${escapeHtml(d.overview)}</p>
-          <div class="kvs" style="margin-top:10px;">
-            ${(d.tags||[]).slice(0,4).map(t => `<span class="kv">${escapeHtml(t)}</span>`).join("")}
-          </div>
-        `;
-        el.addEventListener("click", () => openDisorderModal(d.id));
-        disorderCards.appendChild(el);
+/* ---------------- particle bg ---------------- */
+function initParticles(){
+  const c=document.getElementById('bg-canvas'),x=c.getContext('2d');
+  let w,h,parts;
+  function size(){w=c.width=innerWidth;h=c.height=innerHeight;}
+  function make(){parts=Array.from({length:Math.min(70,Math.floor(w/22))},()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,r:Math.random()*1.6+.4}));}
+  function draw(){
+    x.clearRect(0,0,w,h);
+    for(let i=0;i<parts.length;i++){
+      const p=parts[i];p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0||p.x>w)p.vx*=-1;if(p.y<0||p.y>h)p.vy*=-1;
+      x.beginPath();x.arc(p.x,p.y,p.r,0,7);x.fillStyle='rgba(0,240,255,.6)';x.fill();
+      for(let j=i+1;j<parts.length;j++){
+        const q=parts[j],dx=p.x-q.x,dy=p.y-q.y,d=Math.hypot(dx,dy);
+        if(d<120){x.beginPath();x.moveTo(p.x,p.y);x.lineTo(q.x,q.y);x.strokeStyle='rgba(124,77,255,'+(1-d/120)*.18+')';x.stroke();}
       }
     }
+    requestAnimationFrame(draw);
+  }
+  size();make();draw();
+  addEventListener('resize',()=>{size();make();});
+}
 
-    function persistSelectedDisorder(id){
-      try{
-        const obj = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
-        obj.selectedDisorderId = id;
-        localStorage.setItem(SETTINGS_KEY, JSON.stringify(obj));
-      }catch{}
-    }
-    function getPersistedSelectedDisorder(){
-      try{
-        const obj = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
-        return obj.selectedDisorderId || null;
-      }catch{ return null; }
-    }
-    function updateSelectedDisorderPill(){
-      const pill = document.getElementById("selectedDisorderPill");
-      const id = getPersistedSelectedDisorder();
-      const d = disorders.find(x => x.id === id);
-      pill.textContent = d ? `Selected: ${d.name}` : "No condition selected";
-    }
+/* ---------------- 3D tilt ---------------- */
+function initTilt(){
+  document.addEventListener('mousemove',e=>{
+    const card=e.target.closest('.card');
+    if(!card)return;
+    const r=card.getBoundingClientRect();
+    const px=(e.clientX-r.left)/r.width-.5, py=(e.clientY-r.top)/r.height-.5;
+    card.style.transform=`translateY(-6px) rotateX(${-py*6}deg) rotateY(${px*6}deg)`;
+  });
+  document.addEventListener('mouseout',e=>{const card=e.target.closest('.card');if(card)card.style.transform='';});
+}
 
-    function openDisorderModal(id){
-      const d = disorders.find(x => x.id === id);
-      if (!d) return;
-
-      modalTitle.textContent = d.name;
-      modalTags.innerHTML = (d.tags||[]).map(t => `<span class="kv">${escapeHtml(t)}</span>`).join("");
-      modalOverview.textContent = d.overview;
-      modalSymptoms.textContent = (d.symptoms||[]).join(", ");
-
-      modalTreatments.innerHTML = "";
-      (d.treatments||[]).forEach(t => {
-        const li = document.createElement("li");
-        li.innerHTML = `<b>${escapeHtml(t.label)}</b> — ${escapeHtml(t.note)} <span class="pill" style="margin-left:8px;">${t.score}/5</span>`;
-        modalTreatments.appendChild(li);
-      });
-
-      modalSources.innerHTML = (d.sources||[]).map(s =>
-        `• <a href="${s.url}" target="_blank" rel="noopener noreferrer">${escapeHtml(s.name)}</a>`
-      ).join("<br/>");
-
-      const pick = (d.symptoms || []).slice(0,6);
-      modalQuickAdd.innerHTML = `
-        <div class="chipbar">
-          ${pick.map(s => `<span class="chip" data-sym="${escapeHtml(s)}">${escapeHtml(s)}</span>`).join("")}
-        </div>
-        <div class="meta" style="margin-top:10px;">Tap a symptom to add it.</div>
-        <div class="tiny-disclaimer">This is not real medical advice.</div>
-      `;
-      modalQuickAdd.querySelectorAll(".chip").forEach(ch => {
-        ch.addEventListener("click", () => {
-          const sym = ch.getAttribute("data-sym");
-          addEntry(sym, 5, "", `Added from condition: ${d.name}`);
-          alert("Added.");
-        });
-      });
-
-      // Chart
-      renderEffectivenessChart("modalEffectivenessChart", d.treatments || [], () => {
-        if (modalEffChart){ modalEffChart.destroy(); modalEffChart = null; }
-      }, (chart) => { modalEffChart = chart; });
-
-      persistSelectedDisorder(d.id);
-      updateSelectedDisorderPill();
-      rebuildEffectivenessChart();
-
-      modalBack.style.display = "flex";
-    }
-
-    function closeModal(){
-      modalBack.style.display = "none";
-      if (modalEffChart){ modalEffChart.destroy(); modalEffChart = null; }
-    }
-    closeModalBtn.addEventListener("click", closeModal);
-    modalBack.addEventListener("click", (e) => { if (e.target === modalBack) closeModal(); });
-
-    /**************************************************
-     * Charts
-     **************************************************/
-    let severityChart = null;
-    let effectivenessChart = null;
-
-    function renderSeverityChart(){
-      const history = loadHistory();
-      const canvas = document.getElementById("severityChart");
-      const sorted = history.slice().sort((a,b)=>new Date(a.timestamp)-new Date(b.timestamp));
-      const labels = sorted.map(e => new Date(e.timestamp).toLocaleDateString(undefined,{month:"short", day:"2-digit"}));
-      const data = sorted.map(e => Number(e.severity));
-
-      if (severityChart){ severityChart.destroy(); severityChart = null; }
-
-      severityChart = new Chart(canvas, {
-        type: "line",
-        data: { labels, datasets: [{ label: "Severity (1–10)", data, tension: 0.35, fill: true }] },
-        options: {
-          responsive:true,
-          plugins:{ legend:{ display:true }, tooltip:{ callbacks:{ label:(ctx)=>`Severity: ${ctx.parsed.y}/10` } } },
-          scales:{ y:{ min:0, max:10, ticks:{ stepSize:1 } } }
-        }
-      });
-    }
-
-    function renderEffectivenessChart(canvasId, treatments, beforeDestroy, afterCreate){
-      const canvas = document.getElementById(canvasId);
-      if (!canvas) return;
-      if (beforeDestroy) beforeDestroy();
-
-      const labels = treatments.map(t => t.label);
-      const data = treatments.map(t => Number(t.score));
-
-      const chart = new Chart(canvas, {
-        type:"bar",
-        data:{ labels, datasets:[{ label:"Effectiveness (1–5)", data }] },
-        options:{
-          responsive:true,
-          plugins:{ legend:{ display:true }, tooltip:{ callbacks:{ label:(ctx)=>`Rating: ${ctx.parsed.y}/5` } } },
-          scales:{ y:{ min:0, max:5, ticks:{ stepSize:1 } } }
-        }
-      });
-
-      if (afterCreate) afterCreate(chart);
-      return chart;
-    }
-
-    function rebuildEffectivenessChart(){
-      const pill = document.getElementById("selectedDisorderPill");
-      const id = getPersistedSelectedDisorder();
-      const d = disorders.find(x => x.id === id);
-      if (!d){
-        if (effectivenessChart){ effectivenessChart.destroy(); effectivenessChart = null; }
-        pill.textContent = "No condition selected";
-        return;
-      }
-      renderEffectivenessChart("effectivenessChart", d.treatments || [], () => {
-        if (effectivenessChart){ effectivenessChart.destroy(); effectivenessChart = null; }
-      }, (chart) => { effectivenessChart = chart; });
-    }
-
-    function rebuildCharts(){
-      renderSeverityChart();
-      rebuildEffectivenessChart();
-    }
-
-    /**************************************************
-     * Add entry (NOW stores triggers)
-     **************************************************/
-    function addEntry(symptomName, severity=5, duration="", notes=""){
-      const name = String(symptomName || "").trim();
-      if (!name){ alert("Please enter a symptom."); return; }
-
-      const entry = {
-        id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + "_" + Math.random().toString(16).slice(2),
-        symptomName: name,
-        severity: clamp(Number(severity)||5, 1, 10),
-        duration: String(duration||"").trim(),
-        notes: String(notes||"").trim(),
-        triggers: Array.from(selectedTriggers),
-        timestamp: new Date().toISOString()
-      };
-
-      const history = loadHistory();
-      history.push(entry);
-      saveHistory(history);
-
-      // reset triggers after save so each entry feels intentional
-      selectedTriggers = new Set();
-      renderTriggerChips();
-
-      renderHistory();
-      renderSuggestions();
-      rebuildCharts();
-    }
-
-    /**************************************************
-     * Navigation
-     **************************************************/
-    function switchTo(viewId){
-      document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-      document.getElementById(viewId).classList.add("active");
-
-      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-      document.querySelectorAll(`.tab[data-view="${viewId}"]`).forEach(t => t.classList.add("active"));
-
-      localStorage.setItem(UI_KEY, JSON.stringify({ viewId }));
-    }
-
-    document.querySelectorAll(".tab").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const v = btn.getAttribute("data-view");
-        switchTo(v);
-        if (v === "insightsView") rebuildCharts();
-      });
-    });
-
-    /**************************************************
-     * Premium Photo Insights (NEW, $5 unlock demo)
-     **************************************************/
-    const premiumPill = document.getElementById("premiumPill");
-    const premiumLocked = document.getElementById("premiumLocked");
-    const premiumUnlocked = document.getElementById("premiumUnlocked");
-    const unlockPremiumBtn = document.getElementById("unlockPremiumBtn");
-    const photoInput = document.getElementById("photoInput");
-    const analyzePhotoBtn = document.getElementById("analyzePhotoBtn");
-    const photoResult = document.getElementById("photoResult");
-
-    function isPremium(){
-      try{ return localStorage.getItem(PREMIUM_KEY) === "true"; }catch{ return false; }
-    }
-    function setPremium(on){
-      localStorage.setItem(PREMIUM_KEY, on ? "true" : "false");
-      renderPremium();
-    }
-    function renderPremium(){
-      if (isPremium()){
-        premiumPill.textContent = "✨ Premium unlocked";
-        premiumLocked.style.display = "none";
-        premiumUnlocked.style.display = "block";
-      }else{
-        premiumPill.textContent = "🔒 Premium locked";
-        premiumLocked.style.display = "block";
-        premiumUnlocked.style.display = "none";
-      }
-    }
-
-    unlockPremiumBtn.addEventListener("click", async () => {
-      setLoading(unlockPremiumBtn, true);
-      await new Promise(r => setTimeout(r, 650));
-      setLoading(unlockPremiumBtn, false);
-
-      // demo unlock (no payment processing here)
-      setPremium(true);
-      alert("Premium unlocked (demo).");
-    });
-
-    analyzePhotoBtn.addEventListener("click", async () => {
-      if (!isPremium()) return;
-      if (!photoInput.files || !photoInput.files[0]){
-        alert("Please pick an image first.");
-        return;
-      }
-
-      setLoading(analyzePhotoBtn, true);
-      await new Promise(r => setTimeout(r, 700));
-      setLoading(analyzePhotoBtn, false);
-
-      // IMPORTANT: This is NOT real medical analysis.
-      // This is a placeholder that encourages safer behavior.
-      photoResult.innerHTML = `
-        <h3>📷 Photo notes</h3>
-        <div class="meta">
-          I can’t diagnose from a photo — but here’s a safe way to think about it:
-          <ul style="margin:10px 0 0; padding-left:18px; line-height:1.55;">
-            <li>If it’s <b>spreading fast</b>, very painful, warm to the touch, or you have fever — consider urgent care.</li>
-            <li>If it’s mild, you can track changes (size, color, itching, pain) over 24–48 hours.</li>
-            <li>You most likely may have something like <b>irritation</b>, <b>inflammation</b>, or a <b>minor injury</b> — but if you’re unsure, it’s worth getting checked.</li>
-          </ul>
-        </div>
-        <div class="tiny-disclaimer">This is not real medical advice.</div>
-      `;
-    });
-
-    /**************************************************
-     * Events
-     **************************************************/
-    const saveBtn = document.getElementById("saveBtn");
-
-    document.getElementById("symptomForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      setLoading(saveBtn, true);
-      await new Promise(r => setTimeout(r, 350));
-      setLoading(saveBtn, false);
-
-      const symptomName = document.getElementById("symptomName").value.trim();
-      const severity = Number(document.getElementById("severity").value);
-      const duration = document.getElementById("duration").value.trim();
-      const notes = document.getElementById("notes").value.trim();
-
-      addEntry(symptomName, severity, duration, notes);
-
-      // clear form
-      document.getElementById("symptomForm").reset();
-      document.getElementById("severity").value = 5;
-      selectedTriggers = new Set();
-      renderTriggerChips();
-
-      alert("Saved.");
-    });
-
-    document.getElementById("refreshAi").addEventListener("click", async (e) => {
-      const btn = e.currentTarget;
-      setLoading(btn, true);
-      await new Promise(r => setTimeout(r, 350));
-      setLoading(btn, false);
-      renderSuggestions();
-    });
-
-    document.getElementById("clearAll").addEventListener("click", () => {
-      const ok = confirm("Clear all saved symptom history? This cannot be undone.");
-      if (!ok) return;
-      localStorage.removeItem(STORAGE_KEY);
-      renderHistory();
-      renderSuggestions();
-      rebuildCharts();
-    });
-
-    document.getElementById("quickFromLibrary").addEventListener("click", () => {
-      switchTo("libraryView");
-      setTimeout(() => librarySearch.focus(), 50);
-    });
-
-    librarySearch.addEventListener("input", () => renderLibrary(librarySearch.value));
-    disorderSearch.addEventListener("input", () => renderDisorders(disorderSearch.value));
-
-    document.getElementById("rebuildCharts").addEventListener("click", rebuildCharts);
-    document.getElementById("pickDisorderFromInsights").addEventListener("click", () => {
-      switchTo("disordersView");
-      setTimeout(() => disorderSearch.focus(), 50);
-    });
-
-    /**************************************************
-     * Boot
-     **************************************************/
-    function boot(){
-      // restore last view
-      try{
-        const obj = JSON.parse(localStorage.getItem(UI_KEY) || "{}");
-        if (obj.viewId && document.getElementById(obj.viewId)) switchTo(obj.viewId);
-      }catch{}
-
-      renderTriggerChips();
-      renderHistory();
-      renderSuggestions();
-
-      renderLibrary("");
-      renderLibraryAddPanel();
-
-      renderDisorders("");
-      updateSelectedDisorderPill();
-
-      renderPremium();
-
-      if (document.getElementById("insightsView").classList.contains("active")){
-        rebuildCharts();
-      }
-    }
-    boot();
-  </script>
+/* ---------------- init ---------------- */
+buildFilters();renderProducts();renderKits();updateCart();renderDashboard();observeReveal();initParticles();initTilt();
+purityObs.observe(document.querySelector('.purity'));
+</script>
 </body>
 </html>
