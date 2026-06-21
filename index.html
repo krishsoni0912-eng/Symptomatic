@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>PEPTIDE — Research-Grade Peptides & Supplies</title>
-<meta name="description" content="Research-grade peptides and lab supplies. Sorted by goal: fat loss, muscle, recovery, anti-aging, skin, sleep, energy and more. Third-party tested for purity." />
+<meta name="description" content="Research-grade peptides and lab supplies, sorted by goal. Third-party tested for purity. 30-day worldwide shipping." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
@@ -26,7 +26,6 @@ a{color:inherit;text-decoration:none}
 button{font-family:inherit;cursor:pointer}
 ::selection{background:var(--c2);color:#fff}
 
-/* bg */
 #bg-canvas{position:fixed;inset:0;z-index:0;opacity:.5}
 .mesh{position:fixed;inset:0;z-index:-1;overflow:hidden;background:
   radial-gradient(1200px 800px at 15% -10%,rgba(124,77,255,.22),transparent 60%),
@@ -43,7 +42,14 @@ h2.title{font-family:var(--display);font-weight:800;font-size:clamp(28px,5vw,52p
 .section-head{max-width:680px;margin-bottom:42px}
 .section-head p{color:var(--muted);font-size:17px}
 
-/* nav */
+/* top shipping banner */
+.shipbar{position:relative;z-index:51;background:linear-gradient(90deg,rgba(0,240,255,.16),rgba(124,77,255,.16),rgba(255,46,136,.16));border-bottom:1px solid var(--stroke);overflow:hidden}
+.shipbar-track{display:flex;gap:42px;white-space:nowrap;animation:shipscroll 28s linear infinite;padding:9px 0;font:700 12px/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--text)}
+.shipbar-track span{display:inline-flex;align-items:center;gap:42px}
+.shipbar-track b{color:var(--c1)}
+.shipbar-track i{width:6px;height:6px;background:var(--c3);transform:rotate(45deg);font-style:normal;box-shadow:0 0 8px var(--c3)}
+@keyframes shipscroll{to{transform:translateX(-50%)}}
+
 header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:linear-gradient(to bottom,rgba(5,6,13,.82),rgba(5,6,13,.35));border-bottom:1px solid var(--stroke)}
 .nav{display:flex;align-items:center;gap:24px;height:70px}
 .logo{font-family:var(--display);font-weight:900;font-size:20px;letter-spacing:3px;display:flex;align-items:center;gap:10px}
@@ -59,7 +65,6 @@ header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:li
 .cart-count{min-width:22px;height:22px;padding:0 6px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(135deg,var(--c1),var(--c2));color:#04060f;font-weight:700;font-size:12px}
 .menu-toggle{display:none;background:none;border:1px solid var(--stroke);border-radius:10px;color:var(--text);padding:9px 12px;font-size:18px}
 
-/* hero */
 .hero{padding:84px 0 60px;text-align:center;position:relative}
 .badge-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
 .pill{font-size:12px;font-weight:600;letter-spacing:.05em;padding:8px 15px;border-radius:999px;border:1px solid var(--stroke);background:var(--panel);color:var(--muted);display:inline-flex;gap:7px;align-items:center}
@@ -90,7 +95,6 @@ header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:li
 .marquee-track span::after{content:"";width:7px;height:7px;background:var(--c1);transform:rotate(45deg);box-shadow:0 0 10px var(--c1)}
 @keyframes scrolln{to{transform:translateX(-50%)}}
 
-/* goal tiles */
 .goals{padding:84px 0 26px}
 .goal-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
 .goal-card{position:relative;border-radius:var(--radius);padding:24px 20px;overflow:hidden;cursor:pointer;border:1px solid var(--stroke);background:var(--panel);transition:.35s;min-height:150px;display:flex;flex-direction:column;justify-content:space-between}
@@ -101,7 +105,6 @@ header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:li
 .goal-card h3{font-family:var(--display);font-weight:700;font-size:17px;margin:14px 0 4px;letter-spacing:.5px;position:relative;z-index:2}
 .goal-card p{color:var(--muted);font-size:12.5px;margin:0;position:relative;z-index:2}
 
-/* shop */
 .shop{padding:74px 0}
 .filters{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:30px}
 .chip{padding:9px 16px;border-radius:999px;border:1px solid var(--stroke);background:var(--panel);color:var(--muted);font-size:13px;font-weight:600;transition:.25s;letter-spacing:.02em}
@@ -113,13 +116,15 @@ header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:li
 @media(min-width:700px){.grid{grid-template-columns:repeat(3,1fr);gap:18px}}
 @media(min-width:1024px){.grid{grid-template-columns:repeat(4,1fr);gap:20px}}
 
-.card{position:relative;border-radius:var(--radius2);border:1px solid var(--stroke);background:var(--panel);overflow:hidden;transition:transform .3s,box-shadow .3s,border-color .3s;display:flex;flex-direction:column;transform-style:preserve-3d}
+.card{position:relative;border-radius:var(--radius2);border:1px solid var(--stroke);background:var(--panel);overflow:hidden;transition:transform .3s,box-shadow .3s,border-color .3s;display:flex;flex-direction:column;transform-style:preserve-3d;cursor:pointer}
 .card:hover{transform:translateY(-6px);border-color:rgba(0,240,255,.5);box-shadow:0 24px 60px rgba(0,0,0,.5)}
 .card-media{height:clamp(140px,30vw,190px);position:relative;overflow:hidden;display:grid;place-items:center;background:radial-gradient(circle at 50% 35%,rgba(124,77,255,.22),rgba(5,6,13,.2))}
 .card-media .glow{position:absolute;width:150px;height:150px;border-radius:50%;filter:blur(46px);opacity:.5;transition:.5s}
 .card:hover .card-media .glow{transform:scale(1.4);opacity:.78}
 .card-media svg.art{position:relative;z-index:2;transition:transform .5s ease;max-height:80%}
 .card:hover .card-media svg.art{transform:scale(1.12) rotate(-3deg)}
+.lab-chip{position:absolute;bottom:10px;left:10px;z-index:3;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:4px 8px;border-radius:7px;background:rgba(57,255,136,.12);color:var(--c4);border:1px solid rgba(57,255,136,.4);backdrop-filter:blur(6px);display:flex;gap:5px;align-items:center}
+.lab-chip svg{width:11px;height:11px}
 .goal-badges{position:absolute;top:10px;left:10px;display:flex;gap:5px;z-index:3;flex-wrap:wrap;max-width:78%}
 .gb{font-size:9px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:4px 7px;border-radius:6px;backdrop-filter:blur(6px);background:rgba(5,6,13,.5);border:1px solid var(--gbc,rgba(255,255,255,.3));color:var(--gbc,#fff)}
 .purity-tag{position:absolute;top:10px;right:10px;z-index:3;font-size:10px;font-weight:700;padding:4px 8px;border-radius:7px;background:rgba(5,6,13,.7);border:1px solid rgba(57,255,136,.4);color:var(--c4);backdrop-filter:blur(6px)}
@@ -139,8 +144,14 @@ header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:li
 
 .card.kit{border-color:rgba(124,77,255,.45)}
 .kit-ribbon{position:absolute;top:13px;right:-34px;background:linear-gradient(135deg,var(--c2),var(--c3));color:#fff;font-size:10px;font-weight:800;letter-spacing:.1em;padding:5px 38px;transform:rotate(45deg);z-index:4}
-.kit-contents{font-size:11.5px;color:var(--muted);background:var(--panel);border:1px solid var(--stroke);border-radius:10px;padding:9px 11px;margin-top:2px;list-style:none}
-.kit-contents li{margin:2px 0}
+.kit-break{font-size:11.5px;color:var(--muted);background:var(--panel);border:1px solid var(--stroke);border-radius:12px;padding:11px 12px;margin-top:2px}
+.kit-break .br{display:flex;justify-content:space-between;gap:8px;padding:3px 0}
+.kit-break .br span:last-child{color:var(--text);font-weight:600}
+.kit-break .sub{border-top:1px dashed var(--stroke);margin-top:6px;padding-top:7px}
+.kit-break .disc{color:var(--c4);font-weight:700}
+.kit-foot{display:flex;align-items:flex-end;justify-content:space-between;margin-top:6px;gap:8px}
+.kit-foot .save{font-size:11px;color:var(--c4);font-weight:700}
+.kit-foot .price small{font-family:var(--sans);font-size:11px;color:var(--muted2);font-weight:500;text-decoration:line-through;display:block;text-align:right}
 
 /* purity */
 .purity{padding:84px 0;border-top:1px solid var(--stroke)}
@@ -158,7 +169,6 @@ header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:li
 .coa-row span:first-child{color:var(--muted)}
 .coa-row span:last-child{font-weight:700;color:var(--c4)}
 
-/* dashboard */
 .dash{padding:84px 0;border-top:1px solid var(--stroke)}
 .dash-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
 .dash-card{border:1px solid var(--stroke);border-radius:var(--radius);background:var(--panel);padding:20px}
@@ -171,7 +181,6 @@ header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:li
 .empty{padding:28px;text-align:center;color:var(--muted2)}
 .status-tag{font-size:11px;font-weight:700;padding:4px 10px;border-radius:7px;background:rgba(0,240,255,.12);color:var(--c1);border:1px solid rgba(0,240,255,.3)}
 
-/* ===== futuristic bottom ===== */
 .fz{position:relative;margin-top:60px;padding:80px 0 0;overflow:hidden}
 .fz::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--c1),var(--c2),var(--c3),transparent);box-shadow:0 0 22px var(--c2);animation:scanline 5s ease-in-out infinite}
 @keyframes scanline{0%,100%{opacity:.5}50%{opacity:1}}
@@ -197,7 +206,6 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
 .disclaimer strong{color:var(--c3)}
 .foot-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;color:var(--muted2);font-size:13px;padding-top:22px;border-top:1px solid var(--stroke)}
 
-/* cart drawer */
 .overlay{position:fixed;inset:0;background:rgba(2,3,8,.6);backdrop-filter:blur(4px);z-index:90;opacity:0;pointer-events:none;transition:.3s}
 .overlay.open{opacity:1;pointer-events:auto}
 .drawer{position:fixed;top:0;right:0;height:100%;width:420px;max-width:92vw;z-index:100;background:linear-gradient(180deg,var(--bg2),var(--bg));border-left:1px solid var(--stroke);transform:translateX(105%);transition:transform .4s cubic-bezier(.6,.05,.1,1);display:flex;flex-direction:column}
@@ -227,10 +235,10 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
 .checkout-btn:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,240,255,.4)}
 .checkout-btn:disabled{opacity:.4;transform:none;box-shadow:none;cursor:not-allowed}
 
-/* modal */
 .modal{position:fixed;inset:0;z-index:120;display:none;place-items:center;padding:20px;background:rgba(2,3,8,.7);backdrop-filter:blur(6px)}
 .modal.open{display:grid}
 .modal-box{width:100%;max-width:480px;background:linear-gradient(180deg,var(--bg2),var(--bg));border:1px solid var(--stroke);border-radius:var(--radius2);padding:30px;position:relative;max-height:90vh;overflow-y:auto}
+.modal-box.wide{max-width:780px}
 .modal-box h3{font-family:var(--display);font-size:22px;margin:0 0 6px;letter-spacing:.5px}
 .modal-box .sub{color:var(--muted);font-size:14px;margin-bottom:22px}
 .field{margin-bottom:14px}
@@ -238,12 +246,31 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
 .field input{width:100%;padding:13px 14px;border-radius:11px;border:1px solid var(--stroke);background:var(--panel);color:var(--text);font-family:inherit;font-size:14px}
 .field input:focus{outline:none;border-color:var(--c1)}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.modal .close{position:absolute;top:18px;right:18px}
+.modal .close{position:absolute;top:18px;right:18px;z-index:5}
 .success{text-align:center;padding:10px 0}
 .success .check{width:70px;height:70px;border-radius:50%;margin:0 auto 18px;display:grid;place-items:center;font-size:34px;background:rgba(57,255,136,.14);border:1px solid rgba(57,255,136,.5);color:var(--c4);animation:pop .5s cubic-bezier(.2,1.4,.4,1)}
 @keyframes pop{0%{transform:scale(0)}100%{transform:scale(1)}}
 
-/* age gate */
+/* product detail */
+.detail-grid{display:grid;grid-template-columns:300px 1fr;gap:28px}
+.detail-img{position:relative;border-radius:var(--radius2);overflow:hidden;background:radial-gradient(circle at 50% 30%,rgba(124,77,255,.28),rgba(5,6,13,.4));display:grid;place-items:center;min-height:360px;border:1px solid var(--stroke)}
+.detail-img svg{width:62%;filter:drop-shadow(0 18px 40px rgba(0,0,0,.6));animation:float 6s ease-in-out infinite}
+.lab-badge{position:absolute;top:14px;left:14px;display:flex;align-items:center;gap:7px;padding:7px 11px;border-radius:9px;background:rgba(57,255,136,.13);border:1px solid rgba(57,255,136,.45);color:var(--c4);font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;backdrop-filter:blur(6px)}
+.lab-badge svg{width:14px;height:14px;animation:none;filter:none}
+.detail-info h2{font-family:var(--display);font-weight:800;font-size:26px;margin:0 0 6px;letter-spacing:.5px}
+.detail-tags{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 16px}
+.detail-tags .gb{position:static}
+.detail-info .body{color:var(--muted);font-size:14.5px;line-height:1.6;margin-bottom:18px}
+.detail-spec{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.detail-spec .sp{border:1px solid var(--stroke);border-radius:12px;padding:12px 14px;background:var(--panel)}
+.detail-spec .sp .k{font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:.06em}
+.detail-spec .sp .v{font-weight:700;font-size:15px;margin-top:3px}
+.detail-buy{display:flex;gap:10px;align-items:stretch;margin-top:6px}
+.detail-buy .size-sel{margin:0;flex:1}
+.detail-buy .price{display:flex;align-items:center;color:var(--c1)}
+.detail-buy .checkout-btn{width:auto;padding:13px 22px}
+@media(max-width:640px){.detail-grid{grid-template-columns:1fr}.detail-img{min-height:280px}.detail-img svg{width:46%}}
+
 .agegate{position:fixed;inset:0;z-index:200;background:rgba(2,3,8,.92);backdrop-filter:blur(10px);display:grid;place-items:center;padding:20px}
 .agegate.hidden{display:none}
 .agegate-box{max-width:460px;text-align:center;border:1px solid var(--stroke);border-radius:var(--radius2);padding:42px 34px;background:linear-gradient(180deg,var(--bg2),var(--bg))}
@@ -263,6 +290,24 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
   .stat-cards{grid-template-columns:1fr 1fr}
   .foot-grid{grid-template-columns:1fr;gap:24px}
 }
+
+.instr{padding:84px 0;border-top:1px solid var(--stroke)}
+.instr-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+.video-wrap{position:relative;padding-top:56.25%;border-radius:var(--radius2);overflow:hidden;border:1px solid var(--stroke);background:#000}
+.video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.recon-steps{list-style:none;padding:0;margin:0;counter-reset:rs}
+.recon-steps li{counter-increment:rs;position:relative;padding:11px 0 11px 42px;border-bottom:1px solid var(--stroke);font-size:14.5px;color:var(--muted)}
+.recon-steps li::before{content:counter(rs);position:absolute;left:0;top:9px;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font:800 12px var(--display);background:rgba(0,240,255,.12);color:var(--c1);border:1px solid rgba(0,240,255,.35)}
+.ratio-box{border:1px solid rgba(124,77,255,.4);background:linear-gradient(160deg,rgba(124,77,255,.12),rgba(0,240,255,.06));border-radius:var(--radius2);padding:24px;margin-bottom:22px}
+.ratio-box h4{font-family:var(--display);margin:0 0 12px;font-size:16px;letter-spacing:.5px}
+.ratio-eq{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-weight:700;margin-bottom:14px}
+.ratio-eq .chip2{padding:8px 13px;border-radius:10px;background:var(--panel2);border:1px solid var(--stroke);font-size:13px}
+.ratio-eq .eq{color:var(--c1);font-family:var(--display)}
+.recon-table{width:100%;border-collapse:collapse;font-size:13.5px}
+.recon-table th,.recon-table td{padding:9px 10px;border-bottom:1px solid var(--stroke);text-align:left}
+.recon-table th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.recon-table td:last-child{color:var(--c4);font-weight:700}
+@media(max-width:860px){.instr-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -280,6 +325,14 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
 <div class="mesh"></div>
 <canvas id="bg-canvas"></canvas>
 
+<!-- 30-day shipping banner -->
+<div class="shipbar">
+  <div class="shipbar-track">
+    <span><b>30-DAY WORLDWIDE SHIPPING</b><i></i>Allow up to 30 days for delivery<i></i>Tracking on every order<i></i>Discreet packaging<i></i><b>30-DAY WORLDWIDE SHIPPING</b><i></i>Allow up to 30 days for delivery<i></i>Tracking on every order<i></i>Discreet packaging<i></i></span>
+    <span><b>30-DAY WORLDWIDE SHIPPING</b><i></i>Allow up to 30 days for delivery<i></i>Tracking on every order<i></i>Discreet packaging<i></i><b>30-DAY WORLDWIDE SHIPPING</b><i></i>Allow up to 30 days for delivery<i></i>Tracking on every order<i></i>Discreet packaging<i></i></span>
+  </div>
+</div>
+
 <header>
   <div class="wrap nav">
     <a href="#top" class="logo"><span class="hex"></span> PEPTIDE <small>RESEARCH&nbsp;CO.</small></a>
@@ -287,6 +340,7 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
       <a href="#goals" onclick="closeMenu()">Shop by Goal</a>
       <a href="#shop" onclick="closeMenu()">All Products</a>
       <a href="#kits" onclick="closeMenu()">Kits</a>
+      <a href="#instructions" onclick="closeMenu()">Instructions</a>
       <a href="#purity" onclick="closeMenu()">Purity &amp; COA</a>
       <a href="#dashboard" onclick="closeMenu()">Sales</a>
     </nav>
@@ -311,7 +365,7 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
     <div class="badge-row reveal">
       <span class="pill"><span class="dot"></span> Third-Party Tested</span>
       <span class="pill"><span class="dot"></span> 99%+ Purity</span>
-      <span class="pill"><span class="dot"></span> Fast Discreet Shipping</span>
+      <span class="pill"><span class="dot"></span> 30-Day Worldwide Shipping</span>
     </div>
     <h1 class="reveal">ENGINEER<br><span class="grad">YOUR LIMITS</span></h1>
     <p class="lead reveal">Research-grade peptides and the supplies to run them — organized by what you're chasing. Filter by goal, pick your dose, and check the lab report on every vial.</p>
@@ -344,7 +398,7 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
     <div class="section-head reveal">
       <div class="eyebrow">The Catalog</div>
       <h2 class="title">All products</h2>
-      <p>Individual vials and supplies. Filter by goal or category, then choose your dose on each card.</p>
+      <p>Individual vials and supplies. Tap any product for the full lab-verified detail view and a picture, or choose your dose right on the card.</p>
     </div>
     <div class="filters" id="filters"></div>
     <div class="count-note" id="countNote"></div>
@@ -357,9 +411,52 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
     <div class="section-head reveal">
       <div class="eyebrow">Done-For-You</div>
       <h2 class="title">Ready-to-run kits</h2>
-      <p>Compounds bundled with bacteriostatic water, syringes and alcohol prep pads. One box, ready to reconstitute.</p>
+      <p>Compounds bundled with bacteriostatic water, 100 syringes and 100 alcohol prep pads. Each kit shows the full price breakdown and the bundle discount applied.</p>
     </div>
     <div class="grid" id="kitGrid"></div>
+  </div>
+</section>
+
+<section class="instr" id="instructions">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">How-To</div>
+      <h2 class="title">Reconstitution &amp; instructions</h2>
+      <p>How to mix your peptide with bacteriostatic water using a standard U-100 insulin syringe. Research use only.</p>
+    </div>
+    <div class="instr-grid">
+      <div class="reveal">
+        <div class="ratio-box">
+          <h4>The 1:10 rule</h4>
+          <div class="ratio-eq"><span class="chip2">10&nbsp;mg vial</span><span class="eq">+</span><span class="chip2">100 units BAC water</span><span class="eq">=</span><span class="chip2">1&nbsp;mL @ 10&nbsp;mg/mL</span></div>
+          <p style="color:var(--muted);font-size:14px;margin:0">Adding <strong>100 units (1&nbsp;mL)</strong> of bacteriostatic water to a <strong>10&nbsp;mg</strong> vial makes a 1:10 solution. On a U-100 insulin syringe each <strong>“unit” = 0.1&nbsp;mg (100&nbsp;mcg)</strong> of peptide, so the marks on the syringe map straight to your measured amount.</p>
+        </div>
+        <table class="recon-table">
+          <thead><tr><th>Vial</th><th>BAC water</th><th>Concentration</th><th>Per 1 unit</th></tr></thead>
+          <tbody>
+            <tr><td>5&nbsp;mg</td><td>100 units (1&nbsp;mL)</td><td>5&nbsp;mg/mL</td><td>0.05&nbsp;mg</td></tr>
+            <tr><td>10&nbsp;mg</td><td>100 units (1&nbsp;mL)</td><td>10&nbsp;mg/mL</td><td>0.10&nbsp;mg</td></tr>
+            <tr><td>15&nbsp;mg</td><td>150 units (1.5&nbsp;mL)</td><td>10&nbsp;mg/mL</td><td>0.10&nbsp;mg</td></tr>
+            <tr><td>20&nbsp;mg</td><td>200 units (2&nbsp;mL)</td><td>10&nbsp;mg/mL</td><td>0.10&nbsp;mg</td></tr>
+          </tbody>
+        </table>
+        <ol class="recon-steps" style="margin-top:20px">
+          <li>Wipe the stopper of the peptide vial and the bacteriostatic water with an alcohol prep pad.</li>
+          <li>Draw 100 units (1&nbsp;mL) of bacteriostatic water into a syringe.</li>
+          <li>Insert the needle at an angle and let the water run slowly down the inside of the vial — don't blast the powder.</li>
+          <li>Gently swirl (never shake) until fully dissolved and clear.</li>
+          <li>Store reconstituted vials refrigerated; draw each dose with a fresh sterile syringe.</li>
+        </ol>
+      </div>
+      <div class="reveal">
+        <div class="video-wrap"><iframe src="https://www.youtube.com/embed/efPtqH_NZVU" title="How to reconstitute peptides" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+        <p style="color:var(--muted2);font-size:12.5px;margin-top:14px">More walkthroughs:
+          <a class="coa-link" href="https://www.youtube.com/watch?v=KQJxfVAsXfA" target="_blank" rel="noopener">Tutorial 1</a> &middot;
+          <a class="coa-link" href="https://www.youtube.com/watch?v=b08QwxZW0Ig" target="_blank" rel="noopener">Tutorial 2</a>
+        </p>
+        <div class="disclaimer" style="margin-top:18px">These instructions describe laboratory reconstitution of research materials only. Nothing here is medical advice or a recommendation for human use.</div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -376,7 +473,7 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
           <div class="stat"><div class="num" data-count="99.3" data-suffix="%">0</div><div class="lab">Avg. measured purity</div></div>
           <div class="stat"><div class="num" data-count="100" data-suffix="%">0</div><div class="lab">Batches lab-tested</div></div>
           <div class="stat"><div class="num" data-count="3" data-suffix="rd">0</div><div class="lab">Party HPLC verification</div></div>
-          <div class="stat"><div class="num" data-count="48" data-suffix="h">0</div><div class="lab">Avg. dispatch time</div></div>
+          <div class="stat"><div class="num" data-count="30" data-suffix="d">0</div><div class="lab">Worldwide delivery window</div></div>
         </div>
         <ul class="cert-list">
           <li><span class="ck">&#10003;</span> <div><strong>HPLC &amp; Mass Spec tested</strong> — identity and purity confirmed for every lot.</div></li>
@@ -420,7 +517,6 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
   </div>
 </section>
 
-<!-- futuristic bottom -->
 <div class="fz">
   <div class="fz-grid"></div>
   <span class="fz-corner tl"></span><span class="fz-corner tr"></span>
@@ -430,7 +526,7 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
     <div class="fz-trio">
       <div class="fz-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 6v6c0 5 8 8 8 8s8-3 8-8V6z"/></svg> Lab-Verified Purity</div>
       <div class="fz-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V8a5 5 0 0 1 10 0v3"/></svg> Discreet &amp; Secure</div>
-      <div class="fz-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l2 6 4-14 2 8h6"/></svg> Cold-Chain Dispatch</div>
+      <div class="fz-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="6" width="14" height="11" rx="1"/><path d="M15 9h4l3 3v5h-7z"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg> 30-Day Worldwide Shipping</div>
     </div>
   </div>
 </div>
@@ -443,11 +539,11 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
     <div class="foot-grid">
       <div class="foot-col">
         <div class="logo" style="margin-bottom:14px"><span class="hex"></span> PEPTIDE</div>
-        <p>Research-grade peptides and lab supplies, third-party tested for purity. Shipped fast and discreet. Brand name to be finalized.</p>
+        <p>Research-grade peptides and lab supplies, third-party tested for purity. 30-day worldwide shipping, discreet packaging. Brand name to be finalized.</p>
       </div>
       <div class="foot-col"><h4>Shop</h4><a href="#goals">Shop by Goal</a><a href="#shop">All Products</a><a href="#kits">Kits</a><a href="#shop">Supplies</a></div>
-      <div class="foot-col"><h4>Info</h4><a href="#purity">Purity &amp; COA</a><a href="#dashboard">Sales Dashboard</a><a href="#">Shipping &amp; Returns</a><a href="#">Contact</a></div>
-      <div class="foot-col"><h4>Status</h4><a href="#">All systems operational</a><a href="#">Avg. dispatch 48h</a><a href="#">Free shipping over $150</a></div>
+      <div class="foot-col"><h4>Info</h4><a href="#instructions">Reconstitution Guide</a><a href="#purity">Purity &amp; COA</a><a href="#dashboard">Sales Dashboard</a><a href="#">Contact</a></div>
+      <div class="foot-col"><h4>Status</h4><a href="#">All systems operational</a><a href="#">30-day delivery window</a><a href="#">Free shipping over $150</a></div>
     </div>
     <div class="foot-bottom">
       <span>&copy; 2026 Peptide Research Co. (placeholder brand). All rights reserved.</span>
@@ -462,17 +558,25 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
   <div class="cart-items" id="cartItems"></div>
   <div class="drawer-foot">
     <div class="tot"><span>Subtotal</span><span class="price" id="cartTotal">$0</span></div>
-    <div class="ship-note">Shipping &amp; tax calculated at checkout &middot; Free shipping over $150</div>
+    <div class="ship-note">30-day worldwide shipping &middot; Free shipping over $150 &middot; Tax at checkout</div>
     <button class="checkout-btn" id="checkoutBtn" onclick="openCheckout()">Checkout</button>
   </div>
 </aside>
+
+<!-- product detail modal -->
+<div class="modal" id="detailModal">
+  <div class="modal-box wide">
+    <button class="x close" onclick="closeModal('detailModal')">&times;</button>
+    <div class="detail-grid" id="detailBody"></div>
+  </div>
+</div>
 
 <div class="modal" id="checkoutModal">
   <div class="modal-box">
     <button class="x close" onclick="closeModal('checkoutModal')">&times;</button>
     <div id="checkoutForm">
       <h3>Checkout</h3>
-      <div class="sub">Ships to your door. Demo checkout — no real card is charged.</div>
+      <div class="sub">Ships worldwide, allow up to 30 days. Demo checkout — no real card is charged.</div>
       <div class="field"><label>Full name</label><input id="coName" placeholder="Alex Rivera"></div>
       <div class="field"><label>Email</label><input id="coEmail" type="email" placeholder="you@email.com"></div>
       <div class="field"><label>Shipping address</label><input id="coAddr" placeholder="123 Lab St"></div>
@@ -505,12 +609,52 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
 </div>
 
 <script>
-/* ---------- art ---------- */
+/* ---------- card art ---------- */
 const VIAL=`<svg class="art" width="92" height="138" viewBox="0 0 100 148" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="vg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7c4dff"/><stop offset="1" stop-color="#00f0ff"/></linearGradient></defs><rect x="32" y="4" width="36" height="11" rx="3" fill="#cfd8ff"/><rect x="36" y="1" width="28" height="7" rx="3" fill="#aab4e8"/><path d="M26 16h48v100a14 14 0 0 1-14 14H40a14 14 0 0 1-14-14Z" fill="rgba(255,255,255,.07)" stroke="rgba(255,255,255,.28)" stroke-width="1.5"/><path d="M30 68h40v48a12 12 0 0 1-12 12H42a12 12 0 0 1-12-12Z" fill="url(#vg)"/><rect x="37" y="76" width="26" height="32" rx="5" fill="rgba(255,255,255,.16)"/><rect x="41" y="82" width="18" height="3.5" rx="1.75" fill="rgba(255,255,255,.55)"/><rect x="41" y="90" width="13" height="3" rx="1.5" fill="rgba(255,255,255,.35)"/></svg>`;
 const WATER=`<svg class="art" width="92" height="138" viewBox="0 0 100 148" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="wg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#00f0ff" stop-opacity=".85"/><stop offset="1" stop-color="#39ff88" stop-opacity=".55"/></linearGradient></defs><rect x="32" y="4" width="36" height="11" rx="3" fill="#cfd8ff"/><rect x="36" y="1" width="28" height="7" rx="3" fill="#aab4e8"/><path d="M26 16h48v100a14 14 0 0 1-14 14H40a14 14 0 0 1-14-14Z" fill="rgba(255,255,255,.07)" stroke="rgba(255,255,255,.28)" stroke-width="1.5"/><path d="M30 56h40v60a12 12 0 0 1-12 12H42a12 12 0 0 1-12-12Z" fill="url(#wg)"/><circle cx="44" cy="84" r="3" fill="rgba(255,255,255,.5)"/><circle cx="56" cy="98" r="2.4" fill="rgba(255,255,255,.4)"/><circle cx="50" cy="74" r="2" fill="rgba(255,255,255,.45)"/></svg>`;
 const SYRINGE=`<svg class="art" width="150" height="110" viewBox="0 0 170 120" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#00f0ff"/><stop offset="1" stop-color="#7c4dff"/></linearGradient></defs><g transform="rotate(-18 85 60)"><rect x="20" y="50" width="96" height="22" rx="6" fill="rgba(255,255,255,.10)" stroke="rgba(255,255,255,.3)"/><rect x="24" y="54" width="52" height="14" rx="3" fill="url(#sg)" opacity=".7"/><line x1="34" y1="50" x2="34" y2="72" stroke="rgba(255,255,255,.3)"/><line x1="50" y1="50" x2="50" y2="72" stroke="rgba(255,255,255,.3)"/><line x1="66" y1="50" x2="66" y2="72" stroke="rgba(255,255,255,.3)"/><rect x="10" y="46" width="12" height="30" rx="3" fill="#cfd8ff"/><rect x="116" y="56" width="20" height="10" rx="3" fill="#aab4e8"/><rect x="136" y="59.5" width="30" height="3" rx="1.5" fill="#cfd8ff"/></g></svg>`;
 const PADS=`<svg class="art" width="118" height="118" viewBox="0 0 130 130" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#39ff88" stop-opacity=".5"/><stop offset="1" stop-color="#00f0ff" stop-opacity=".5"/></linearGradient></defs><g transform="rotate(-8 65 65)"><rect x="22" y="30" width="86" height="70" rx="6" fill="url(#pg)" stroke="rgba(255,255,255,.35)" stroke-width="1.5"/><rect x="22" y="30" width="86" height="14" fill="rgba(255,255,255,.18)"/><path d="M22 100l86 0" stroke="rgba(255,255,255,.3)" stroke-dasharray="3 4"/><text x="65" y="72" font-family="Orbitron,sans-serif" font-size="18" font-weight="800" fill="rgba(255,255,255,.85)" text-anchor="middle">70%</text><text x="65" y="88" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.6)" text-anchor="middle" letter-spacing="2">ALCOHOL PAD</text></g></svg>`;
 const BOX=`<svg class="art" width="140" height="130" viewBox="0 0 150 140" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bx1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7c4dff"/><stop offset="1" stop-color="#ff2e88"/></linearGradient><linearGradient id="bx2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#00f0ff"/><stop offset="1" stop-color="#7c4dff"/></linearGradient></defs><path d="M75 18 L128 42 L75 66 L22 42 Z" fill="url(#bx2)" opacity=".9"/><path d="M22 42 L75 66 L75 122 L22 98 Z" fill="url(#bx1)" opacity=".75"/><path d="M128 42 L75 66 L75 122 L128 98 Z" fill="url(#bx1)" opacity=".5"/><path d="M75 18 L128 42 L75 66 L22 42 Z" fill="none" stroke="rgba(255,255,255,.4)"/><path d="M22 42 L75 66 L75 122 L22 98 Z" fill="none" stroke="rgba(255,255,255,.25)"/><path d="M128 42 L75 66 L75 122 L128 98 Z" fill="none" stroke="rgba(255,255,255,.25)"/></svg>`;
+
+/* ---------- realistic labeled vial for product detail ("the actual peptide") ---------- */
+function bigVial(name,purity,kind){
+  const safe=(name||'').toUpperCase();
+  const fs=safe.length>17?12:safe.length>12?15:18;
+  const liquid=kind==='water'?'#7fe9ff':'#f4f6ff';
+  const powder=kind==='water'?'#bdecff':'#f1f3fb';
+  return `<svg viewBox="0 0 220 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="glass" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#dfe6ff" stop-opacity=".10"/><stop offset="0.5" stop-color="#ffffff" stop-opacity=".22"/><stop offset="1" stop-color="#9fb0e0" stop-opacity=".10"/></linearGradient>
+      <linearGradient id="cap" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a93ad"/><stop offset=".5" stop-color="#eef1f8"/><stop offset="1" stop-color="#79839c"/></linearGradient>
+      <linearGradient id="holo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00f0ff"/><stop offset=".5" stop-color="#7c4dff"/><stop offset="1" stop-color="#ff2e88"/></linearGradient>
+    </defs>
+    <ellipse cx="110" cy="322" rx="64" ry="11" fill="#000" opacity=".4"/>
+    <!-- crimp cap -->
+    <rect x="78" y="22" width="64" height="20" rx="4" fill="url(#cap)"/>
+    <rect x="86" y="14" width="48" height="12" rx="5" fill="#c7cee0"/>
+    <!-- stopper -->
+    <rect x="82" y="40" width="56" height="16" fill="#2a2f3d"/>
+    <!-- glass body -->
+    <path d="M70 54 h80 a8 8 0 0 1 8 8 v232 a18 18 0 0 1-18 18 H80 a18 18 0 0 1-18-18 V62 a8 8 0 0 1 8-8 Z" fill="url(#glass)" stroke="rgba(255,255,255,.4)" stroke-width="1.5"/>
+    <!-- glass highlight -->
+    <rect x="78" y="64" width="9" height="232" rx="4" fill="#ffffff" opacity=".25"/>
+    <!-- powder cake -->
+    <path d="M70 250 h88 v40 a18 18 0 0 1-18 18 H88 a18 18 0 0 1-18-18 Z" fill="${powder}" opacity=".92"/>
+    <ellipse cx="114" cy="250" rx="44" ry="8" fill="#ffffff" opacity=".9"/>
+    <!-- label -->
+    <rect x="66" y="120" width="96" height="118" rx="8" fill="#0b0f1d" stroke="rgba(0,240,255,.5)" stroke-width="1.2"/>
+    <rect x="66" y="120" width="96" height="22" rx="8" fill="url(#holo)" opacity=".85"/>
+    <text x="114" y="135" font-family="Orbitron,sans-serif" font-size="9" font-weight="800" fill="#05060d" text-anchor="middle" letter-spacing="1">PEPTIDE · RUO</text>
+    <text x="114" y="166" font-family="Orbitron,sans-serif" font-size="${fs}" font-weight="800" fill="#ffffff" text-anchor="middle">${safe}</text>
+    <text x="114" y="184" font-family="Space Grotesk,sans-serif" font-size="9" fill="#39ff88" text-anchor="middle" letter-spacing="1">PURITY ${purity}</text>
+    <line x1="80" y1="196" x2="148" y2="196" stroke="rgba(255,255,255,.18)"/>
+    <text x="114" y="210" font-family="Space Grotesk,sans-serif" font-size="7.5" fill="rgba(255,255,255,.6)" text-anchor="middle" letter-spacing=".5">RESEARCH USE ONLY · NOT FOR HUMAN USE</text>
+    <!-- barcode -->
+    <g fill="#ffffff" opacity=".85">
+      <rect x="82" y="220" width="2" height="12"/><rect x="86" y="220" width="1" height="12"/><rect x="89" y="220" width="3" height="12"/><rect x="94" y="220" width="1" height="12"/><rect x="97" y="220" width="2" height="12"/><rect x="101" y="220" width="3" height="12"/><rect x="106" y="220" width="1" height="12"/><rect x="109" y="220" width="2" height="12"/><rect x="113" y="220" width="3" height="12"/><rect x="118" y="220" width="1" height="12"/><rect x="121" y="220" width="2" height="12"/><rect x="125" y="220" width="3" height="12"/><rect x="130" y="220" width="1" height="12"/><rect x="133" y="220" width="2" height="12"/><rect x="137" y="220" width="3" height="12"/><rect x="142" y="220" width="1" height="12"/>
+    </g>
+  </svg>`;
+}
 
 /* ---------- goal taxonomy ---------- */
 const GOALS={
@@ -529,8 +673,6 @@ const GOALS={
   immune:{label:'Immune',color:'#8affc1'},
   blend:{label:'Blends',color:'#c0a3ff'}
 };
-
-/* goal tiles shown on hero (with line-icons, no emoji) */
 const ICON={
   fatloss:'<path d="M12 3c3 4 5 6 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-6 1-9z"/>',
   muscle:'<path d="M4 14l5-2 3-7 3 7 5 2-5 2-3 5-3-5z"/>',
@@ -542,114 +684,117 @@ const ICON={
   energy:'<path d="M13 2L4 14h6l-1 8 9-12h-6z"/>'
 };
 const TILES=[
-  {g:'fatloss',d:'Shredded & lean'},
-  {g:'muscle',d:'Jacked & growth'},
-  {g:'recovery',d:'Heal & repair'},
-  {g:'longevity',d:'Anti-aging'},
-  {g:'aesthetic',d:'Pretty face & tan'},
-  {g:'sleep',d:'Deep sleep'},
-  {g:'libido',d:'Drive & hormones'},
-  {g:'energy',d:'Mitochondria & drive'}
+  {g:'fatloss',d:'Shredded & lean'},{g:'muscle',d:'Jacked & growth'},
+  {g:'recovery',d:'Heal & repair'},{g:'longevity',d:'Anti-aging'},
+  {g:'aesthetic',d:'Pretty face & tan'},{g:'sleep',d:'Deep sleep'},
+  {g:'libido',d:'Drive & hormones'},{g:'energy',d:'Mitochondria & drive'}
 ];
 
-/* ---------- products (from supplier list, sorted by research) ---------- */
+/* ---------- products (photo prices x1.75, capped 20mg) ---------- */
 const PRODUCTS=[
-  // ---- Fat loss / metabolic / appetite ----
-  {id:'tirz',name:'Tirzepatide',goals:['fatloss','appetite'],purity:'99.2%',art:VIAL,desc:'Dual GIP/GLP-1 receptor agonist studied for body weight and glucose regulation.',variants:[{size:'5mg',price:39},{size:'10mg',price:55},{size:'15mg',price:69},{size:'20mg',price:79},{size:'30mg',price:99},{size:'60mg',price:159}]},
-  {id:'sema',name:'Semaglutide',goals:['fatloss','appetite'],purity:'99.1%',art:VIAL,desc:'GLP-1 receptor agonist researched for appetite signalling and metabolic studies.',variants:[{size:'5mg',price:35},{size:'10mg',price:55},{size:'20mg',price:79},{size:'30mg',price:95}]},
-  {id:'reta',name:'Retatrutide',goals:['fatloss','appetite'],purity:'99.0%',art:VIAL,desc:'Triple GIP/GLP-1/glucagon agonist studied for advanced metabolic research.',variants:[{size:'5mg',price:65},{size:'10mg',price:95},{size:'20mg',price:119},{size:'40mg',price:209},{size:'60mg',price:299}]},
-  {id:'cagri',name:'Cagrilintide',goals:['fatloss','appetite'],purity:'99.0%',art:VIAL,desc:'Long-acting amylin analogue researched for satiety pathways.',variants:[{size:'5mg',price:99},{size:'10mg',price:189}]},
-  {id:'survo',name:'Survodutide',goals:['fatloss','appetite'],purity:'98.9%',art:VIAL,desc:'GLP-1/glucagon dual agonist for metabolic and hepatic research.',variants:[{size:'10mg',price:279}]},
-  {id:'aod',name:'AOD-9604',goals:['fatloss'],purity:'99.0%',art:VIAL,desc:'Modified HGH fragment studied for lipolysis without growth effects.',variants:[{size:'2mg',price:49},{size:'5mg',price:89}]},
-  {id:'adipo',name:'Adipotide (FTPP)',goals:['fatloss'],purity:'98.5%',art:VIAL,desc:'Pro-apoptotic peptide researched for adipose-tissue vasculature studies.',variants:[{size:'5mg',price:125}]},
-  {id:'motsc',name:'MOTS-C',goals:['fatloss','energy','longevity'],purity:'99.1%',art:VIAL,desc:'Mitochondrial-derived peptide studied for metabolism and exercise capacity.',variants:[{size:'10mg',price:59},{size:'20mg',price:109},{size:'40mg',price:199}]},
-  {id:'amq',name:'5-Amino-1MQ',goals:['fatloss','energy'],purity:'98.8%',art:VIAL,desc:'NNMT inhibitor researched for adipocyte metabolism and energy expenditure.',variants:[{size:'5mg',price:75},{size:'50mg',price:115}]},
-  {id:'slu',name:'SLU-PP-332',goals:['fatloss','energy'],purity:'98.6%',art:VIAL,desc:'ERR agonist / exercise-mimetic studied for fat oxidation and endurance.',variants:[{size:'5mg',price:85}]},
-  {id:'lcar',name:'L-Carnitine 600',goals:['fatloss','energy'],purity:'USP',art:VIAL,desc:'Carnitine solution researched for fatty-acid transport and energy metabolism.',variants:[{size:'10ml',price:35}]},
-  {id:'lipoc',name:'Lipo-C (Fat Blaster)',goals:['fatloss','blend'],purity:'Verified',art:VIAL,desc:'Lipotropic blend (MIC + carnitine class) for fat-metabolism research.',variants:[{size:'10ml',price:95}]},
-  {id:'lemon',name:'Lemon Bottle',goals:['fatloss'],purity:'Verified',art:VIAL,desc:'Lipolytic solution studied in adipose-reduction research.',variants:[{size:'10ml',price:69}]},
-  {id:'aicar',name:'AICAR',goals:['energy','fatloss'],purity:'98.7%',art:VIAL,desc:'AMPK activator researched for endurance and metabolic adaptation.',variants:[{size:'50mg',price:59}]},
+  // Fat loss / metabolic / appetite
+  {id:'tirz',name:'Tirzepatide',goals:['fatloss','appetite'],purity:'99.2%',art:VIAL,desc:'Dual GIP/GLP-1 receptor agonist studied for body weight and glucose regulation.',variants:[{size:'5mg',price:75},{size:'10mg',price:110},{size:'15mg',price:140},{size:'20mg',price:165}]},
+  {id:'sema',name:'Semaglutide',goals:['fatloss','appetite'],purity:'99.1%',art:VIAL,desc:'GLP-1 receptor agonist researched for appetite signalling and metabolic studies.',variants:[{size:'5mg',price:70},{size:'10mg',price:110},{size:'15mg',price:130},{size:'20mg',price:156}]},
+  {id:'reta',name:'Retatrutide',goals:['fatloss','appetite'],purity:'99.0%',art:VIAL,desc:'Triple GIP/GLP-1/glucagon agonist studied for advanced metabolic research.',variants:[{size:'5mg',price:128},{size:'10mg',price:191},{size:'15mg',price:214},{size:'20mg',price:238}]},
+  {id:'cagri',name:'Cagrilintide',goals:['fatloss','appetite'],purity:'99.0%',art:VIAL,desc:'Long-acting amylin analogue researched for satiety pathways.',variants:[{size:'5mg',price:201},{size:'10mg',price:394}]},
+  {id:'survo',name:'Survodutide',goals:['fatloss','appetite'],purity:'98.9%',art:VIAL,desc:'GLP-1/glucagon dual agonist for metabolic and hepatic research.',variants:[{size:'10mg',price:571}]},
+  {id:'aod',name:'AOD-9604',goals:['fatloss'],purity:'99.0%',art:VIAL,desc:'Modified HGH fragment studied for lipolysis without growth effects.',variants:[{size:'2mg',price:105},{size:'5mg',price:191}]},
+  {id:'adipo',name:'Adipotide (FTPP)',goals:['fatloss'],purity:'98.5%',art:VIAL,desc:'Pro-apoptotic peptide researched for adipose-tissue vasculature studies.',variants:[{size:'5mg',price:254}]},
+  {id:'motsc',name:'MOTS-C',goals:['fatloss','energy','longevity'],purity:'99.1%',art:VIAL,desc:'Mitochondrial-derived peptide studied for metabolism and exercise capacity.',variants:[{size:'10mg',price:123},{size:'20mg',price:228}]},
+  {id:'amq',name:'5-Amino-1MQ',goals:['fatloss','energy'],purity:'98.8%',art:VIAL,desc:'NNMT inhibitor researched for adipocyte metabolism and energy expenditure.',variants:[{size:'5mg',price:154}]},
+  {id:'slu',name:'SLU-PP-332',goals:['fatloss','energy'],purity:'98.6%',art:VIAL,desc:'ERR agonist / exercise-mimetic studied for fat oxidation and endurance.',variants:[{size:'5mg',price:175}]},
+  {id:'lcar',name:'L-Carnitine 600',goals:['fatloss','energy'],purity:'USP',art:WATER,desc:'Carnitine solution researched for fatty-acid transport and energy metabolism.',variants:[{size:'10ml',price:70}]},
+  {id:'lipoc',name:'Lipo-C (Fat Blaster)',goals:['fatloss','blend'],purity:'Verified',art:WATER,desc:'Lipotropic blend (MIC + carnitine class) for fat-metabolism research.',variants:[{size:'10ml',price:200}]},
+  {id:'lemon',name:'Lemon Bottle',goals:['fatloss'],purity:'Verified',art:WATER,desc:'Lipolytic solution studied in adipose-reduction research.',variants:[{size:'10ml',price:140}]},
+  {id:'aicar',name:'AICAR',goals:['energy','fatloss'],purity:'98.7%',art:VIAL,desc:'AMPK activator researched for endurance and metabolic adaptation.',variants:[{size:'50mg',price:117}]},
 
-  // ---- Muscle / growth / GH secretagogues ----
-  {id:'cjcnd',name:'CJC-1295 (no DAC)',goals:['muscle','recovery'],purity:'99.0%',art:VIAL,desc:'GHRH analogue (Mod GRF 1-29) studied for pulsatile GH release.',variants:[{size:'2mg',price:35},{size:'5mg',price:79},{size:'10mg',price:155}]},
-  {id:'cjcd',name:'CJC-1295 (with DAC)',goals:['muscle','recovery'],purity:'99.0%',art:VIAL,desc:'Long-acting GHRH analogue for sustained GH research.',variants:[{size:'2mg',price:69},{size:'5mg',price:159}]},
-  {id:'ipa',name:'Ipamorelin',goals:['muscle','recovery','sleep'],purity:'99.2%',art:VIAL,desc:'Selective GH secretagogue researched for clean GH pulses.',variants:[{size:'5mg',price:35},{size:'10mg',price:69}]},
-  {id:'sermo',name:'Sermorelin',goals:['muscle','sleep'],purity:'99.0%',art:VIAL,desc:'GHRH analogue studied for endogenous GH and sleep architecture.',variants:[{size:'5mg',price:65},{size:'10mg',price:135}]},
-  {id:'tesa',name:'Tesamorelin',goals:['muscle','fatloss'],purity:'99.0%',art:VIAL,desc:'GHRH analogue researched for visceral adipose reduction.',variants:[{size:'2mg',price:49},{size:'5mg',price:95},{size:'10mg',price:169},{size:'20mg',price:299}]},
-  {id:'hex',name:'Hexarelin',goals:['muscle'],purity:'98.9%',art:VIAL,desc:'Potent GHRP studied for GH release and cardiac research.',variants:[{size:'2mg',price:33},{size:'5mg',price:75}]},
-  {id:'ghrp2',name:'GHRP-2',goals:['muscle','appetite'],purity:'99.0%',art:VIAL,desc:'Growth-hormone-releasing peptide researched for GH and appetite.',variants:[{size:'5mg',price:23},{size:'10mg',price:45}]},
-  {id:'ghrp6',name:'GHRP-6',goals:['muscle','appetite'],purity:'99.0%',art:VIAL,desc:'GHRP studied for GH release and strong appetite stimulation.',variants:[{size:'5mg',price:23},{size:'10mg',price:45}]},
-  {id:'hgh',name:'HGH 191AA (Somatropin)',goals:['muscle','recovery'],purity:'99.0%',art:VIAL,desc:'Recombinant 191-amino-acid growth hormone for research.',variants:[{size:'10iu',price:45},{size:'15iu',price:79},{size:'24iu',price:105},{size:'36iu',price:159}]},
-  {id:'igf',name:'IGF-1 LR3',goals:['muscle','recovery'],purity:'98.8%',art:VIAL,desc:'Long-acting insulin-like growth factor for cell-proliferation studies.',variants:[{size:'0.1mg',price:39},{size:'1mg',price:79}]},
-  {id:'mgf',name:'MGF',goals:['muscle','recovery'],purity:'98.7%',art:VIAL,desc:'Mechano growth factor researched for muscle repair signalling.',variants:[{size:'2mg',price:55}]},
-  {id:'pegmgf',name:'PEG-MGF',goals:['muscle','recovery'],purity:'98.7%',art:VIAL,desc:'Pegylated MGF studied for extended muscle-repair half-life.',variants:[{size:'2mg',price:85}]},
+  // Muscle / growth / GH secretagogues
+  {id:'cjcnd',name:'CJC-1295 (no DAC)',goals:['muscle','recovery'],purity:'99.0%',art:VIAL,desc:'GHRH analogue (Mod GRF 1-29) studied for pulsatile GH release.',variants:[{size:'2mg',price:72},{size:'5mg',price:166},{size:'10mg',price:324}]},
+  {id:'cjcd',name:'CJC-1295 (with DAC)',goals:['muscle','recovery'],purity:'99.0%',art:VIAL,desc:'Long-acting GHRH analogue for sustained GH research.',variants:[{size:'2mg',price:140},{size:'5mg',price:333}]},
+  {id:'ipa',name:'Ipamorelin',goals:['muscle','recovery','sleep'],purity:'99.2%',art:VIAL,desc:'Selective GH secretagogue researched for clean GH pulses.',variants:[{size:'5mg',price:72},{size:'10mg',price:142}]},
+  {id:'sermo',name:'Sermorelin',goals:['muscle','sleep'],purity:'99.0%',art:VIAL,desc:'GHRH analogue studied for endogenous GH and sleep architecture.',variants:[{size:'5mg',price:133},{size:'10mg',price:275}]},
+  {id:'tesa',name:'Tesamorelin',goals:['muscle','fatloss'],purity:'99.0%',art:VIAL,desc:'GHRH analogue researched for visceral adipose reduction.',variants:[{size:'2mg',price:105},{size:'5mg',price:198},{size:'10mg',price:350},{size:'20mg',price:625}]},
+  {id:'hex',name:'Hexarelin',goals:['muscle'],purity:'98.9%',art:VIAL,desc:'Potent GHRP studied for GH release and cardiac research.',variants:[{size:'2mg',price:68},{size:'5mg',price:158}]},
+  {id:'ghrp2',name:'GHRP-2',goals:['muscle','appetite'],purity:'99.0%',art:VIAL,desc:'Growth-hormone-releasing peptide researched for GH and appetite.',variants:[{size:'5mg',price:47},{size:'10mg',price:95}]},
+  {id:'ghrp6',name:'GHRP-6',goals:['muscle','appetite'],purity:'99.0%',art:VIAL,desc:'GHRP studied for GH release and strong appetite stimulation.',variants:[{size:'5mg',price:47},{size:'10mg',price:95}]},
+  {id:'hgh',name:'HGH 191AA (Somatropin)',goals:['muscle','recovery'],purity:'99.0%',art:VIAL,desc:'Recombinant 191-amino-acid growth hormone for research.',variants:[{size:'10iu',price:86},{size:'12iu',price:114},{size:'15iu',price:149},{size:'24iu',price:201},{size:'36iu',price:306}]},
+  {id:'igf',name:'IGF-1 LR3',goals:['muscle','recovery'],purity:'98.8%',art:VIAL,desc:'Long-acting insulin-like growth factor for cell-proliferation studies.',variants:[{size:'0.1mg',price:81},{size:'1mg',price:158}]},
+  {id:'mgf',name:'MGF',goals:['muscle','recovery'],purity:'98.7%',art:VIAL,desc:'Mechano growth factor researched for muscle repair signalling.',variants:[{size:'2mg',price:114}]},
+  {id:'pegmgf',name:'PEG-MGF',goals:['muscle','recovery'],purity:'98.7%',art:VIAL,desc:'Pegylated MGF studied for extended muscle-repair half-life.',variants:[{size:'2mg',price:175}]},
 
-  // ---- Recovery / healing / immune ----
-  {id:'bpc',name:'BPC-157',goals:['recovery'],purity:'99.3%',art:VIAL,desc:'Body-protection compound studied for tissue, tendon and gut repair.',variants:[{size:'5mg',price:41},{size:'10mg',price:59}]},
-  {id:'tb500',name:'TB-500',goals:['recovery'],purity:'99.2%',art:VIAL,desc:'Thymosin beta-4 fragment researched for healing and flexibility.',variants:[{size:'2mg',price:42},{size:'5mg',price:79},{size:'10mg',price:155}]},
-  {id:'kpv',name:'KPV',goals:['recovery','immune'],purity:'99.0%',art:VIAL,desc:'Alpha-MSH fragment studied for anti-inflammatory and gut research.',variants:[{size:'10mg',price:59}]},
-  {id:'vip',name:'VIP',goals:['recovery','immune'],purity:'98.6%',art:VIAL,desc:'Vasoactive intestinal peptide researched for immune and respiratory studies.',variants:[{size:'10mg',price:159}]},
-  {id:'ll37',name:'LL-37',goals:['immune','recovery'],purity:'98.8%',art:VIAL,desc:'Cathelicidin antimicrobial peptide for immune-defense research.',variants:[{size:'5mg',price:85}]},
-  {id:'dermo',name:'Dermorphin',goals:['recovery'],purity:'98.5%',art:VIAL,desc:'Opioid heptapeptide studied in analgesia research.',variants:[{size:'5mg',price:31}]},
-  {id:'thymalin',name:'Thymalin',goals:['immune','longevity'],purity:'98.7%',art:VIAL,desc:'Thymus peptide researched for immune regulation and aging.',variants:[{size:'10mg',price:59}]},
+  // Recovery / healing / immune
+  {id:'bpc',name:'BPC-157',goals:['recovery'],purity:'99.3%',art:VIAL,desc:'Body-protection compound studied for tissue, tendon and gut repair.',variants:[{size:'5mg',price:84},{size:'10mg',price:119}]},
+  {id:'tb500',name:'TB-500',goals:['recovery'],purity:'99.2%',art:VIAL,desc:'Thymosin beta-4 fragment researched for healing and flexibility.',variants:[{size:'2mg',price:86},{size:'5mg',price:158},{size:'10mg',price:308}]},
+  {id:'kpv',name:'KPV',goals:['recovery','immune'],purity:'99.0%',art:VIAL,desc:'Alpha-MSH fragment studied for anti-inflammatory and gut research.',variants:[{size:'10mg',price:123}]},
+  {id:'vip',name:'VIP',goals:['recovery','immune'],purity:'98.6%',art:VIAL,desc:'Vasoactive intestinal peptide researched for immune and respiratory studies.',variants:[{size:'10mg',price:333}]},
+  {id:'ll37',name:'LL-37',goals:['immune','recovery'],purity:'98.8%',art:VIAL,desc:'Cathelicidin antimicrobial peptide for immune-defense research.',variants:[{size:'5mg',price:172}]},
+  {id:'dermo',name:'Dermorphin',goals:['recovery'],purity:'98.5%',art:VIAL,desc:'Opioid heptapeptide studied in analgesia research.',variants:[{size:'5mg',price:63}]},
+  {id:'thymalin',name:'Thymalin',goals:['immune','longevity'],purity:'98.7%',art:VIAL,desc:'Thymus peptide researched for immune regulation and aging.',variants:[{size:'10mg',price:119}]},
 
-  // ---- Blends ----
-  {id:'bbtb',name:'BPC-157 + TB-500 Blend',goals:['recovery','blend'],purity:'Verified',art:VIAL,desc:'Synergy recovery blend studied for accelerated tissue repair.',variants:[{size:'10mg (5+5)',price:89},{size:'20mg (10+10)',price:175}]},
-  {id:'glow',name:'Glow Blend (TB+BPC+GHK)',goals:['recovery','skin','blend'],purity:'Verified',art:VIAL,desc:'TB-500 + BPC-157 + GHK-Cu blend for skin and recovery research.',variants:[{size:'70mg',price:179}]},
-  {id:'klow',name:'Klow Blend (TB+BPC+GHK+KPV)',goals:['recovery','skin','immune','blend'],purity:'Verified',art:VIAL,desc:'Glow blend plus KPV for skin, gut and recovery research.',variants:[{size:'80mg',price:205}]},
-  {id:'cjcipa',name:'CJC-1295 + Ipamorelin',goals:['muscle','recovery','blend'],purity:'Verified',art:VIAL,desc:'Classic GH-secretagogue stack for synergistic GH research.',variants:[{size:'10mg (5+5)',price:105}]},
-  {id:'cagsem',name:'Cagrilintide + Semaglutide',goals:['fatloss','appetite','blend'],purity:'Verified',art:VIAL,desc:'Amylin + GLP-1 blend (CagriSema class) for metabolic research.',variants:[{size:'10mg (5+5)',price:149}]},
-  {id:'shb',name:'Super Human Blend',goals:['recovery','blend'],purity:'Verified',art:VIAL,desc:'Multi-peptide recovery and performance research blend.',variants:[{size:'10ml',price:75}]},
+  // Blends
+  {id:'bbtb',name:'BPC-157 + TB-500 Blend',goals:['recovery','blend'],purity:'Verified',art:VIAL,desc:'Synergy recovery blend studied for accelerated tissue repair.',variants:[{size:'10mg (5+5)',price:184},{size:'20mg (10+10)',price:359}]},
+  {id:'glow',name:'Glow Blend (TB+BPC+GHK)',goals:['recovery','skin','blend'],purity:'Verified',art:VIAL,desc:'TB-500 + BPC-157 + GHK-Cu blend for skin and recovery research.',variants:[{size:'70mg',price:368}]},
+  {id:'klow',name:'Klow Blend (TB+BPC+GHK+KPV)',goals:['recovery','skin','immune','blend'],purity:'Verified',art:VIAL,desc:'Glow blend plus KPV for skin, gut and recovery research.',variants:[{size:'80mg',price:420}]},
+  {id:'cjcipa',name:'CJC-1295 + Ipamorelin',goals:['muscle','recovery','blend'],purity:'Verified',art:VIAL,desc:'Classic GH-secretagogue stack for synergistic GH research.',variants:[{size:'10mg (5+5)',price:214}]},
+  {id:'cagsem',name:'Cagrilintide + Semaglutide',goals:['fatloss','appetite','blend'],purity:'Verified',art:VIAL,desc:'Amylin + GLP-1 blend (CagriSema class) for metabolic research.',variants:[{size:'10mg (5+5)',price:308}]},
+  {id:'shb',name:'Super Human Blend',goals:['recovery','blend'],purity:'Verified',art:WATER,desc:'Multi-peptide recovery and performance research blend.',variants:[{size:'10ml',price:149}]},
 
-  // ---- Skin / aesthetics / hair / pretty face ----
-  {id:'ghkcu',name:'GHK-Cu',goals:['skin','aesthetic','hair'],purity:'99.4%',art:VIAL,desc:'Copper peptide researched for collagen, skin and hair follicle studies.',variants:[{size:'50mg',price:29},{size:'100mg',price:55}]},
-  {id:'mt2',name:'Melanotan 2',goals:['aesthetic','libido'],purity:'99.1%',art:VIAL,desc:'Melanocortin agonist studied for pigmentation and libido pathways.',variants:[{size:'10mg',price:47}]},
-  {id:'mt1',name:'Melanotan 1 (Afamelanotide)',goals:['aesthetic'],purity:'99.0%',art:VIAL,desc:'Selective melanocortin agonist researched for tanning pathways.',variants:[{size:'10mg',price:55}]},
-  {id:'gluta',name:'Glutathione',goals:['skin','aesthetic'],purity:'99.0%',art:VIAL,desc:'Master antioxidant studied for skin brightness and detox pathways.',variants:[{size:'600mg',price:35}]},
-  {id:'snap8',name:'SNAP-8',goals:['skin','aesthetic'],purity:'98.5%',art:VIAL,desc:'Peptide researched for expression-line and anti-wrinkle studies.',variants:[{size:'10mg',price:39}]},
-  {id:'pt141',name:'PT-141 (Bremelanotide)',goals:['libido'],purity:'99.0%',art:VIAL,desc:'Melanocortin peptide researched for sexual-arousal pathways.',variants:[{size:'10mg',price:53}]},
+  // Skin / aesthetics / hair / pretty face
+  {id:'ghkcu',name:'GHK-Cu',goals:['skin','aesthetic','hair'],purity:'99.4%',art:VIAL,desc:'Copper peptide researched for collagen, skin and hair follicle studies.',variants:[{size:'50mg',price:58}]},
+  {id:'mt2',name:'Melanotan 2',goals:['aesthetic','libido'],purity:'99.1%',art:VIAL,desc:'Melanocortin agonist studied for pigmentation and libido pathways.',variants:[{size:'10mg',price:95}]},
+  {id:'mt1',name:'Melanotan 1',goals:['aesthetic'],purity:'99.0%',art:VIAL,desc:'Selective melanocortin agonist researched for tanning pathways.',variants:[{size:'10mg',price:112}]},
+  {id:'gluta',name:'Glutathione',goals:['skin','aesthetic'],purity:'99.0%',art:VIAL,desc:'Master antioxidant studied for skin brightness and detox pathways.',variants:[{size:'600mg',price:70}]},
+  {id:'snap8',name:'SNAP-8',goals:['skin','aesthetic'],purity:'98.5%',art:VIAL,desc:'Peptide researched for expression-line and anti-wrinkle studies.',variants:[{size:'10mg',price:79}]},
+  {id:'pt141',name:'PT-141 (Bremelanotide)',goals:['libido'],purity:'99.0%',art:VIAL,desc:'Melanocortin peptide researched for sexual-arousal pathways.',variants:[{size:'10mg',price:109}]},
 
-  // ---- Longevity / anti-aging ----
-  {id:'nad',name:'NAD+',goals:['longevity','energy'],purity:'99.0%',art:VIAL,desc:'Coenzyme studied for cellular energy, repair and aging research.',variants:[{size:'100mg',price:47},{size:'500mg',price:85}]},
-  {id:'epi',name:'Epitalon',goals:['longevity','sleep'],purity:'99.0%',art:VIAL,desc:'Telomerase-related tetrapeptide researched for longevity and sleep.',variants:[{size:'10mg',price:33},{size:'50mg',price:155}]},
-  {id:'pineal',name:'Pinealon',goals:['longevity','cognitive'],purity:'98.7%',art:VIAL,desc:'Short peptide studied for neuroprotection and cognitive aging.',variants:[{size:'10mg',price:55}]},
-  {id:'foxo4',name:'FOXO4-DRI',goals:['longevity'],purity:'98.0%',art:VIAL,desc:'Senolytic peptide researched for senescent-cell clearance.',variants:[{size:'10mg',price:329}]},
-  {id:'ss31',name:'SS-31 (Elamipretide)',goals:['longevity','energy'],purity:'98.8%',art:VIAL,desc:'Mitochondria-targeting peptide for bioenergetic research.',variants:[{size:'10mg',price:89},{size:'50mg',price:349}]},
+  // Longevity / anti-aging / energy
+  {id:'nad',name:'NAD+',goals:['longevity','energy'],purity:'99.0%',art:VIAL,desc:'Coenzyme studied for cellular energy, repair and aging research.',variants:[{size:'100mg',price:95}]},
+  {id:'epi',name:'Epitalon',goals:['longevity','sleep'],purity:'99.0%',art:VIAL,desc:'Telomerase-related tetrapeptide researched for longevity and sleep.',variants:[{size:'10mg',price:67}]},
+  {id:'pineal',name:'Pinealon',goals:['longevity','cognitive'],purity:'98.7%',art:VIAL,desc:'Short peptide studied for neuroprotection and cognitive aging.',variants:[{size:'10mg',price:114}]},
+  {id:'foxo4',name:'FOXO4-DRI',goals:['longevity'],purity:'98.0%',art:VIAL,desc:'Senolytic peptide researched for senescent-cell clearance.',variants:[{size:'10mg',price:665}]},
+  {id:'ss31',name:'SS-31 (Elamipretide)',goals:['longevity','energy'],purity:'98.8%',art:VIAL,desc:'Mitochondria-targeting peptide for bioenergetic research.',variants:[{size:'10mg',price:184}]},
+  {id:'b12',name:'Vitamin B12',goals:['energy'],purity:'USP',art:VIAL,desc:'Methylcobalamin researched for energy metabolism studies.',variants:[{size:'10mg',price:44}]},
 
-  // ---- Sleep / mood / cognitive ----
-  {id:'dsip',name:'DSIP',goals:['sleep'],purity:'98.9%',art:VIAL,desc:'Delta-sleep-inducing peptide researched for sleep regulation.',variants:[{size:'5mg',price:39},{size:'10mg',price:79}]},
-  {id:'mela',name:'Melatonin',goals:['sleep'],purity:'99.0%',art:VIAL,desc:'Circadian hormone studied for sleep-cycle research.',variants:[{size:'10mg',price:55}]},
-  {id:'selank',name:'Selank',goals:['cognitive','sleep'],purity:'99.0%',art:VIAL,desc:'Anxiolytic peptide researched for stress, mood and focus.',variants:[{size:'5mg',price:42},{size:'10mg',price:69}]},
-  {id:'semax',name:'Semax',goals:['cognitive'],purity:'99.0%',art:VIAL,desc:'Nootropic peptide studied for focus, memory and neuroprotection.',variants:[{size:'5mg',price:42},{size:'10mg',price:69}]},
-  {id:'snap8b',name:'SNAP-8 / SS-31 — see above',hidden:true,goals:[],variants:[]},
+  // Sleep / mood / cognitive
+  {id:'dsip',name:'DSIP',goals:['sleep'],purity:'98.9%',art:VIAL,desc:'Delta-sleep-inducing peptide researched for sleep regulation.',variants:[{size:'5mg',price:81},{size:'10mg',price:161},{size:'15mg',price:200}]},
+  {id:'mela',name:'Melatonin',goals:['sleep'],purity:'99.0%',art:VIAL,desc:'Circadian hormone studied for sleep-cycle research.',variants:[{size:'10mg',price:112}]},
+  {id:'selank',name:'Selank',goals:['cognitive','sleep'],purity:'99.0%',art:VIAL,desc:'Anxiolytic peptide researched for stress, mood and focus.',variants:[{size:'5mg',price:86},{size:'10mg',price:140}]},
+  {id:'semax',name:'Semax',goals:['cognitive'],purity:'99.0%',art:VIAL,desc:'Nootropic peptide studied for focus, memory and neuroprotection.',variants:[{size:'5mg',price:86},{size:'10mg',price:140}]},
 
-  // ---- Libido / hormonal ----
-  {id:'oxy',name:'Oxytocin',goals:['libido','cognitive'],purity:'99.0%',art:VIAL,desc:'Neuropeptide studied for bonding, mood and social behaviour.',variants:[{size:'2mg',price:35},{size:'5mg',price:59}]},
-  {id:'kiss',name:'Kisspeptin-10',goals:['libido'],purity:'98.8%',art:VIAL,desc:'Upstream regulator researched for reproductive hormone signalling.',variants:[{size:'5mg',price:57},{size:'10mg',price:115}]},
-  {id:'gonad',name:'Gonadorelin',goals:['libido'],purity:'99.0%',art:VIAL,desc:'GnRH analogue studied for endogenous hormone axis research.',variants:[{size:'2mg',price:35}]},
-  {id:'hcg',name:'HCG',goals:['libido'],purity:'99.0%',art:VIAL,desc:'Human chorionic gonadotropin for reproductive endocrine research.',variants:[{size:'5000iu',price:75},{size:'10000iu',price:145}]},
-  {id:'hmg',name:'HMG',goals:['libido'],purity:'99.0%',art:VIAL,desc:'Menotropin studied for gonadotropin and fertility research.',variants:[{size:'75iu',price:59}]},
-  {id:'b12',name:'Vitamin B12',goals:['energy'],purity:'USP',art:VIAL,desc:'Methylcobalamin researched for energy metabolism studies.',variants:[{size:'10mg',price:22}]},
+  // Libido / hormonal
+  {id:'oxy',name:'Oxytocin',goals:['libido','cognitive'],purity:'99.0%',art:VIAL,desc:'Neuropeptide studied for bonding, mood and social behaviour.',variants:[{size:'2mg',price:70},{size:'5mg',price:119}]},
+  {id:'kiss',name:'Kisspeptin-10',goals:['libido'],purity:'98.8%',art:VIAL,desc:'Upstream regulator researched for reproductive hormone signalling.',variants:[{size:'5mg',price:116},{size:'10mg',price:228}]},
+  {id:'gonad',name:'Gonadorelin',goals:['libido'],purity:'99.0%',art:VIAL,desc:'GnRH analogue studied for endogenous hormone axis research.',variants:[{size:'2mg',price:72}]},
+  {id:'hcg',name:'HCG',goals:['libido'],purity:'99.0%',art:VIAL,desc:'Human chorionic gonadotropin for reproductive endocrine research.',variants:[{size:'5000iu',price:149},{size:'10000iu',price:289}]},
+  {id:'hmg',name:'HMG',goals:['libido'],purity:'99.0%',art:VIAL,desc:'Menotropin studied for gonadotropin and fertility research.',variants:[{size:'75iu',price:119}]},
 
-  // ---- Supplies ----
-  {id:'bac10',name:'Bacteriostatic Water',goals:['supplies'],purity:'0.9% benzyl',art:WATER,desc:'Bacteriostatic water for reconstitution. Sealed multi-use vial.',variants:[{size:'3ml',price:8},{size:'10ml',price:14}]},
-  {id:'acetic',name:'Acetic Acid 0.6%',goals:['supplies'],purity:'0.6%',art:WATER,desc:'Dilute acetic acid solvent for peptides requiring acidic reconstitution.',variants:[{size:'3ml',price:8},{size:'10ml',price:13}]},
+  // Supplies (no markup)
+  {id:'bac10',name:'Bacteriostatic Water',goals:['supplies'],purity:'0.9% benzyl',art:WATER,kind:'water',desc:'Bacteriostatic water for reconstitution. Sealed multi-use vial.',variants:[{size:'3ml',price:8},{size:'10ml',price:12}]},
+  {id:'acetic',name:'Acetic Acid 0.6%',goals:['supplies'],purity:'0.6%',art:WATER,kind:'water',desc:'Dilute acetic acid solvent for peptides requiring acidic reconstitution.',variants:[{size:'3ml',price:8},{size:'10ml',price:12}]},
   {id:'syr29',name:'Insulin Syringes 29G · 0.5cc',goals:['supplies'],purity:'Sterile',art:SYRINGE,desc:'Single-use sterile syringes, individually wrapped.',variants:[{size:'Box of 100',price:24}]},
   {id:'syr31',name:'Insulin Syringes 31G · 1cc',goals:['supplies'],purity:'Sterile',art:SYRINGE,desc:'Fine-gauge sterile syringes, individually blister-packed.',variants:[{size:'Box of 100',price:26}]},
-  {id:'pads',name:'Alcohol Prep Pads',goals:['supplies'],purity:'70% IPA',art:PADS,desc:'Sterile 70% isopropyl alcohol prep pads, individually sealed.',variants:[{size:'Box of 200',price:12}]}
-].filter(p=>!p.hidden);
-
-const KITS=[
-  {id:'k1',name:'Starter Reconstitution Kit',goals:['supplies'],art:BOX,save:14,desc:'Everything to start running any compound.',price:99,contents:['1× Research peptide (your pick at checkout)','1× Bacteriostatic Water 10ml','Box of 100 syringes','Box of 200 alcohol prep pads']},
-  {id:'k2',name:'SHREDDED Stack Kit',goals:['fatloss','blend'],art:BOX,save:22,desc:'Fat-loss research stack with all supplies.',price:149,contents:['Semaglutide 10mg','L-Carnitine 600 10ml','Bacteriostatic Water 10ml','100 syringes + 200 prep pads']},
-  {id:'k3',name:'JACKED Mass Kit',goals:['muscle','blend'],art:BOX,save:24,desc:'GH-secretagogue research stack with supplies.',price:169,contents:['CJC-1295 + Ipamorelin 10mg','BPC-157 5mg','Bacteriostatic Water 10ml','100 syringes + 200 prep pads']},
-  {id:'k4',name:'PRETTY FACE Aesthetics Kit',goals:['aesthetic','skin','blend'],art:BOX,save:20,desc:'Skin, glow & tan research stack with supplies.',price:139,contents:['GHK-Cu 100mg','Glutathione 600mg','Melanotan 2 10mg','100 syringes + 200 prep pads']},
-  {id:'k5',name:'RECOVERY Repair Kit',goals:['recovery','blend'],art:BOX,save:21,desc:'Healing research stack with all supplies.',price:129,contents:['BPC-157 + TB-500 Blend 10mg','Bacteriostatic Water 10ml','100 syringes + 200 prep pads']},
-  {id:'k6',name:'SLEEP & RESET Kit',goals:['sleep','longevity','blend'],art:BOX,save:18,desc:'Sleep and recovery research stack with supplies.',price:119,contents:['DSIP 5mg','Epitalon 10mg','Bacteriostatic Water 10ml','100 syringes + 200 prep pads']}
+  {id:'pads',name:'Alcohol Prep Pads',goals:['supplies'],purity:'70% IPA',art:PADS,desc:'Sterile 70% isopropyl alcohol prep pads, individually sealed.',variants:[{size:'Box of 100',price:10}]}
 ];
 
+/* ---------- kits (component breakdown + discount) ---------- */
+const SUP={water:{n:'Bacteriostatic Water 10ml',p:12},syr:{n:'100 Insulin Syringes',p:24},pads:{n:'100 Alcohol Prep Pads',p:10}};
+function kitFrom(name,goals,desc,disc,items){
+  const comps=items.concat([SUP.water,SUP.syr,SUP.pads].map(s=>({n:s.n,p:s.p})));
+  const sub=comps.reduce((s,c)=>s+c.p,0);
+  const price=Math.round(sub*(1-disc/100));
+  return {id:'',name,goals,art:BOX,desc,disc,comps,sub,price,save:sub-price};
+}
+const KITS=[
+  kitFrom('Reconstitution Supplies Kit',['supplies'],'Just the supplies — bacteriostatic water plus 100 syringes and 100 prep pads.',10,[]),
+  kitFrom('SHREDDED Stack Kit',['fatloss','blend'],'Fat-loss research stack with all supplies.',15,[{n:'Semaglutide 10mg',p:110},{n:'L-Carnitine 600 10ml',p:70}]),
+  kitFrom('JACKED Mass Kit',['muscle','blend'],'GH-secretagogue research stack with supplies.',15,[{n:'CJC-1295 + Ipamorelin 10mg',p:214},{n:'BPC-157 5mg',p:84}]),
+  kitFrom('PRETTY FACE Aesthetics Kit',['aesthetic','skin','blend'],'Skin, glow & tan research stack with supplies.',15,[{n:'GHK-Cu 50mg',p:58},{n:'Glutathione 600mg',p:70},{n:'Melanotan 2 10mg',p:95}]),
+  kitFrom('RECOVERY Repair Kit',['recovery','blend'],'Healing research stack with all supplies.',15,[{n:'BPC-157 + TB-500 Blend 10mg',p:184}]),
+  kitFrom('SLEEP & RESET Kit',['sleep','longevity','blend'],'Sleep and recovery research stack with supplies.',12,[{n:'DSIP 5mg',p:81},{n:'Epitalon 10mg',p:67}])
+].map((k,i)=>({...k,id:'k'+(i+1)}));
+
 /* ---------- state ---------- */
-let cart=JSON.parse(localStorage.getItem('pep_cart2')||'{}');
+let cart=JSON.parse(localStorage.getItem('pep_cart3')||'{}');
 let sales=JSON.parse(localStorage.getItem('pep_sales')||'[]');
 const $=s=>document.querySelector(s);
 const money=n=>'$'+n.toLocaleString('en-US',{minimumFractionDigits:n%1?2:0,maximumFractionDigits:2});
@@ -662,65 +807,59 @@ const FILTERS=[{k:'all',label:'All'}].concat(
   [{k:'supplies',label:'Supplies'}]
 );
 let activeFilter='all';
-function buildFilters(){
-  $('#filters').innerHTML=FILTERS.map(f=>`<button class="chip ${f.k===activeFilter?'active':''}" onclick="setFilter('${f.k}')">${f.label}</button>`).join('');
-}
+function buildFilters(){$('#filters').innerHTML=FILTERS.map(f=>`<button class="chip ${f.k===activeFilter?'active':''}" onclick="setFilter('${f.k}')">${f.label}</button>`).join('');}
 function setFilter(k){activeFilter=k;buildFilters();renderProducts();}
 function filterGoal(k){activeFilter=k;buildFilters();renderProducts();$('#shop').scrollIntoView({behavior:'smooth'});}
-function matches(p){
-  if(activeFilter==='all')return p.goals[0]!=='supplies'?true:true;
-  return (p.goals||[]).includes(activeFilter);
-}
-
+function matches(p){if(activeFilter==='all')return true;return (p.goals||[]).includes(activeFilter);}
 function gbadges(p){return (p.goals||[]).filter(g=>GOALS[g]).slice(0,3).map(g=>`<span class="gb" style="--gbc:${GOALS[g].color}">${GOALS[g].label.split(' ')[0]}</span>`).join('');}
 
-function variantSelect(p){
+function packLabel(p,raw){return (p.goals&&p.goals[0]==='supplies')?raw:`10 vials × ${raw}`;}
+function variantSelect(p,cls){
   if(p.variants.length<=1)return '';
-  return `<select class="size-sel" onchange="updatePrice('${p.id}',this)">`+p.variants.map((v,i)=>`<option value="${i}">${v.size} — ${money(v.price)}</option>`).join('')+`</select>`;
+  return `<select class="${cls||'size-sel'}" onclick="event.stopPropagation()" onchange="updatePrice('${p.id}',this)">`+p.variants.map((v,i)=>`<option value="${i}">${packLabel(p,v.size)} — ${money(v.price)}</option>`).join('')+`</select>`;
 }
-function updatePrice(id,sel){const p=find(id);const v=p.variants[sel.value];$('#price-'+id).textContent=money(v.price);}
+function updatePrice(id,sel){const p=find(id);const v=p.variants[sel.value];const el=$('#price-'+id);if(el)el.textContent=money(v.price);}
 
 function productCard(p){
   const single=p.variants.length<=1;
-  return `<div class="card reveal" data-id="${p.id}">
+  const isSup=p.goals[0]==='supplies';
+  return `<div class="card reveal" data-id="${p.id}" onclick="openDetail('${p.id}')">
     <div class="card-media"><div class="glow" style="background:${GOALS[(p.goals||[])[0]]?.color||'#7c4dff'}"></div>
       <div class="goal-badges">${gbadges(p)}</div>
-      ${p.goals[0]!=='supplies'?`<span class="purity-tag">${p.purity}</span>`:`<span class="purity-tag">${p.purity}</span>`}
+      <span class="purity-tag">${p.purity}</span>
+      ${!isSup?`<span class="lab-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 6v6c0 5 8 8 8 8s8-3 8-8V6z"/><path d="M9 12l2 2 4-4"/></svg> Lab Approved</span>`:''}
       ${p.art}
     </div>
     <div class="card-body">
       <h3>${p.name}</h3>
       <div class="desc">${p.desc}</div>
       ${variantSelect(p)}
-      <div class="card-meta">
-        <span>${single?p.variants[0].size:''}</span>
-        ${p.goals[0]!=='supplies'?`<span class="coa-link" onclick="openCoa('${p.name}','RC-2026-${Math.floor(Math.random()*9000+1000)}','${p.purity}')">View COA</span>`:''}
-      </div>
-      <div class="card-foot">
-        <div class="price" id="price-${p.id}">${money(p.variants[0].price)}</div>
-        <button class="add-btn" onclick="addToCart('${p.id}',this)">Add</button>
-      </div>
+      <div class="card-meta"><span>${single?packLabel(p,p.variants[0].size):''}</span>${!isSup?`<span class="coa-link" onclick="event.stopPropagation();openCoa('${p.name}','RC-2026-${Math.floor(Math.random()*9000+1000)}','${p.purity}')">View COA</span>`:''}</div>
+      <div class="card-foot"><div class="price" id="price-${p.id}">${money(p.variants[0].price)}</div><button class="add-btn" onclick="event.stopPropagation();addToCart('${p.id}',this)">Add</button></div>
     </div>
   </div>`;
 }
 function kitCard(p){
   return `<div class="card kit reveal" data-id="${p.id}">
-    <div class="kit-ribbon">SAVE ${p.save}%</div>
-    <div class="card-media"><div class="glow" style="background:var(--c3)"></div>
-      <div class="goal-badges">${gbadges(p)}</div>${p.art}</div>
+    <div class="kit-ribbon">SAVE ${p.disc}%</div>
+    <div class="card-media"><div class="glow" style="background:var(--c3)"></div><div class="goal-badges">${gbadges(p)}</div>${p.art}</div>
     <div class="card-body">
       <h3>${p.name}</h3>
       <div class="desc">${p.desc}</div>
-      <ul class="kit-contents">${p.contents.map(c=>`<li>• ${c}</li>`).join('')}</ul>
-      <div class="card-foot"><div class="price" id="price-${p.id}">${money(p.price)}</div><button class="add-btn" onclick="addToCart('${p.id}',this)">Add Kit</button></div>
+      <div class="kit-break">
+        ${p.comps.map(c=>`<div class="br"><span>${c.n}</span><span>${money(c.p)}</span></div>`).join('')}
+        <div class="br sub"><span>Bundle value</span><span>${money(p.sub)}</span></div>
+        <div class="br"><span>Kit discount (${p.disc}%)</span><span class="disc">−${money(p.save)}</span></div>
+      </div>
+      <div class="kit-foot">
+        <span class="save">You save ${money(p.save)}</span>
+        <div class="price" id="price-${p.id}"><small>${money(p.sub)}</small>${money(p.price)}</div>
+      </div>
+      <button class="add-btn" style="margin-top:8px;width:100%" onclick="addToCart('${p.id}',this)">Add Kit</button>
     </div>
   </div>`;
 }
-function renderGoals(){
-  $('#goalGrid').innerHTML=TILES.map(t=>`<div class="goal-card reveal" style="--accent:${GOALS[t.g].color}" onclick="filterGoal('${t.g}')">
-    <svg class="gicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICON[t.g]}</svg>
-    <div><h3>${GOALS[t.g].label}</h3><p>${t.d}</p></div></div>`).join('');
-}
+function renderGoals(){$('#goalGrid').innerHTML=TILES.map(t=>`<div class="goal-card reveal" style="--accent:${GOALS[t.g].color}" onclick="filterGoal('${t.g}')"><svg class="gicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICON[t.g]}</svg><div><h3>${GOALS[t.g].label}</h3><p>${t.d}</p></div></div>`).join('');}
 function renderProducts(){
   const list=PRODUCTS.filter(matches);
   $('#productGrid').innerHTML=list.map(productCard).join('')||'<p style="color:var(--muted)">Nothing in this category yet.</p>';
@@ -729,23 +868,51 @@ function renderProducts(){
 }
 function renderKits(){$('#kitGrid').innerHTML=KITS.map(kitCard).join('');observeReveal();}
 
+/* ---------- product detail ---------- */
+function openDetail(id){
+  const p=find(id);if(!p)return;
+  const isSup=p.goals[0]==='supplies';
+  const tags=(p.goals||[]).filter(g=>GOALS[g]).map(g=>`<span class="gb" style="--gbc:${GOALS[g].color}">${GOALS[g].label}</span>`).join('')||'<span class="gb">Supply</span>';
+  $('#detailBody').innerHTML=`
+    <div class="detail-img">
+      <div class="lab-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 6v6c0 5 8 8 8 8s8-3 8-8V6z"/><path d="M9 12l2 2 4-4"/></svg> Lab Approved · HPLC Verified</div>
+      ${bigVial(p.name,p.purity,p.kind)}
+    </div>
+    <div class="detail-info">
+      <h2>${p.name}</h2>
+      <div class="detail-tags">${tags}</div>
+      <div class="body">${p.desc} ${isSup?'':'Sold as a sealed box of <strong>10 vials</strong> — the strength shown is per vial. '}Reconstitute with bacteriostatic water before use — see the <a href="#instructions" class="coa-link" onclick="closeModal('detailModal')">reconstitution guide</a>. Each lot ships with a matching Certificate of Analysis.</div>
+      <div class="detail-spec">
+        <div class="sp"><div class="k">Measured Purity</div><div class="v">${p.purity}</div></div>
+        <div class="sp"><div class="k">Pack</div><div class="v">${isSup?p.variants[0].size:'Box of 10 vials'}</div></div>
+        <div class="sp"><div class="k">Form</div><div class="v">${p.kind==='water'?'Solution':'Lyophilized powder'}</div></div>
+        <div class="sp"><div class="k">Verification</div><div class="v">3rd-party HPLC / MS</div></div>
+      </div>
+      <div class="detail-buy">
+        ${p.variants.length>1?variantSelect(p,'size-sel'):`<div class="price" style="font-size:24px">${money(p.variants[0].price)}</div>`}
+        ${p.variants.length>1?`<div class="price" id="price-${p.id}" style="font-size:22px;align-items:center;display:flex">${money(p.variants[0].price)}</div>`:''}
+        <button class="checkout-btn" onclick="addToCart('${p.id}',this);openCart()">Add to Cart</button>
+      </div>
+      ${!isSup?`<p style="font-size:12px;color:var(--muted2);margin-top:14px"><a class="coa-link" onclick="openCoa('${p.name}','RC-2026-${Math.floor(Math.random()*9000+1000)}','${p.purity}')">View Certificate of Analysis →</a> · Research use only, not for human consumption.</p>`:''}
+    </div>`;
+  $('#detailModal').classList.add('open');
+}
+
 /* ---------- cart ---------- */
 function addToCart(id,btn){
-  const card=btn.closest('.card');
-  const sel=card?card.querySelector('.size-sel'):null;
-  const p=find(id);
-  let size,price;
-  if(p.variants){const idx=sel?+sel.value:0;size=p.variants[idx].size;price=p.variants[idx].price;}
+  let size,price;const p=find(id);
+  const scope=btn?btn.closest('.modal-box')||btn.closest('.card'):null;
+  const sel=scope?scope.querySelector('.size-sel'):null;
+  if(p.variants){const idx=sel?+sel.value:0;size=packLabel(p,p.variants[idx].size);price=p.variants[idx].price;}
   else{size=p.size||'kit';price=p.price;}
   const key=id+'|'+size;
   if(!cart[key])cart[key]={id,name:p.name,size,price,qty:0};
-  cart[key].qty++;
-  saveCart();updateCart();
-  btn.classList.add('added');const t=btn.textContent;btn.textContent='Added';setTimeout(()=>{btn.classList.remove('added');btn.textContent=t;},1000);
+  cart[key].qty++;saveCart();updateCart();
+  if(btn){btn.classList.add('added');const t=btn.textContent;btn.textContent='Added';setTimeout(()=>{btn.classList.remove('added');btn.textContent=t;},1000);}
 }
 function changeQty(key,d){if(cart[key]){cart[key].qty+=d;if(cart[key].qty<=0)delete cart[key];saveCart();updateCart();}}
 function removeItem(key){delete cart[key];saveCart();updateCart();}
-function saveCart(){localStorage.setItem('pep_cart2',JSON.stringify(cart));}
+function saveCart(){localStorage.setItem('pep_cart3',JSON.stringify(cart));}
 function cartTotal(){return Object.values(cart).reduce((s,i)=>s+i.price*i.qty,0);}
 function cartCount(){return Object.values(cart).reduce((s,i)=>s+i.qty,0);}
 function updateCart(){
@@ -754,9 +921,7 @@ function updateCart(){
   if(!items.length){$('#cartItems').innerHTML='<p style="color:var(--muted2);text-align:center;padding:50px 0">Your cart is empty.</p>';$('#checkoutBtn').disabled=true;}
   else{$('#checkoutBtn').disabled=false;
     $('#cartItems').innerHTML=items.map(([key,it])=>{const p=find(it.id);const art=(p&&p.art||VIAL);
-      return `<div class="ci"><div class="ci-thumb">${art}</div><div class="ci-info"><h4>${it.name}</h4><div class="sz">${it.size}</div><div class="p">${money(it.price)}</div>
-      <div class="qty"><button onclick="changeQty('${key}',-1)">−</button><span>${it.qty}</span><button onclick="changeQty('${key}',1)">+</button></div>
-      <button class="ci-rm" onclick="removeItem('${key}')">remove</button></div><div class="price" style="font-size:14px">${money(it.price*it.qty)}</div></div>`;
+      return `<div class="ci"><div class="ci-thumb">${art}</div><div class="ci-info"><h4>${it.name}</h4><div class="sz">${it.size}</div><div class="p">${money(it.price)}</div><div class="qty"><button onclick="changeQty('${key}',-1)">−</button><span>${it.qty}</span><button onclick="changeQty('${key}',1)">+</button></div><button class="ci-rm" onclick="removeItem('${key}')">remove</button></div><div class="price" style="font-size:14px">${money(it.price*it.qty)}</div></div>`;
     }).join('');}
   $('#cartTotal').textContent=money(cartTotal());$('#payAmt').textContent=money(cartTotal());
 }
@@ -773,7 +938,7 @@ function placeOrder(){
   sales.push(order);localStorage.setItem('pep_sales',JSON.stringify(sales));
   cart={};saveCart();updateCart();renderDashboard();
   $('#checkoutForm').style.display='none';$('#checkoutSuccess').style.display='block';
-  $('#successMsg').textContent=`Order ${order.id} for ${money(total)} confirmed — shipping to ${name}. Tracking sent to ${email}.`;
+  $('#successMsg').textContent=`Order ${order.id} for ${money(total)} confirmed — shipping to ${name} (allow up to 30 days). Tracking sent to ${email}.`;
 }
 
 /* ---------- dashboard ---------- */
@@ -817,7 +982,7 @@ function initParticles(){
 }
 function initTilt(){
   if(matchMedia('(hover:none)').matches)return;
-  document.addEventListener('mousemove',e=>{const card=e.target.closest('.card');if(!card)return;const r=card.getBoundingClientRect();const px=(e.clientX-r.left)/r.width-.5,py=(e.clientY-r.top)/r.height-.5;card.style.transform=`translateY(-6px) rotateX(${-py*5}deg) rotateY(${px*5}deg)`;});
+  document.addEventListener('mousemove',e=>{const card=e.target.closest('.card');if(!card||card.classList.contains('kit'))return;const r=card.getBoundingClientRect();const px=(e.clientX-r.left)/r.width-.5,py=(e.clientY-r.top)/r.height-.5;card.style.transform=`translateY(-6px) rotateX(${-py*5}deg) rotateY(${px*5}deg)`;});
   document.addEventListener('mouseout',e=>{const card=e.target.closest('.card');if(card)card.style.transform='';});
 }
 
