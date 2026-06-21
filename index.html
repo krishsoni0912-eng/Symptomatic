@@ -308,6 +308,22 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
 .recon-table th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
 .recon-table td:last-child{color:var(--c4);font-weight:700}
 @media(max-width:860px){.instr-grid{grid-template-columns:1fr}}
+
+.search-wrap{position:relative;margin-bottom:18px;max-width:560px}
+.search-wrap svg{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted2)}
+.search-wrap input{width:100%;padding:14px 16px 14px 46px;border-radius:14px;border:1px solid var(--stroke);background:var(--panel);color:var(--text);font-family:inherit;font-size:15px}
+.search-wrap input:focus{outline:none;border-color:var(--c1);box-shadow:0 0 22px rgba(0,240,255,.18)}
+.card-warn{font-size:9.5px;color:#ffb020;font-weight:700;letter-spacing:.03em;display:flex;align-items:center;gap:5px}
+.card-warn::before{content:"";width:6px;height:6px;background:#ffb020;clip-path:polygon(50% 0,100% 100%,0 100%)}
+.detail-imgs{display:flex;flex-direction:column;gap:14px}
+.detail-purity{position:relative;border:1px solid var(--stroke);border-radius:var(--radius2);background:linear-gradient(160deg,rgba(57,255,136,.08),rgba(5,6,13,.4));padding:16px 16px 10px;min-height:auto}
+.detail-purity .pt-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.detail-purity .pt-head span{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.detail-purity .pt-head b{font-size:11px;color:var(--c4)}
+.detail-purity svg{width:100%;height:auto;animation:none;filter:none}
+.detail-purity .pt-note{font-size:10px;color:var(--muted2);margin-top:4px}
+.warn-box{border:1px solid rgba(255,176,32,.4);background:rgba(255,176,32,.07);border-radius:14px;padding:14px 16px;font-size:12.5px;color:var(--muted);line-height:1.55;margin-top:16px}
+.warn-box strong{color:#ffb020}
 </style>
 </head>
 <body>
@@ -316,7 +332,7 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
   <div class="agegate-box">
     <div class="logo" style="justify-content:center;margin-bottom:20px"><span class="hex"></span> PEPTIDE</div>
     <h2>Age &amp; Use Verification</h2>
-    <p>All products are sold strictly for <strong>laboratory and research use only</strong> — not for human or veterinary consumption. You must be 21+ to enter.</p>
+    <p>All products are sold strictly for <strong>laboratory and research / testing use only</strong>. They are <strong>not FDA approved</strong>, not for human or animal consumption, and nothing here is medical advice. You must be 21+ and a qualified researcher to enter.</p>
     <button class="btn btn-primary" onclick="enterSite()">I am 21+ &amp; agree</button>
     <button class="btn btn-ghost" onclick="location.href='https://www.google.com'">Exit</button>
   </div>
@@ -399,6 +415,10 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
       <div class="eyebrow">The Catalog</div>
       <h2 class="title">All products</h2>
       <p>Individual vials and supplies. Tap any product for the full lab-verified detail view and a picture, or choose your dose right on the card.</p>
+    </div>
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="searchInput" type="search" placeholder="Search peptides — e.g. Tirzepatide, BPC, GLP-1, sleep…" oninput="onSearch(this.value)" autocomplete="off">
     </div>
     <div class="filters" id="filters"></div>
     <div class="count-note" id="countNote"></div>
@@ -534,7 +554,7 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
 <footer>
   <div class="wrap">
     <div class="disclaimer">
-      <strong>RESEARCH USE ONLY.</strong> Products listed are intended exclusively for in-vitro laboratory research and development. They are <strong>not</strong> drugs, foods, cosmetics, or dietary supplements, and are <strong>not</strong> for human or animal consumption, diagnosis, treatment, or prevention of any disease. Statements have not been evaluated by any regulatory authority. Buyer assumes all responsibility for proper handling and lawful use.
+      <strong>⚠ RESEARCH &amp; TESTING USE ONLY — NOT FDA APPROVED.</strong> All products are intended exclusively for in-vitro laboratory research and development. They are <strong>not FDA approved</strong> and are <strong>not</strong> drugs, foods, cosmetics, or dietary supplements. They are <strong>not for human or animal consumption</strong>, and are <strong>not recommended</strong> for personal use, diagnosis, treatment, cure, or prevention of any disease. Nothing on this website is <strong>medical advice</strong>; it is provided for informational purposes only — always consult a licensed healthcare professional. No statements have been evaluated by the FDA or any regulatory authority. Products are sold "as is" with no warranty of any kind. By purchasing, the buyer certifies they are a qualified researcher 21+ and assumes all responsibility, risk, and liability for lawful handling and use; the seller disclaims all liability to the fullest extent permitted by law.
     </div>
     <div class="foot-grid">
       <div class="foot-col">
@@ -656,6 +676,22 @@ function bigVial(name,purity,kind){
   </svg>`;
 }
 
+/* ---------- HPLC purity-test chart image ---------- */
+function purityChart(purity){
+  return `<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+    <line x1="34" y1="172" x2="288" y2="172" stroke="rgba(255,255,255,.3)"/>
+    <line x1="34" y1="22" x2="34" y2="172" stroke="rgba(255,255,255,.3)"/>
+    <line x1="34" y1="120" x2="288" y2="120" stroke="rgba(255,255,255,.07)"/>
+    <line x1="34" y1="70" x2="288" y2="70" stroke="rgba(255,255,255,.07)"/>
+    <polyline points="34,162 72,161 96,160 106,151 113,161 138,162 148,160 152,30 156,160 178,162 206,161 230,156 236,161 288,162" fill="none" stroke="#39ff88" stroke-width="2"/>
+    <polygon points="148,160 152,30 156,160" fill="rgba(57,255,136,.18)"/>
+    <text x="160" y="86" font-family="Space Grotesk,sans-serif" font-size="9" fill="#39ff88">${purity}</text>
+    <text x="40" y="16" font-family="Orbitron,sans-serif" font-size="9" font-weight="800" fill="rgba(255,255,255,.85)">HPLC PURITY ANALYSIS</text>
+    <text x="150" y="190" font-family="Space Grotesk,sans-serif" font-size="8" fill="rgba(255,255,255,.5)" text-anchor="middle">Retention time (min)</text>
+    <text x="20" y="100" font-family="Space Grotesk,sans-serif" font-size="8" fill="rgba(255,255,255,.5)" transform="rotate(-90 20 100)" text-anchor="middle">mAU</text>
+  </svg>`;
+}
+
 /* ---------- goal taxonomy ---------- */
 const GOALS={
   fatloss:{label:'Fat Loss',color:'#39ff88'},
@@ -693,18 +729,19 @@ const TILES=[
 /* ---------- products (photo prices x1.75, capped 20mg) ---------- */
 const PRODUCTS=[
   // Fat loss / metabolic / appetite
-  {id:'tirz',name:'Tirzepatide',goals:['fatloss','appetite'],purity:'99.2%',art:VIAL,desc:'Dual GIP/GLP-1 receptor agonist studied for body weight and glucose regulation.',variants:[{size:'5mg',price:75},{size:'10mg',price:110},{size:'15mg',price:140},{size:'20mg',price:165}]},
-  {id:'sema',name:'Semaglutide',goals:['fatloss','appetite'],purity:'99.1%',art:VIAL,desc:'GLP-1 receptor agonist researched for appetite signalling and metabolic studies.',variants:[{size:'5mg',price:70},{size:'10mg',price:110},{size:'15mg',price:130},{size:'20mg',price:156}]},
-  {id:'reta',name:'Retatrutide',goals:['fatloss','appetite'],purity:'99.0%',art:VIAL,desc:'Triple GIP/GLP-1/glucagon agonist studied for advanced metabolic research.',variants:[{size:'5mg',price:128},{size:'10mg',price:191},{size:'15mg',price:214},{size:'20mg',price:238}]},
+  {id:'tirz',name:'Tirzepatide',goals:['fatloss','appetite'],purity:'99.2%',art:VIAL,desc:'Dual GIP/GLP-1 receptor agonist studied for body weight and glucose regulation.',variants:[{size:'5mg',price:75},{size:'10mg',price:110},{size:'15mg',price:140},{size:'20mg',price:165},{size:'30mg',price:200},{size:'40mg',price:250},{size:'50mg',price:298},{size:'60mg',price:326},{size:'70mg',price:357},{size:'80mg',price:403},{size:'90mg',price:452},{size:'100mg',price:499},{size:'120mg',price:546}]},
+  {id:'sema',name:'Semaglutide',goals:['fatloss','appetite'],purity:'99.1%',art:VIAL,desc:'GLP-1 receptor agonist researched for appetite signalling and metabolic studies.',variants:[{size:'5mg',price:70},{size:'10mg',price:110},{size:'15mg',price:130},{size:'20mg',price:156},{size:'30mg',price:191}]},
+  {id:'reta',name:'Retatrutide',goals:['fatloss','appetite'],purity:'99.0%',art:VIAL,desc:'Triple GIP/GLP-1/glucagon agonist studied for advanced metabolic research.',variants:[{size:'5mg',price:128},{size:'10mg',price:191},{size:'15mg',price:214},{size:'20mg',price:238},{size:'30mg',price:357},{size:'40mg',price:427},{size:'50mg',price:523},{size:'60mg',price:618}]},
   {id:'cagri',name:'Cagrilintide',goals:['fatloss','appetite'],purity:'99.0%',art:VIAL,desc:'Long-acting amylin analogue researched for satiety pathways.',variants:[{size:'5mg',price:201},{size:'10mg',price:394}]},
   {id:'survo',name:'Survodutide',goals:['fatloss','appetite'],purity:'98.9%',art:VIAL,desc:'GLP-1/glucagon dual agonist for metabolic and hepatic research.',variants:[{size:'10mg',price:571}]},
   {id:'aod',name:'AOD-9604',goals:['fatloss'],purity:'99.0%',art:VIAL,desc:'Modified HGH fragment studied for lipolysis without growth effects.',variants:[{size:'2mg',price:105},{size:'5mg',price:191}]},
   {id:'adipo',name:'Adipotide (FTPP)',goals:['fatloss'],purity:'98.5%',art:VIAL,desc:'Pro-apoptotic peptide researched for adipose-tissue vasculature studies.',variants:[{size:'5mg',price:254}]},
-  {id:'motsc',name:'MOTS-C',goals:['fatloss','energy','longevity'],purity:'99.1%',art:VIAL,desc:'Mitochondrial-derived peptide studied for metabolism and exercise capacity.',variants:[{size:'10mg',price:123},{size:'20mg',price:228}]},
-  {id:'amq',name:'5-Amino-1MQ',goals:['fatloss','energy'],purity:'98.8%',art:VIAL,desc:'NNMT inhibitor researched for adipocyte metabolism and energy expenditure.',variants:[{size:'5mg',price:154}]},
+  {id:'motsc',name:'MOTS-C',goals:['fatloss','energy','longevity'],purity:'99.1%',art:VIAL,desc:'Mitochondrial-derived peptide studied for metabolism and exercise capacity.',variants:[{size:'10mg',price:123},{size:'20mg',price:228},{size:'40mg',price:427}]},
+  {id:'amq',name:'5-Amino-1MQ',goals:['fatloss','energy'],purity:'98.8%',art:VIAL,desc:'NNMT inhibitor researched for adipocyte metabolism and energy expenditure.',variants:[{size:'5mg',price:154},{size:'50mg',price:238}]},
   {id:'slu',name:'SLU-PP-332',goals:['fatloss','energy'],purity:'98.6%',art:VIAL,desc:'ERR agonist / exercise-mimetic studied for fat oxidation and endurance.',variants:[{size:'5mg',price:175}]},
   {id:'lcar',name:'L-Carnitine 600',goals:['fatloss','energy'],purity:'USP',art:WATER,desc:'Carnitine solution researched for fatty-acid transport and energy metabolism.',variants:[{size:'10ml',price:70}]},
   {id:'lipoc',name:'Lipo-C (Fat Blaster)',goals:['fatloss','blend'],purity:'Verified',art:WATER,desc:'Lipotropic blend (MIC + carnitine class) for fat-metabolism research.',variants:[{size:'10ml',price:200}]},
+  {id:'lipoc2',name:'Lipo-C',goals:['fatloss','blend'],purity:'Verified',art:WATER,desc:'Lipotropic MIC research solution for fat-metabolism studies.',variants:[{size:'10ml',price:140}]},
   {id:'lemon',name:'Lemon Bottle',goals:['fatloss'],purity:'Verified',art:WATER,desc:'Lipolytic solution studied in adipose-reduction research.',variants:[{size:'10ml',price:140}]},
   {id:'aicar',name:'AICAR',goals:['energy','fatloss'],purity:'98.7%',art:VIAL,desc:'AMPK activator researched for endurance and metabolic adaptation.',variants:[{size:'50mg',price:117}]},
 
@@ -718,7 +755,7 @@ const PRODUCTS=[
   {id:'ghrp2',name:'GHRP-2',goals:['muscle','appetite'],purity:'99.0%',art:VIAL,desc:'Growth-hormone-releasing peptide researched for GH and appetite.',variants:[{size:'5mg',price:47},{size:'10mg',price:95}]},
   {id:'ghrp6',name:'GHRP-6',goals:['muscle','appetite'],purity:'99.0%',art:VIAL,desc:'GHRP studied for GH release and strong appetite stimulation.',variants:[{size:'5mg',price:47},{size:'10mg',price:95}]},
   {id:'hgh',name:'HGH 191AA (Somatropin)',goals:['muscle','recovery'],purity:'99.0%',art:VIAL,desc:'Recombinant 191-amino-acid growth hormone for research.',variants:[{size:'10iu',price:86},{size:'12iu',price:114},{size:'15iu',price:149},{size:'24iu',price:201},{size:'36iu',price:306}]},
-  {id:'igf',name:'IGF-1 LR3',goals:['muscle','recovery'],purity:'98.8%',art:VIAL,desc:'Long-acting insulin-like growth factor for cell-proliferation studies.',variants:[{size:'0.1mg',price:81},{size:'1mg',price:158}]},
+  {id:'igf',name:'IGF-1 LR3',goals:['muscle','recovery'],purity:'98.8%',art:VIAL,desc:'Long-acting insulin-like growth factor for cell-proliferation studies.',variants:[{size:'0.1mg',price:81},{size:'1mg',price:350}]},
   {id:'mgf',name:'MGF',goals:['muscle','recovery'],purity:'98.7%',art:VIAL,desc:'Mechano growth factor researched for muscle repair signalling.',variants:[{size:'2mg',price:114}]},
   {id:'pegmgf',name:'PEG-MGF',goals:['muscle','recovery'],purity:'98.7%',art:VIAL,desc:'Pegylated MGF studied for extended muscle-repair half-life.',variants:[{size:'2mg',price:175}]},
 
@@ -740,19 +777,19 @@ const PRODUCTS=[
   {id:'shb',name:'Super Human Blend',goals:['recovery','blend'],purity:'Verified',art:WATER,desc:'Multi-peptide recovery and performance research blend.',variants:[{size:'10ml',price:149}]},
 
   // Skin / aesthetics / hair / pretty face
-  {id:'ghkcu',name:'GHK-Cu',goals:['skin','aesthetic','hair'],purity:'99.4%',art:VIAL,desc:'Copper peptide researched for collagen, skin and hair follicle studies.',variants:[{size:'50mg',price:58}]},
+  {id:'ghkcu',name:'GHK-Cu',goals:['skin','aesthetic','hair'],purity:'99.4%',art:VIAL,desc:'Copper peptide researched for collagen, skin and hair follicle studies.',variants:[{size:'50mg',price:58},{size:'100mg',price:114}]},
   {id:'mt2',name:'Melanotan 2',goals:['aesthetic','libido'],purity:'99.1%',art:VIAL,desc:'Melanocortin agonist studied for pigmentation and libido pathways.',variants:[{size:'10mg',price:95}]},
-  {id:'mt1',name:'Melanotan 1',goals:['aesthetic'],purity:'99.0%',art:VIAL,desc:'Selective melanocortin agonist researched for tanning pathways.',variants:[{size:'10mg',price:112}]},
+  {id:'mt1',name:'Melanotan 1',goals:['aesthetic'],purity:'99.0%',art:VIAL,desc:'Selective melanocortin agonist researched for tanning pathways.',variants:[{size:'10mg',price:119}]},
   {id:'gluta',name:'Glutathione',goals:['skin','aesthetic'],purity:'99.0%',art:VIAL,desc:'Master antioxidant studied for skin brightness and detox pathways.',variants:[{size:'600mg',price:70}]},
   {id:'snap8',name:'SNAP-8',goals:['skin','aesthetic'],purity:'98.5%',art:VIAL,desc:'Peptide researched for expression-line and anti-wrinkle studies.',variants:[{size:'10mg',price:79}]},
   {id:'pt141',name:'PT-141 (Bremelanotide)',goals:['libido'],purity:'99.0%',art:VIAL,desc:'Melanocortin peptide researched for sexual-arousal pathways.',variants:[{size:'10mg',price:109}]},
 
   // Longevity / anti-aging / energy
-  {id:'nad',name:'NAD+',goals:['longevity','energy'],purity:'99.0%',art:VIAL,desc:'Coenzyme studied for cellular energy, repair and aging research.',variants:[{size:'100mg',price:95}]},
-  {id:'epi',name:'Epitalon',goals:['longevity','sleep'],purity:'99.0%',art:VIAL,desc:'Telomerase-related tetrapeptide researched for longevity and sleep.',variants:[{size:'10mg',price:67}]},
+  {id:'nad',name:'NAD+',goals:['longevity','energy'],purity:'99.0%',art:VIAL,desc:'Coenzyme studied for cellular energy, repair and aging research.',variants:[{size:'100mg',price:95},{size:'500mg',price:166}]},
+  {id:'epi',name:'Epitalon',goals:['longevity','sleep'],purity:'99.0%',art:VIAL,desc:'Telomerase-related tetrapeptide researched for longevity and sleep.',variants:[{size:'10mg',price:67},{size:'50mg',price:308}]},
   {id:'pineal',name:'Pinealon',goals:['longevity','cognitive'],purity:'98.7%',art:VIAL,desc:'Short peptide studied for neuroprotection and cognitive aging.',variants:[{size:'10mg',price:114}]},
   {id:'foxo4',name:'FOXO4-DRI',goals:['longevity'],purity:'98.0%',art:VIAL,desc:'Senolytic peptide researched for senescent-cell clearance.',variants:[{size:'10mg',price:665}]},
-  {id:'ss31',name:'SS-31 (Elamipretide)',goals:['longevity','energy'],purity:'98.8%',art:VIAL,desc:'Mitochondria-targeting peptide for bioenergetic research.',variants:[{size:'10mg',price:184}]},
+  {id:'ss31',name:'SS-31 (Elamipretide)',goals:['longevity','energy'],purity:'98.8%',art:VIAL,desc:'Mitochondria-targeting peptide for bioenergetic research.',variants:[{size:'10mg',price:184},{size:'50mg',price:712}]},
   {id:'b12',name:'Vitamin B12',goals:['energy'],purity:'USP',art:VIAL,desc:'Methylcobalamin researched for energy metabolism studies.',variants:[{size:'10mg',price:44}]},
 
   // Sleep / mood / cognitive
@@ -769,8 +806,8 @@ const PRODUCTS=[
   {id:'hmg',name:'HMG',goals:['libido'],purity:'99.0%',art:VIAL,desc:'Menotropin studied for gonadotropin and fertility research.',variants:[{size:'75iu',price:119}]},
 
   // Supplies (no markup)
-  {id:'bac10',name:'Bacteriostatic Water',goals:['supplies'],purity:'0.9% benzyl',art:WATER,kind:'water',desc:'Bacteriostatic water for reconstitution. Sealed multi-use vial.',variants:[{size:'3ml',price:8},{size:'10ml',price:12}]},
-  {id:'acetic',name:'Acetic Acid 0.6%',goals:['supplies'],purity:'0.6%',art:WATER,kind:'water',desc:'Dilute acetic acid solvent for peptides requiring acidic reconstitution.',variants:[{size:'3ml',price:8},{size:'10ml',price:12}]},
+  {id:'bac10',name:'Bacteriostatic Water',goals:['supplies'],purity:'0.9% benzyl',art:WATER,kind:'water',desc:'Bacteriostatic water for reconstitution. Sealed multi-use vial.',variants:[{size:'3ml',price:10},{size:'10ml',price:11}]},
+  {id:'acetic',name:'Acetic Acid 0.6%',goals:['supplies'],purity:'0.6%',art:WATER,kind:'water',desc:'Dilute acetic acid solvent for peptides requiring acidic reconstitution.',variants:[{size:'3ml',price:10},{size:'10ml',price:11}]},
   {id:'syr29',name:'Insulin Syringes 29G · 0.5cc',goals:['supplies'],purity:'Sterile',art:SYRINGE,desc:'Single-use sterile syringes, individually wrapped.',variants:[{size:'Box of 100',price:24}]},
   {id:'syr31',name:'Insulin Syringes 31G · 1cc',goals:['supplies'],purity:'Sterile',art:SYRINGE,desc:'Fine-gauge sterile syringes, individually blister-packed.',variants:[{size:'Box of 100',price:26}]},
   {id:'pads',name:'Alcohol Prep Pads',goals:['supplies'],purity:'70% IPA',art:PADS,desc:'Sterile 70% isopropyl alcohol prep pads, individually sealed.',variants:[{size:'Box of 100',price:10}]}
@@ -786,7 +823,7 @@ function kitFrom(name,goals,desc,disc,items){
 }
 const KITS=[
   kitFrom('Reconstitution Supplies Kit',['supplies'],'Just the supplies — bacteriostatic water plus 100 syringes and 100 prep pads.',10,[]),
-  kitFrom('SHREDDED Stack Kit',['fatloss','blend'],'Fat-loss research stack with all supplies.',15,[{n:'Semaglutide 10mg',p:110},{n:'L-Carnitine 600 10ml',p:70}]),
+  kitFrom('SHREDDED Stack Kit',['fatloss','blend'],'Fat-loss research stack with Retatrutide, Semaglutide & all supplies.',15,[{n:'Retatrutide 10mg',p:191},{n:'Semaglutide 10mg',p:110},{n:'L-Carnitine 600 10ml',p:70}]),
   kitFrom('JACKED Mass Kit',['muscle','blend'],'GH-secretagogue research stack with supplies.',15,[{n:'CJC-1295 + Ipamorelin 10mg',p:214},{n:'BPC-157 5mg',p:84}]),
   kitFrom('PRETTY FACE Aesthetics Kit',['aesthetic','skin','blend'],'Skin, glow & tan research stack with supplies.',15,[{n:'GHK-Cu 50mg',p:58},{n:'Glutathione 600mg',p:70},{n:'Melanotan 2 10mg',p:95}]),
   kitFrom('RECOVERY Repair Kit',['recovery','blend'],'Healing research stack with all supplies.',15,[{n:'BPC-157 + TB-500 Blend 10mg',p:184}]),
@@ -806,11 +843,16 @@ const FILTERS=[{k:'all',label:'All'}].concat(
   ['fatloss','appetite','muscle','recovery','longevity','skin','aesthetic','hair','energy','sleep','cognitive','libido','immune','blend'].map(k=>({k,label:GOALS[k].label})),
   [{k:'supplies',label:'Supplies'}]
 );
-let activeFilter='all';
+let activeFilter='all',searchTerm='';
 function buildFilters(){$('#filters').innerHTML=FILTERS.map(f=>`<button class="chip ${f.k===activeFilter?'active':''}" onclick="setFilter('${f.k}')">${f.label}</button>`).join('');}
 function setFilter(k){activeFilter=k;buildFilters();renderProducts();}
 function filterGoal(k){activeFilter=k;buildFilters();renderProducts();$('#shop').scrollIntoView({behavior:'smooth'});}
-function matches(p){if(activeFilter==='all')return true;return (p.goals||[]).includes(activeFilter);}
+function onSearch(v){searchTerm=(v||'').trim().toLowerCase();renderProducts();}
+function matches(p){
+  const inCat=activeFilter==='all'||(p.goals||[]).includes(activeFilter);
+  const inSearch=!searchTerm||p.name.toLowerCase().includes(searchTerm)||(p.desc||'').toLowerCase().includes(searchTerm);
+  return inCat&&inSearch;
+}
 function gbadges(p){return (p.goals||[]).filter(g=>GOALS[g]).slice(0,3).map(g=>`<span class="gb" style="--gbc:${GOALS[g].color}">${GOALS[g].label.split(' ')[0]}</span>`).join('');}
 
 function packLabel(p,raw){return (p.goals&&p.goals[0]==='supplies')?raw:`10 vials × ${raw}`;}
@@ -833,6 +875,7 @@ function productCard(p){
     <div class="card-body">
       <h3>${p.name}</h3>
       <div class="desc">${p.desc}</div>
+      ${!isSup?`<div class="card-warn">Research use only · Not FDA approved</div>`:''}
       ${variantSelect(p)}
       <div class="card-meta"><span>${single?packLabel(p,p.variants[0].size):''}</span>${!isSup?`<span class="coa-link" onclick="event.stopPropagation();openCoa('${p.name}','RC-2026-${Math.floor(Math.random()*9000+1000)}','${p.purity}')">View COA</span>`:''}</div>
       <div class="card-foot"><div class="price" id="price-${p.id}">${money(p.variants[0].price)}</div><button class="add-btn" onclick="event.stopPropagation();addToCart('${p.id}',this)">Add</button></div>
@@ -873,10 +916,18 @@ function openDetail(id){
   const p=find(id);if(!p)return;
   const isSup=p.goals[0]==='supplies';
   const tags=(p.goals||[]).filter(g=>GOALS[g]).map(g=>`<span class="gb" style="--gbc:${GOALS[g].color}">${GOALS[g].label}</span>`).join('')||'<span class="gb">Supply</span>';
+  const lot='RC-2026-'+Math.floor(Math.random()*9000+1000);
   $('#detailBody').innerHTML=`
-    <div class="detail-img">
-      <div class="lab-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 6v6c0 5 8 8 8 8s8-3 8-8V6z"/><path d="M9 12l2 2 4-4"/></svg> Lab Approved · HPLC Verified</div>
-      ${bigVial(p.name,p.purity,p.kind)}
+    <div class="detail-imgs">
+      <div class="detail-img">
+        <div class="lab-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 6v6c0 5 8 8 8 8s8-3 8-8V6z"/><path d="M9 12l2 2 4-4"/></svg> Lab Approved · HPLC Verified</div>
+        ${bigVial(p.name,p.purity,p.kind)}
+      </div>
+      ${!isSup?`<div class="detail-purity">
+        <div class="pt-head"><span>Purity Test · HPLC</span><b>${p.purity}</b></div>
+        ${purityChart(p.purity)}
+        <div class="pt-note">Representative chromatogram. Full Certificate of Analysis available per lot (${lot}). Real lab-report image can be added here.</div>
+      </div>`:''}
     </div>
     <div class="detail-info">
       <h2>${p.name}</h2>
@@ -893,7 +944,8 @@ function openDetail(id){
         ${p.variants.length>1?`<div class="price" id="price-${p.id}" style="font-size:22px;align-items:center;display:flex">${money(p.variants[0].price)}</div>`:''}
         <button class="checkout-btn" onclick="addToCart('${p.id}',this);openCart()">Add to Cart</button>
       </div>
-      ${!isSup?`<p style="font-size:12px;color:var(--muted2);margin-top:14px"><a class="coa-link" onclick="openCoa('${p.name}','RC-2026-${Math.floor(Math.random()*9000+1000)}','${p.purity}')">View Certificate of Analysis →</a> · Research use only, not for human consumption.</p>`:''}
+      ${!isSup?`<p style="font-size:12px;color:var(--muted2);margin-top:14px"><a class="coa-link" onclick="openCoa('${p.name}','${lot}','${p.purity}')">View Certificate of Analysis →</a></p>`:''}
+      <div class="warn-box"><strong>⚠ Warning — Research Use Only.</strong> Not FDA approved. Not a drug, supplement, or medical product. Sold strictly for laboratory and testing purposes — <strong>not for human or animal consumption</strong> and not recommended for personal use. Nothing here is medical advice; consult a licensed professional. Sold with no warranty of fitness; the buyer assumes all responsibility, risk, and liability for handling and lawful use.</div>
     </div>`;
   $('#detailModal').classList.add('open');
 }
