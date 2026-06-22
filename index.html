@@ -335,6 +335,16 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
 .pay-opt:hover{border-color:rgba(255,255,255,.25)}
 .pay-opt.sel{border-color:var(--c1);background:rgba(0,240,255,.08)}
 .pay-opt input{margin:0}
+.pay-info{margin:0 0 12px}
+.pay-info-box{border:1px solid var(--stroke);border-radius:11px;background:var(--panel);padding:13px 14px;font-size:13px;color:var(--muted)}
+.pay-info-box .pay-to{margin-top:8px;font-size:13px;color:var(--text)}
+.pay-info-box .pay-to b{color:var(--c1);word-break:break-all}
+.pay-apps{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.pay-apps a{font-size:12px;font-weight:700;color:#04060f;background:linear-gradient(135deg,var(--c1),var(--c2));padding:7px 12px;border-radius:9px;transition:.2s}
+.pay-apps a:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,240,255,.3)}
+.pay-why{font-size:11.5px;color:var(--muted2);line-height:1.55;border-left:2px solid var(--c2);padding:5px 0 5px 12px;margin:0 0 16px}
+.pay-why strong{color:var(--muted)}
+.invoice{white-space:pre-wrap;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;line-height:1.5;background:var(--panel);border:1px solid var(--stroke);border-radius:11px;padding:14px;color:var(--text);text-align:left;margin:14px 0 0;max-height:240px;overflow:auto}
 </style>
 </head>
 <body>
@@ -621,14 +631,10 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
       <div class="field"><label>Shipping address</label><input id="coAddr" placeholder="123 Lab St"></div>
       <div class="row2"><div class="field"><label>City</label><input id="coCity" placeholder="Austin"></div><div class="field"><label>ZIP</label><input id="coZip" placeholder="78701"></div></div>
       <div class="field"><label>How would you like to pay?</label>
-        <div class="pay-methods">
-          <label class="pay-opt sel"><input type="radio" name="pay" value="Secure card link" checked onchange="selPay(this)"> Card (secure link)</label>
-          <label class="pay-opt"><input type="radio" name="pay" value="Zelle / Cash App" onchange="selPay(this)"> Zelle / Cash App</label>
-          <label class="pay-opt"><input type="radio" name="pay" value="Crypto" onchange="selPay(this)"> Crypto</label>
-          <label class="pay-opt"><input type="radio" name="pay" value="Bank transfer / Invoice" onchange="selPay(this)"> Bank / Invoice</label>
-        </div>
+        <div class="pay-methods" id="payMethods"></div>
       </div>
-      <p style="font-size:11.5px;color:var(--muted2);margin:0 0 14px">No card details are entered on this site. After you place the order you'll receive payment instructions by email.</p>
+      <div id="payInfo" class="pay-info"></div>
+      <div class="pay-why"><strong>Why pay this way?</strong> Major card networks and apps like PayPal/Stripe don't permit research-compound purchases, so to process your order reliably — and keep it private and discreet — we accept crypto and direct transfer. Choose a method above for step-by-step instructions and a link to download the app.</div>
       <button class="checkout-btn" onclick="placeOrder()">Place Order · <span id="payAmt">$0</span></button>
     </div>
     <div id="checkoutSuccess" style="display:none">
@@ -1153,24 +1159,81 @@ const ORDER_EMAIL='krishsoni0912@gmail.com';   // where order emails go (visible
 const WEB3FORMS_KEY='';                        // paste a free key from web3forms.com to email orders privately
 /* ============================================================ */
 
-let selectedPay='Secure card link';
-function selPay(el){selectedPay=el.value;document.querySelectorAll('.pay-opt').forEach(o=>o.classList.remove('sel'));el.closest('.pay-opt').classList.add('sel');}
+/* ====== PAYMENT DETAILS (edit these with your real handles) ====== */
+const CRYPTO_WALLET='YOUR-BTC-OR-USDT-WALLET-ADDRESS'; // paste your crypto wallet address
+const CASHAPP_TAG='$YourCashtag';                      // your Cash App $cashtag
+const ZELLE_CONTACT='your-zelle@email.com';            // your Zelle email or phone
+const PAY={
+  crypto:{label:'Crypto (BTC / USDT)',to:CRYPTO_WALLET,how:'Send the exact order total in Bitcoin or USDT to the wallet address below, then email a screenshot of the transaction.',apps:[['Get Coinbase','https://www.coinbase.com/'],['Cash App (buy BTC)','https://cash.app/'],['Trust Wallet','https://trustwallet.com/']]},
+  cashapp:{label:'Cash App',to:CASHAPP_TAG,how:'Open Cash App, send the total to our Cashtag below, and put your order number in the note.',apps:[['Get Cash App','https://cash.app/']]},
+  zelle:{label:'Zelle',to:ZELLE_CONTACT,how:'Open your banking app, choose Zelle, and send the total to the contact below.',apps:[['How Zelle works','https://www.zellepay.com/get-started']]},
+  bank:{label:'Bank transfer',to:'Details emailed after checkout',how:'We will email you bank / wire transfer details to complete your payment.',apps:[]}
+};
+let selectedPayKey='crypto';
+function renderPayMethods(){
+  const m=$('#payMethods');if(!m)return;
+  m.innerHTML=Object.entries(PAY).map(([k,v])=>`<label class="pay-opt ${k===selectedPayKey?'sel':''}"><input type="radio" name="pay" value="${k}" ${k===selectedPayKey?'checked':''} onchange="selPay('${k}')"> ${v.label}</label>`).join('');
+  renderPayInfo();
+}
+function selPay(k){selectedPayKey=k;document.querySelectorAll('#payMethods .pay-opt').forEach(o=>o.classList.remove('sel'));const r=document.querySelector(`#payMethods input[value="${k}"]`);if(r)r.closest('.pay-opt').classList.add('sel');renderPayInfo();}
+function payAppsHTML(v,center){return v.apps.length?`<div class="pay-apps"${center?' style="justify-content:center"':''}>${v.apps.map(a=>`<a href="${a[1]}" target="_blank" rel="noopener">${a[0]} ↗</a>`).join('')}</div>`:'';}
+function renderPayInfo(){
+  const v=PAY[selectedPayKey];if(!$('#payInfo'))return;
+  $('#payInfo').innerHTML=`<div class="pay-info-box"><div>${v.how}</div>${v.to?`<div class="pay-to">Send to: <b>${v.to}</b></div>`:''}${payAppsHTML(v)}</div>`;
+}
 
 /* ---------- checkout ---------- */
-function openCheckout(){if(!cartCount())return;closeCart();$('#checkoutForm').style.display='block';$('#checkoutSuccess').style.display='none';$('#checkoutModal').classList.add('open');}
+function openCheckout(){if(!cartCount())return;closeCart();$('#checkoutForm').style.display='block';$('#checkoutSuccess').style.display='none';renderPayMethods();$('#checkoutModal').classList.add('open');}
 function orderLines(){return Object.values(cart).map(i=>`${i.qty}× ${i.name} (${i.size}) — ${money(i.price*i.qty)}`);}
+function pad(s,n){s=String(s);return s.length>=n?s:s+' '.repeat(n-s.length);}
+function buildInvoice(order,detailed){
+  const v=PAY[order.payKey]||{};
+  return [
+    '====================================',
+    '         PEPTIDE RESEARCH CO.',
+    '           ORDER / INVOICE',
+    '====================================',
+    'Invoice : '+order.id,
+    'Date    : '+new Date(order.date).toLocaleString(),
+    'Status  : AWAITING PAYMENT',
+    '',
+    'SHIP TO',
+    '  '+order.name,
+    '  '+order.addr,
+    '  '+order.email+(order.phone?'  |  '+order.phone:''),
+    '',
+    'ITEMS',
+    ...detailed.map(d=>'  '+pad(d.qty+'x '+d.name,30)+pad(d.size,16)+money(d.line)),
+    '  ----------------------------------',
+    '  '+pad('TOTAL',46)+money(order.total),
+    '',
+    'PAYMENT',
+    '  Method  : '+(v.label||order.pay),
+    '  Send to : '+(v.to||'-'),
+    '',
+    'Research use only. Not for human consumption.',
+    '===================================='
+  ].join('\n');
+}
 function placeOrder(){
   const name=$('#coName').value.trim()||'Guest';const email=$('#coEmail').value.trim();
   if(!email){$('#coEmail').focus();$('#coEmail').style.borderColor='var(--c3)';return;}
   const phone=$('#coPhone').value.trim(),addr=$('#coAddr').value.trim(),city=$('#coCity').value.trim(),zip=$('#coZip').value.trim();
+  const v=PAY[selectedPayKey];
   const total=cartTotal(),units=cartCount(),items=orderLines();
-  const order={id:'#'+(1000+sales.length+1),name,email,phone,addr:`${addr}, ${city} ${zip}`,pay:selectedPay,units,total,items,status:'Processing',date:new Date().toISOString()};
+  const detailed=Object.values(cart).map(i=>({name:i.name,size:i.size,qty:i.qty,line:i.price*i.qty}));
+  const order={id:'#'+(1000+sales.length+1),name,email,phone,addr:`${addr}, ${city} ${zip}`,payKey:selectedPayKey,pay:v.label,units,total,items,status:'Awaiting payment',date:new Date().toISOString()};
   sales.push(order);localStorage.setItem('pep_sales',JSON.stringify(sales));
-  const body=`NEW ORDER ${order.id}\n\nPACK & SHIP:\n${items.join('\n')}\n\nTotal: ${money(total)}\nPayment method: ${selectedPay}\n\nShip to:\n${name}\n${order.addr}\nEmail: ${email}\nPhone: ${phone||'-'}\n\nPlaced: ${new Date().toLocaleString()}`;
-  notifyOwner(order,body);
+  const invoice=buildInvoice(order,detailed);
+  notifyOwner(order,invoice);
   cart={};saveCart();updateCart();renderDashboard();
   $('#checkoutForm').style.display='none';$('#checkoutSuccess').style.display='block';
-  $('#successMsg').innerHTML=`Order <strong>${order.id}</strong> for <strong>${money(total)}</strong> received. We'll email <strong>${email}</strong> payment instructions for <strong>${selectedPay}</strong>, then ship to ${name} (allow up to 30 days).`;
+  $('#successMsg').innerHTML=`Order <strong>${order.id}</strong> received — total <strong>${money(total)}</strong>.<br><br>
+    <strong>To complete your order, pay ${money(total)} via ${v.label}:</strong><br>${v.how}
+    ${v.to?`<div style="margin-top:6px">Send to: <b style="color:var(--c1);word-break:break-all">${v.to}</b></div>`:''}
+    ${payAppsHTML(v,true)}
+    <div style="margin-top:10px;font-size:12px">After paying, email your payment proof and order number <strong>${order.id}</strong> to <b>${ORDER_EMAIL}</b>. We ship within the dispatch window once payment is confirmed.</div>
+    <div class="invoice">${invoice.replace(/</g,'&lt;')}</div>`;
 }
 function notifyOwner(order,body){
   if(WEB3FORMS_KEY){
