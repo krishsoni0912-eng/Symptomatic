@@ -676,6 +676,141 @@ function bigVial(name,purity,kind){
   </svg>`;
 }
 
+/* ---------- brand-free product-photo vial (front page) ---------- */
+function doseFmt(s){return String(s).replace(/mg/i,' MG').replace(/ml/i,' ML').replace(/iu/i,' IU').replace(/mcg/i,' MCG').toUpperCase();}
+function shelfVial(name,dose){
+  const n=name.length>20?9:name.length>16?10.5:name.length>12?12:14;
+  return `<svg class="art" viewBox="0 0 200 320" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="cap2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6c7480"/><stop offset=".5" stop-color="#b3bac4"/><stop offset="1" stop-color="#5f666f"/></linearGradient>
+      <linearGradient id="col2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c7ccd4"/><stop offset=".5" stop-color="#f4f6f9"/><stop offset="1" stop-color="#b9bfc8"/></linearGradient>
+      <linearGradient id="body2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e6ecf4" stop-opacity=".55"/><stop offset=".5" stop-color="#ffffff" stop-opacity=".95"/><stop offset="1" stop-color="#ccd4e0" stop-opacity=".55"/></linearGradient>
+      <linearGradient id="band2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1f9be0"/><stop offset="1" stop-color="#3cb2f0"/></linearGradient>
+    </defs>
+    <ellipse cx="100" cy="306" rx="54" ry="9" fill="#000" opacity=".33"/>
+    <rect x="66" y="14" width="68" height="30" rx="5" fill="url(#cap2)"/>
+    <rect x="70" y="9" width="60" height="11" rx="4" fill="#7b828c"/>
+    <rect x="64" y="42" width="72" height="14" rx="3" fill="url(#col2)"/>
+    <path d="M62 54 h76 a6 6 0 0 1 6 6 v224 a20 20 0 0 1-20 20 H76 a20 20 0 0 1-20-20 V60 a6 6 0 0 1 6-6 Z" fill="url(#body2)" stroke="rgba(255,255,255,.6)"/>
+    <rect x="70" y="64" width="7" height="220" rx="3.5" fill="#fff" opacity=".7"/>
+    <rect x="60" y="150" width="80" height="122" rx="4" fill="#ffffff"/>
+    <rect x="60" y="186" width="80" height="22" fill="url(#band2)"/>
+    <text x="100" y="201" font-family="Space Grotesk,Arial,sans-serif" font-size="${n}" font-weight="700" fill="#fff" text-anchor="middle">${name}</text>
+    <rect x="76" y="216" width="48" height="20" rx="3" fill="#fff" stroke="#9aa3b0"/>
+    <text x="100" y="230" font-family="Space Grotesk,Arial,sans-serif" font-size="12" font-weight="700" fill="#1b2430" text-anchor="middle">${dose}</text>
+    <text x="100" y="250" font-family="Space Grotesk,Arial,sans-serif" font-size="8" fill="#5a6472" text-anchor="middle">99% Purity</text>
+    <text x="100" y="261" font-family="Space Grotesk,Arial,sans-serif" font-size="7.5" fill="#7a8492" text-anchor="middle">Research Use Only</text>
+  </svg>`;
+}
+function cardArt(p){return (p.id==='syr29'||p.id==='syr31'||p.id==='pads')?p.art:shelfVial(p.name,doseFmt(p.variants[0].size));}
+
+/* ---------- plain-language descriptions ---------- */
+const EASY={
+  tirz:'The heavy-hitter for fat loss — a dual GLP-1/GIP researched for powerful appetite control and weight management (same class as Mounjaro/Zepbound).',
+  sema:'GLP-1 researched for appetite suppression and weight loss — the compound behind Ozempic/Wegovy. A go-to for getting lean.',
+  reta:'Next-gen triple-action fat-loss research peptide — studied for some of the strongest weight and appetite results yet.',
+  cagri:'Amylin analogue researched for appetite control and fullness — often paired with semaglutide for fat loss.',
+  survo:'Dual GLP-1/glucagon researched for weight loss and liver-fat metabolism.',
+  aod:'A growth-hormone fragment studied for burning fat without affecting blood sugar or growth.',
+  adipo:'Research peptide studied for cutting off the blood supply to fat tissue.',
+  motsc:'Mitochondrial peptide studied for energy, metabolism and endurance — the "exercise in a vial" research compound.',
+  amq:'Studied for revving metabolism and fat burning by blocking a fat-storage enzyme.',
+  slu:'Exercise-mimetic researched for fat burning and stamina without the workout.',
+  lcar:'Carnitine studied for turning stored fat into usable energy — a fat-loss and energy staple.',
+  lipoc:'Fat-burning lipotropic blend studied for breaking down and flushing out stored fat.',
+  lipoc2:'Lipotropic MIC solution studied for breaking down and flushing stored fat.',
+  lemon:'Lipolytic solution studied for dissolving stubborn localized fat.',
+  aicar:'Endurance research compound studied for stamina and fat metabolism (an "exercise mimetic").',
+  cjcnd:'Boosts your own growth hormone in natural pulses — researched for muscle, recovery and a leaner build.',
+  cjcd:'Long-acting growth-hormone booster studied for steady GH support, muscle and recovery.',
+  ipa:'Clean growth-hormone booster researched for muscle, recovery and deeper sleep with minimal side effects.',
+  sermo:'Studied for raising your natural growth hormone — popular in anti-aging, muscle and sleep research.',
+  tesa:'Growth-hormone releaser specifically studied for trimming stubborn belly/visceral fat.',
+  hex:'Strong growth-hormone releaser studied for muscle growth and faster recovery.',
+  ghrp2:'Growth-hormone peptide studied for muscle gain and a bump in appetite.',
+  ghrp6:'Growth-hormone peptide studied for muscle and a strong hunger boost — handy for bulking research.',
+  hgh:'Real growth hormone — researched for muscle growth, fat loss, recovery and anti-aging.',
+  igf:'Powerful growth factor studied for muscle-cell growth and repair.',
+  mgf:'Muscle-repair factor studied for building new muscle after training stress.',
+  pegmgf:'Longer-lasting muscle-repair factor studied for recovery and growth.',
+  bpc:'The healing peptide — researched for repairing tendons, joints, muscle and the gut.',
+  tb500:'Recovery peptide studied for healing injuries, flexibility and lowering inflammation.',
+  kpv:'Anti-inflammatory peptide studied for gut health and calming inflammation.',
+  vip:'Studied for immune balance, lung health and reducing inflammation.',
+  ll37:'Antimicrobial peptide studied for immune defense and fighting infection.',
+  dermo:'Research peptide used in pain/analgesia studies.',
+  thymalin:'Immune-support peptide studied for balancing immunity and healthy aging.',
+  bbtb:'The ultimate recovery stack — BPC-157 + TB-500 researched together for faster healing.',
+  glow:'Skin + recovery blend (TB-500 + BPC-157 + GHK-Cu) studied for glowing skin and healing.',
+  klow:'Glow blend plus KPV — studied for skin, gut and full-body recovery.',
+  cjcipa:'The classic growth-hormone stack — CJC-1295 + Ipamorelin for muscle, recovery and anti-aging.',
+  cagsem:'Fat-loss power couple — cagrilintide + semaglutide researched for strong appetite control.',
+  shb:'An all-in-one recovery and performance research blend.',
+  ghkcu:'Copper peptide loved in skin and hair research — studied for collagen, firmer skin and thicker hair.',
+  mt2:'The tanning peptide — studied for a deep tan with sun exposure, plus libido effects.',
+  mt1:'Tanning peptide studied for darker, more even pigmentation.',
+  gluta:'Master antioxidant studied for brighter, clearer skin and detox — the "glow" molecule.',
+  snap8:'Peptide studied for smoothing expression lines and wrinkles.',
+  pt141:'The libido peptide — researched for boosting sexual arousal and desire.',
+  nad:'Cellular-energy and anti-aging coenzyme studied for energy, repair and longevity.',
+  epi:'Anti-aging peptide studied for longevity, better sleep and cellular repair.',
+  pineal:'Brain peptide studied for memory, focus and healthy aging.',
+  foxo4:'Cutting-edge longevity peptide studied for clearing out old "senescent" cells.',
+  ss31:'Mitochondria-targeting peptide studied for cellular energy and anti-aging.',
+  b12:'Energy vitamin studied for metabolism and fighting fatigue.',
+  dsip:'The sleep peptide — studied for deeper, more restful sleep.',
+  mela:'Sleep hormone studied for resetting your sleep cycle.',
+  selank:'Calm-and-focus peptide studied for easing anxiety and sharpening the mind.',
+  semax:'Nootropic peptide studied for focus, memory and brain protection.',
+  oxy:'The "bonding" hormone studied for mood, connection and wellbeing.',
+  kiss:'Hormone-trigger peptide studied for boosting natural testosterone and fertility signals.',
+  gonad:'Studied for kick-starting the body’s natural testosterone production.',
+  hcg:'Studied for supporting natural hormone and testosterone production.',
+  hmg:'Fertility/hormone research compound studied for supporting natural hormone output.',
+  bac10:'Sterile mixing water — use this to reconstitute (mix) your peptides before use.',
+  acetic:'Mild acidic solvent for mixing peptides that need acidic reconstitution.',
+  syr29:'Sterile insulin syringes for drawing and measuring your research solution.',
+  syr31:'Extra-fine sterile insulin syringes for precise measuring.',
+  pads:'Sterile alcohol wipes for cleaning vial tops before drawing.'
+};
+/* ---------- smart-search aliases / nicknames ---------- */
+const ALIAS={
+  tirz:'mounjaro zepbound weight loss glp skinny fat burn appetite',
+  sema:'ozempic wegovy weight loss glp skinny fat burn appetite',
+  reta:'weight loss glp fat burn triple agonist',
+  cagri:'cagrisema appetite weight fat',
+  cagsem:'cagrisema weight loss appetite',
+  survo:'weight loss liver fat glp',
+  aod:'fat burn hgh fragment weight',
+  mt2:'tan tanning bronze sun melanotan libido',
+  mt1:'tan tanning melanotan pigment',
+  pt141:'libido sex drive arousal bremelanotide erectile',
+  ghkcu:'hair skin collagen copper glow wrinkle',
+  gluta:'skin whitening glow brighten antioxidant detox',
+  snap8:'wrinkle botox antiaging skin face',
+  bpc:'healing injury recovery gut tendon joint',
+  tb500:'healing injury recovery thymosin flexibility',
+  bbtb:'healing recovery wolverine stack injury',
+  hgh:'growth hormone somatropin muscle anti aging',
+  cjcipa:'growth hormone stack muscle gh',
+  ipa:'growth hormone gh muscle sleep',
+  igf:'muscle growth igf1',
+  nad:'energy longevity anti aging nad+ nadplus',
+  ss31:'mitochondria energy anti aging elamipretide',
+  dsip:'sleep insomnia rest',
+  mela:'sleep melatonin insomnia',
+  selank:'anxiety calm focus mood',
+  semax:'focus memory nootropic brain',
+  hcg:'testosterone trt fertility hormone',
+  gonad:'testosterone trt gonadorelin',
+  kiss:'testosterone fertility hormone kisspeptin',
+  bac10:'bacteriostatic water mixing reconstitute solvent',
+  acetic:'acetic acid solvent mixing reconstitute',
+  syr29:'syringe needle insulin',
+  syr31:'syringe needle insulin fine',
+  pads:'alcohol swab wipe prep pad'
+};
+
 /* ---------- HPLC purity-test chart image ---------- */
 function purityChart(purity){
   return `<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
@@ -850,8 +985,9 @@ function filterGoal(k){activeFilter=k;buildFilters();renderProducts();$('#shop')
 function onSearch(v){searchTerm=(v||'').trim().toLowerCase();renderProducts();}
 function matches(p){
   const inCat=activeFilter==='all'||(p.goals||[]).includes(activeFilter);
-  const inSearch=!searchTerm||p.name.toLowerCase().includes(searchTerm)||(p.desc||'').toLowerCase().includes(searchTerm);
-  return inCat&&inSearch;
+  if(!searchTerm)return inCat;
+  const hay=[p.name,EASY[p.id]||'',p.desc||'',(p.goals||[]).map(g=>GOALS[g]&&GOALS[g].label||'').join(' '),ALIAS[p.id]||''].join(' ').toLowerCase();
+  return inCat&&searchTerm.split(/\s+/).every(t=>hay.includes(t));
 }
 function gbadges(p){return (p.goals||[]).filter(g=>GOALS[g]).slice(0,3).map(g=>`<span class="gb" style="--gbc:${GOALS[g].color}">${GOALS[g].label.split(' ')[0]}</span>`).join('');}
 
@@ -870,11 +1006,11 @@ function productCard(p){
       <div class="goal-badges">${gbadges(p)}</div>
       <span class="purity-tag">${p.purity}</span>
       ${!isSup?`<span class="lab-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 6v6c0 5 8 8 8 8s8-3 8-8V6z"/><path d="M9 12l2 2 4-4"/></svg> Lab Approved</span>`:''}
-      ${p.art}
+      ${cardArt(p)}
     </div>
     <div class="card-body">
       <h3>${p.name}</h3>
-      <div class="desc">${p.desc}</div>
+      <div class="desc">${EASY[p.id]||p.desc}</div>
       ${!isSup?`<div class="card-warn">Research use only · Not FDA approved</div>`:''}
       ${variantSelect(p)}
       <div class="card-meta"><span>${single?packLabel(p,p.variants[0].size):''}</span>${!isSup?`<span class="coa-link" onclick="event.stopPropagation();openCoa('${p.name}','RC-2026-${Math.floor(Math.random()*9000+1000)}','${p.purity}')">View COA</span>`:''}</div>
@@ -921,18 +1057,23 @@ function openDetail(id){
     <div class="detail-imgs">
       <div class="detail-img">
         <div class="lab-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 6v6c0 5 8 8 8 8s8-3 8-8V6z"/><path d="M9 12l2 2 4-4"/></svg> Lab Approved · HPLC Verified</div>
-        ${bigVial(p.name,p.purity,p.kind)}
+        ${shelfVial(p.name,doseFmt(p.variants[0].size))}
       </div>
+      ${!isSup?`<div class="detail-purity">
+        <div class="pt-head"><span>Product Photo · 2</span><b>actual</b></div>
+        ${bigVial(p.name,p.purity,p.kind)}
+        <div class="pt-note">Second image slot — your real de-branded product photo can be dropped in here.</div>
+      </div>`:''}
       ${!isSup?`<div class="detail-purity">
         <div class="pt-head"><span>Purity Test · HPLC</span><b>${p.purity}</b></div>
         ${purityChart(p.purity)}
-        <div class="pt-note">Representative chromatogram. Full Certificate of Analysis available per lot (${lot}). Real lab-report image can be added here.</div>
+        <div class="pt-note">Representative chromatogram. Full Certificate of Analysis available per lot (${lot}).</div>
       </div>`:''}
     </div>
     <div class="detail-info">
       <h2>${p.name}</h2>
       <div class="detail-tags">${tags}</div>
-      <div class="body">${p.desc} ${isSup?'':'Sold as a sealed box of <strong>10 vials</strong> — the strength shown is per vial. '}Reconstitute with bacteriostatic water before use — see the <a href="#instructions" class="coa-link" onclick="closeModal('detailModal')">reconstitution guide</a>. Each lot ships with a matching Certificate of Analysis.</div>
+      <div class="body"><strong style="color:var(--text)">${EASY[p.id]||p.desc}</strong><br><span style="font-size:13px;color:var(--muted2)">${p.desc}</span> ${isSup?'':'<br>Sold as a sealed box of <strong>10 vials</strong> — the strength shown is per vial. Reconstitute with bacteriostatic water before use — see the <a href="#instructions" class="coa-link" onclick="closeModal(\'detailModal\')">reconstitution guide</a>.'}</div>
       <div class="detail-spec">
         <div class="sp"><div class="k">Measured Purity</div><div class="v">${p.purity}</div></div>
         <div class="sp"><div class="k">Pack</div><div class="v">${isSup?p.variants[0].size:'Box of 10 vials'}</div></div>
