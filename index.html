@@ -345,6 +345,14 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
 .pay-why{font-size:11.5px;color:var(--muted2);line-height:1.55;border-left:2px solid var(--c2);padding:5px 0 5px 12px;margin:0 0 16px}
 .pay-why strong{color:var(--muted)}
 .invoice{white-space:pre-wrap;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;line-height:1.5;background:var(--panel);border:1px solid var(--stroke);border-radius:11px;padding:14px;color:var(--text);text-align:left;margin:14px 0 0;max-height:240px;overflow:auto}
+.legal h4{font-size:14px;margin:18px 0 4px;color:var(--text)}
+.legal p{font-size:13px;color:var(--muted);line-height:1.65;margin:0 0 4px}
+.legal ul{margin:8px 0;padding-left:18px}
+.legal li{font-size:13px;color:var(--muted);line-height:1.55;margin:6px 0}
+.agree-doc{max-height:230px;overflow:auto;border:1px solid var(--stroke);border-radius:12px;padding:14px 16px;background:var(--panel);margin-bottom:6px}
+.agree-doc p{margin:0 0 6px}
+.agree-check{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--text);margin:14px 0;cursor:pointer}
+.agree-check input{margin-top:3px;flex:none;width:16px;height:16px}
 </style>
 </head>
 <body>
@@ -401,7 +409,8 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
     <div class="badge-row reveal">
       <span class="pill"><span class="dot"></span> Third-Party Tested</span>
       <span class="pill"><span class="dot"></span> 99%+ Purity</span>
-      <span class="pill"><span class="dot"></span> 30-Day Worldwide Shipping</span>
+      <span class="pill"><span class="dot"></span> Research Use Only</span>
+      <span class="pill"><span class="dot"></span> Do Your Own Research</span>
     </div>
     <h1 class="reveal">RESEARCH-GRADE<br><span class="grad">PEPTIDES</span></h1>
     <p class="lead reveal">High-purity peptides and lab supplies supplied strictly for laboratory research. <strong>Not FDA approved · investigational · do your own research.</strong> Browse by research area, choose your size, and review the lab report on every vial.</p>
@@ -590,7 +599,7 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
         <p>Research-grade peptides and lab supplies, third-party tested for purity. 30-day worldwide shipping, discreet packaging. Brand name to be finalized.</p>
       </div>
       <div class="foot-col"><h4>Shop</h4><a href="#goals">Research Areas</a><a href="#shop">All Products</a><a href="#kits">Kits</a><a href="#shop">Supplies</a></div>
-      <div class="foot-col"><h4>Info</h4><a href="#instructions">Reconstitution Guide</a><a href="#purity">Purity &amp; COA</a><a href="#dashboard">Sales Dashboard</a><a href="#">Contact</a></div>
+      <div class="foot-col"><h4>Info</h4><a href="#instructions">Reconstitution Guide</a><a href="#purity">Purity &amp; COA</a><a href="#" onclick="openModal('termsModal');return false">Terms &amp; Conditions</a><a href="#" onclick="openModal('privacyModal');return false">Privacy Policy</a></div>
       <div class="foot-col"><h4>Status</h4><a href="#">All systems operational</a><a href="#">30-day delivery window</a><a href="#dashboard">Owner login</a></div>
     </div>
     <div class="foot-bottom">
@@ -606,7 +615,7 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
   <div class="cart-items" id="cartItems"></div>
   <div class="drawer-foot">
     <div class="tot"><span>Subtotal</span><span class="price" id="cartTotal">$0</span></div>
-    <div class="ship-note">30-day worldwide shipping &middot; Free shipping over $150 &middot; Tax at checkout</div>
+    <div class="ship-note">Research use only · Not FDA approved · Do your own research · 30-day worldwide shipping</div>
     <button class="checkout-btn" id="checkoutBtn" onclick="openCheckout()">Checkout</button>
   </div>
 </aside>
@@ -622,7 +631,25 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
 <div class="modal" id="checkoutModal">
   <div class="modal-box">
     <button class="x close" onclick="closeModal('checkoutModal')">&times;</button>
-    <div id="checkoutForm">
+    <div id="agreeStep">
+      <h3>Before you order</h3>
+      <div class="sub">Please read and agree to the statement below to continue. This protects both you and us.</div>
+      <div class="agree-doc legal">
+        <p><strong>Research-Use-Only &amp; Liability Agreement</strong></p>
+        <p>By checking the box and continuing, I confirm and agree that:</p>
+        <ul>
+          <li>I am at least <strong>21 years old</strong> and a qualified researcher purchasing solely for bona-fide laboratory research.</li>
+          <li>All products are <strong>investigational compounds for research / laboratory use only</strong>, are <strong>NOT FDA approved</strong>, and are <strong>NOT</strong> drugs, supplements, cosmetics, or medical products.</li>
+          <li>Products are <strong>NOT for human or animal consumption</strong>, diagnosis, treatment, or any in-vivo use, and <strong>no</strong> therapeutic, performance, cosmetic, or weight-related effect is claimed or implied.</li>
+          <li>I will <strong>do my own research</strong> and am solely responsible for the lawful handling, use, storage, and disposal of all products under the laws that apply to me.</li>
+          <li>Products are sold <strong>"as is" with no warranty of any kind</strong>. To the fullest extent permitted by law, I <strong>release and waive all claims</strong> against the seller and <strong>agree not to bring any lawsuit</strong> for any loss, injury, or damage arising from these products or their use, and I agree to indemnify and hold the seller harmless.</li>
+          <li>I have read and accept the <a class="coa-link" onclick="openModal('termsModal')">Terms &amp; Conditions</a> and <a class="coa-link" onclick="openModal('privacyModal')">Privacy Policy</a>.</li>
+        </ul>
+      </div>
+      <label class="agree-check"><input type="checkbox" id="agreeChk" onchange="document.getElementById('agreeBtn').disabled=!this.checked"> I have read, understand, and agree to the statement above.</label>
+      <button class="checkout-btn" id="agreeBtn" disabled onclick="agreeContinue()">I Agree — Continue to Checkout</button>
+    </div>
+    <div id="checkoutForm" style="display:none">
       <h3>Checkout</h3>
       <div class="sub">Ships worldwide, allow up to 30 days. Place your order below — we email you a secure payment link / invoice to complete payment, then ship.</div>
       <div class="field"><label>Full name</label><input id="coName" placeholder="Alex Rivera"></div>
@@ -657,6 +684,64 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
     <div class="coa-row"><span>Sterility</span><span>PASS</span></div>
     <div class="coa-row"><span>Overall</span><span>RELEASED</span></div>
     <p style="font-size:12px;color:var(--muted2);margin-top:18px">Representative sample document. Live COAs are generated per lot and matched to the batch number printed on each vial.</p>
+  </div>
+</div>
+
+<div class="modal" id="termsModal">
+  <div class="modal-box wide">
+    <button class="x close" onclick="closeModal('termsModal')">&times;</button>
+    <div class="legal">
+      <h3>Terms &amp; Conditions</h3>
+      <div class="sub">Last updated 2026 · Please read before purchasing.</div>
+      <h4>1. Research use only</h4>
+      <p>All products sold on this website are <strong>investigational compounds intended strictly for laboratory and research use only</strong>. They are <strong>not approved by the FDA</strong> and are <strong>not</strong> drugs, foods, supplements, cosmetics, or medical devices. They are <strong>not for human or animal consumption</strong> and must not be used for diagnosis, treatment, cure, prevention of disease, or any in-vivo application. No therapeutic, performance, cosmetic, or weight-related effect is claimed or implied.</p>
+      <h4>2. Eligibility</h4>
+      <p>You must be at least <strong>21 years of age</strong>, legally permitted to purchase these materials where you live, and a qualified researcher acquiring them for legitimate research. By ordering you certify all of the above.</p>
+      <h4>3. Do your own research</h4>
+      <p>You are solely responsible for understanding what you are purchasing and for the lawful handling, storage, use, and disposal of all products in accordance with every law and regulation that applies to you. Conduct your own due diligence before ordering.</p>
+      <h4>4. No medical advice</h4>
+      <p>Nothing on this website is medical, legal, or professional advice. Always consult a licensed professional. Statements have not been evaluated by the FDA or any regulatory authority.</p>
+      <h4>5. No warranty &amp; limitation of liability</h4>
+      <p>Products are provided <strong>"as is"</strong> without warranty of any kind, express or implied, including merchantability or fitness for a particular purpose. To the fullest extent permitted by law, the seller is not liable for any direct, indirect, incidental, or consequential loss, injury, or damage arising from the products or their use. The buyer assumes all risk and agrees to indemnify and hold the seller harmless.</p>
+      <h4>6. Waiver of claims</h4>
+      <p>To the fullest extent permitted by law, by purchasing you release and waive all claims against the seller and agree not to bring any lawsuit or legal action arising from the products or their use. (Note: some claims cannot be waived under applicable law.)</p>
+      <h4>7. Orders, pricing &amp; payment</h4>
+      <p>Prices are in USD and may change without notice. Payment is made directly through the method you select at checkout (crypto, Cash App, Zelle, or bank transfer); we do not collect card details on this site. Orders are processed after payment is confirmed.</p>
+      <h4>8. Shipping &amp; returns</h4>
+      <p>Allow up to 30 days for worldwide delivery. Risk of loss passes on shipment. Because of the nature of these products, <strong>all sales are final</strong> and returns are not accepted once shipped, except where required by law.</p>
+      <h4>9. Compliance &amp; refusal</h4>
+      <p>We may refuse or cancel any order at our discretion. You agree not to resell, misuse, or use any product unlawfully.</p>
+      <h4>10. Governing law &amp; changes</h4>
+      <p>These terms are governed by the laws of the seller's jurisdiction [set your state]. We may update these terms at any time; continued use constitutes acceptance. Questions: krishsoni0912@gmail.com.</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="privacyModal">
+  <div class="modal-box wide">
+    <button class="x close" onclick="closeModal('privacyModal')">&times;</button>
+    <div class="legal">
+      <h3>Privacy Policy</h3>
+      <div class="sub">Last updated 2026 · Your privacy and data.</div>
+      <h4>What we collect</h4>
+      <p>Only what you give us at checkout to process an order: your name, email, phone (optional), shipping address, and the items you ordered. We do <strong>not</strong> ask for or store any payment-card numbers on this website.</p>
+      <h4>How we use it</h4>
+      <p>Your information is used solely to process, fulfill, ship, and communicate about your order, and to meet legal obligations. We do <strong>not</strong> sell, rent, or trade your personal information to anyone.</p>
+      <h4>Who sees it</h4>
+      <p>Order details are sent to us (and, if enabled, through our form/email provider) so we can fulfill your order, and shared only with a shipping carrier as needed to deliver, or if required by law.</p>
+      <h4>Payments</h4>
+      <p>Payments happen directly between you and your chosen method (crypto wallet, Cash App, Zelle, or bank). We never see or store your card or banking credentials.</p>
+      <h4>Stored on your device</h4>
+      <p>Your cart and your own order history are saved in your browser's local storage on your device only. You can clear them at any time in your browser, and the owner dashboard data stays on the device it was created on.</p>
+      <h4>Security</h4>
+      <p>We minimize the data we collect (and collect no card data) to reduce risk. No method of transmission or storage is 100% secure, but we take reasonable steps to protect your information.</p>
+      <h4>Your choices</h4>
+      <p>You may request access to, correction of, or deletion of your personal information by emailing krishsoni0912@gmail.com. We honor applicable privacy rights (including CCPA/GDPR-style requests where they apply).</p>
+      <h4>Age</h4>
+      <p>This site is intended only for adults 21+ and is not directed to minors. We do not knowingly collect data from anyone under 21.</p>
+      <h4>Changes</h4>
+      <p>We may update this policy; the latest version is always posted here.</p>
+    </div>
   </div>
 </div>
 
@@ -1183,7 +1268,8 @@ function renderPayInfo(){
 }
 
 /* ---------- checkout ---------- */
-function openCheckout(){if(!cartCount())return;closeCart();$('#checkoutForm').style.display='block';$('#checkoutSuccess').style.display='none';renderPayMethods();$('#checkoutModal').classList.add('open');}
+function openCheckout(){if(!cartCount())return;closeCart();$('#agreeStep').style.display='block';$('#checkoutForm').style.display='none';$('#checkoutSuccess').style.display='none';$('#agreeChk').checked=false;$('#agreeBtn').disabled=true;$('#checkoutModal').classList.add('open');}
+function agreeContinue(){$('#agreeStep').style.display='none';$('#checkoutForm').style.display='block';renderPayMethods();}
 function orderLines(){return Object.values(cart).map(i=>`${i.qty}× ${i.name} (${i.size}) — ${money(i.price*i.qty)}`);}
 function pad(s,n){s=String(s);return s.length>=n?s:s+' '.repeat(n-s.length);}
 function buildInvoice(order,detailed){
@@ -1265,6 +1351,7 @@ function ownerLock(){sessionStorage.removeItem('pep_owner');$('#ownerPanel').sty
 
 /* ---------- modals ---------- */
 function openCoa(prod,lot,pur){$('#coaProd').textContent=prod;$('#coaLot').textContent=lot;$('#coaPur').textContent=pur;$('#coaModal').classList.add('open');}
+function openModal(id){$('#'+id).classList.add('open');}
 function closeModal(id){$('#'+id).classList.remove('open');}
 
 /* ---------- age gate ---------- */
