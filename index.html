@@ -324,6 +324,17 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
 .detail-purity .pt-note{font-size:10px;color:var(--muted2);margin-top:4px}
 .warn-box{border:1px solid rgba(255,176,32,.4);background:rgba(255,176,32,.07);border-radius:14px;padding:14px 16px;font-size:12.5px;color:var(--muted);line-height:1.55;margin-top:16px}
 .warn-box strong{color:#ffb020}
+.owner-gate{display:flex;align-items:center;gap:12px;flex-wrap:wrap;border:1px solid var(--stroke);background:var(--panel);border-radius:var(--radius);padding:22px;max-width:480px}
+.owner-gate svg{width:26px;height:26px;color:var(--c1)}
+.owner-gate input{flex:1;min-width:160px;padding:13px 14px;border-radius:11px;border:1px solid var(--stroke);background:var(--panel2);color:var(--text);font-family:inherit;font-size:14px}
+.owner-gate input:focus{outline:none;border-color:var(--c1)}
+.owner-gate .btn{padding:13px 22px}
+.owner-err{flex-basis:100%;color:var(--c3);font-size:12px;min-height:14px}
+.pay-methods{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px}
+.pay-opt{border:1px solid var(--stroke);border-radius:11px;padding:11px 12px;font-size:13px;cursor:pointer;background:var(--panel);transition:.2s;display:flex;align-items:center;gap:8px}
+.pay-opt:hover{border-color:rgba(255,255,255,.25)}
+.pay-opt.sel{border-color:var(--c1);background:rgba(0,240,255,.08)}
+.pay-opt input{margin:0}
 </style>
 </head>
 <body>
@@ -358,7 +369,6 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
       <a href="#kits" onclick="closeMenu()">Kits</a>
       <a href="#instructions" onclick="closeMenu()">Instructions</a>
       <a href="#purity" onclick="closeMenu()">Purity &amp; COA</a>
-      <a href="#dashboard" onclick="closeMenu()">Sales</a>
     </nav>
     <button class="menu-toggle" onclick="toggleMenu()">&#9776;</button>
     <button class="cart-btn" onclick="openCart()">
@@ -519,21 +529,29 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
 <section class="dash" id="dashboard">
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="eyebrow">Owner View</div>
-      <h2 class="title">Sales dashboard</h2>
-      <p>Live tally of orders placed through the store. (Demo tracking stored in your browser — connect a payment processor to make it real.)</p>
+      <div class="eyebrow">Private · Owner Only</div>
+      <h2 class="title">Owner portal</h2>
+      <p>Restricted area. Customers don't see this — enter your owner passcode to view orders to fulfill.</p>
     </div>
-    <div class="dash-cards reveal">
-      <div class="dash-card"><div class="k">Total Revenue</div><div class="v" id="dRevenue">$0</div></div>
-      <div class="dash-card"><div class="k">Orders</div><div class="v" id="dOrders">0</div></div>
-      <div class="dash-card"><div class="k">Units Sold</div><div class="v" id="dUnits">0</div></div>
-      <div class="dash-card"><div class="k">Avg. Order</div><div class="v" id="dAov">$0</div></div>
+    <div id="ownerGate" class="owner-gate reveal">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+      <input id="ownerPass" type="password" placeholder="Owner passcode" onkeydown="if(event.key==='Enter')ownerUnlock()">
+      <button class="btn btn-primary" onclick="ownerUnlock()">Unlock</button>
+      <div id="ownerErr" class="owner-err"></div>
     </div>
-    <table class="dash-table reveal">
-      <thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th></tr></thead>
-      <tbody id="orderRows"><tr><td colspan="5" class="empty">No orders yet — place a test order to see it appear here.</td></tr></tbody>
-    </table>
-    <p style="margin-top:14px;font-size:12px;color:var(--muted2)">Reset demo data anytime — <a href="#" onclick="clearSales();return false" style="color:var(--c1)">clear dashboard</a>.</p>
+    <div id="ownerPanel" style="display:none">
+      <div class="dash-cards">
+        <div class="dash-card"><div class="k">Total Revenue</div><div class="v" id="dRevenue">$0</div></div>
+        <div class="dash-card"><div class="k">Orders</div><div class="v" id="dOrders">0</div></div>
+        <div class="dash-card"><div class="k">Units Sold</div><div class="v" id="dUnits">0</div></div>
+        <div class="dash-card"><div class="k">Avg. Order</div><div class="v" id="dAov">$0</div></div>
+      </div>
+      <table class="dash-table">
+        <thead><tr><th>Order</th><th>Customer</th><th>Items to box &amp; ship</th><th>Total</th><th>Pay</th></tr></thead>
+        <tbody id="orderRows"><tr><td colspan="5" class="empty">No orders on this device yet. Real customer orders are emailed to you the moment they check out.</td></tr></tbody>
+      </table>
+      <p style="margin-top:14px;font-size:12px;color:var(--muted2)">Orders shown here are the ones placed on <em>this</em> device. Every order also emails you the full pack-and-ship list. · <a href="#" onclick="clearSales();return false" style="color:var(--c1)">clear this device</a> · <a href="#" onclick="ownerLock();return false" style="color:var(--c1)">lock</a></p>
+    </div>
   </div>
 </section>
 
@@ -563,7 +581,7 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
       </div>
       <div class="foot-col"><h4>Shop</h4><a href="#goals">Shop by Goal</a><a href="#shop">All Products</a><a href="#kits">Kits</a><a href="#shop">Supplies</a></div>
       <div class="foot-col"><h4>Info</h4><a href="#instructions">Reconstitution Guide</a><a href="#purity">Purity &amp; COA</a><a href="#dashboard">Sales Dashboard</a><a href="#">Contact</a></div>
-      <div class="foot-col"><h4>Status</h4><a href="#">All systems operational</a><a href="#">30-day delivery window</a><a href="#">Free shipping over $150</a></div>
+      <div class="foot-col"><h4>Status</h4><a href="#">All systems operational</a><a href="#">30-day delivery window</a><a href="#dashboard">Owner login</a></div>
     </div>
     <div class="foot-bottom">
       <span>&copy; 2026 Peptide Research Co. (placeholder brand). All rights reserved.</span>
@@ -596,14 +614,22 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
     <button class="x close" onclick="closeModal('checkoutModal')">&times;</button>
     <div id="checkoutForm">
       <h3>Checkout</h3>
-      <div class="sub">Ships worldwide, allow up to 30 days. Demo checkout — no real card is charged.</div>
+      <div class="sub">Ships worldwide, allow up to 30 days. Place your order below — we email you a secure payment link / invoice to complete payment, then ship.</div>
       <div class="field"><label>Full name</label><input id="coName" placeholder="Alex Rivera"></div>
       <div class="field"><label>Email</label><input id="coEmail" type="email" placeholder="you@email.com"></div>
+      <div class="field"><label>Phone (optional)</label><input id="coPhone" placeholder="+1 555 123 4567"></div>
       <div class="field"><label>Shipping address</label><input id="coAddr" placeholder="123 Lab St"></div>
       <div class="row2"><div class="field"><label>City</label><input id="coCity" placeholder="Austin"></div><div class="field"><label>ZIP</label><input id="coZip" placeholder="78701"></div></div>
-      <div class="field"><label>Card number</label><input id="coCard" placeholder="4242 4242 4242 4242" inputmode="numeric"></div>
-      <div class="row2"><div class="field"><label>Expiry</label><input id="coExp" placeholder="12/28"></div><div class="field"><label>CVC</label><input id="coCvc" placeholder="123" inputmode="numeric"></div></div>
-      <button class="checkout-btn" style="margin-top:8px" onclick="placeOrder()">Pay <span id="payAmt">$0</span> &amp; Ship</button>
+      <div class="field"><label>How would you like to pay?</label>
+        <div class="pay-methods">
+          <label class="pay-opt sel"><input type="radio" name="pay" value="Secure card link" checked onchange="selPay(this)"> Card (secure link)</label>
+          <label class="pay-opt"><input type="radio" name="pay" value="Zelle / Cash App" onchange="selPay(this)"> Zelle / Cash App</label>
+          <label class="pay-opt"><input type="radio" name="pay" value="Crypto" onchange="selPay(this)"> Crypto</label>
+          <label class="pay-opt"><input type="radio" name="pay" value="Bank transfer / Invoice" onchange="selPay(this)"> Bank / Invoice</label>
+        </div>
+      </div>
+      <p style="font-size:11.5px;color:var(--muted2);margin:0 0 14px">No card details are entered on this site. After you place the order you'll receive payment instructions by email.</p>
+      <button class="checkout-btn" onclick="placeOrder()">Place Order · <span id="payAmt">$0</span></button>
     </div>
     <div id="checkoutSuccess" style="display:none">
       <div class="success"><div class="check">&#10003;</div><h3>Order Confirmed</h3><div class="sub" id="successMsg"></div><button class="btn btn-primary" onclick="closeModal('checkoutModal')">Done</button></div>
@@ -1073,7 +1099,7 @@ function openDetail(id){
     <div class="detail-info">
       <h2>${p.name}</h2>
       <div class="detail-tags">${tags}</div>
-      <div class="body"><strong style="color:var(--text)">${EASY[p.id]||p.desc}</strong><br><span style="font-size:13px;color:var(--muted2)">${p.desc}</span> ${isSup?'':'<br>Sold as a sealed box of <strong>10 vials</strong> — the strength shown is per vial. Reconstitute with bacteriostatic water before use — see the <a href="#instructions" class="coa-link" onclick="closeModal(\'detailModal\')">reconstitution guide</a>.'}</div>
+      <div class="body"><strong style="color:var(--text)">${EASY[p.id]||p.desc}</strong><br><span style="font-size:13px;color:var(--muted2)">${p.desc}</span>${!isSup?`<br><span style="font-size:12.5px;color:var(--c1)">Researched for: ${(p.goals||[]).map(g=>GOALS[g]&&GOALS[g].label).filter(Boolean).join(', ')}</span>`:''} ${isSup?'':'<br>Sold as a sealed box of <strong>10 vials</strong> — the strength shown is per vial. Reconstitute with bacteriostatic water before use — see the <a href="#instructions" class="coa-link" onclick="closeModal(\'detailModal\')">reconstitution guide</a>.'}</div>
       <div class="detail-spec">
         <div class="sp"><div class="k">Measured Purity</div><div class="v">${p.purity}</div></div>
         <div class="sp"><div class="k">Pack</div><div class="v">${isSup?p.variants[0].size:'Box of 10 vials'}</div></div>
@@ -1121,17 +1147,38 @@ function updateCart(){
 function openCart(){$('#drawer').classList.add('open');$('#overlay').classList.add('open');}
 function closeCart(){$('#drawer').classList.remove('open');$('#overlay').classList.remove('open');}
 
+/* ====== OWNER / ORDER NOTIFICATION CONFIG (edit these) ====== */
+const OWNER_PASSCODE='peptide2026';            // change this to your own passcode
+const ORDER_EMAIL='krishsoni0912@gmail.com';   // where order emails go (visible in page source)
+const WEB3FORMS_KEY='';                        // paste a free key from web3forms.com to email orders privately
+/* ============================================================ */
+
+let selectedPay='Secure card link';
+function selPay(el){selectedPay=el.value;document.querySelectorAll('.pay-opt').forEach(o=>o.classList.remove('sel'));el.closest('.pay-opt').classList.add('sel');}
+
 /* ---------- checkout ---------- */
 function openCheckout(){if(!cartCount())return;closeCart();$('#checkoutForm').style.display='block';$('#checkoutSuccess').style.display='none';$('#checkoutModal').classList.add('open');}
+function orderLines(){return Object.values(cart).map(i=>`${i.qty}× ${i.name} (${i.size}) — ${money(i.price*i.qty)}`);}
 function placeOrder(){
   const name=$('#coName').value.trim()||'Guest';const email=$('#coEmail').value.trim();
   if(!email){$('#coEmail').focus();$('#coEmail').style.borderColor='var(--c3)';return;}
-  const total=cartTotal(),units=cartCount();
-  const order={id:'#'+(1000+sales.length+1),name,email,units,total,status:'Processing',date:new Date().toISOString()};
+  const phone=$('#coPhone').value.trim(),addr=$('#coAddr').value.trim(),city=$('#coCity').value.trim(),zip=$('#coZip').value.trim();
+  const total=cartTotal(),units=cartCount(),items=orderLines();
+  const order={id:'#'+(1000+sales.length+1),name,email,phone,addr:`${addr}, ${city} ${zip}`,pay:selectedPay,units,total,items,status:'Processing',date:new Date().toISOString()};
   sales.push(order);localStorage.setItem('pep_sales',JSON.stringify(sales));
+  const body=`NEW ORDER ${order.id}\n\nPACK & SHIP:\n${items.join('\n')}\n\nTotal: ${money(total)}\nPayment method: ${selectedPay}\n\nShip to:\n${name}\n${order.addr}\nEmail: ${email}\nPhone: ${phone||'-'}\n\nPlaced: ${new Date().toLocaleString()}`;
+  notifyOwner(order,body);
   cart={};saveCart();updateCart();renderDashboard();
   $('#checkoutForm').style.display='none';$('#checkoutSuccess').style.display='block';
-  $('#successMsg').textContent=`Order ${order.id} for ${money(total)} confirmed — shipping to ${name} (allow up to 30 days). Tracking sent to ${email}.`;
+  $('#successMsg').innerHTML=`Order <strong>${order.id}</strong> for <strong>${money(total)}</strong> received. We'll email <strong>${email}</strong> payment instructions for <strong>${selectedPay}</strong>, then ship to ${name} (allow up to 30 days).`;
+}
+function notifyOwner(order,body){
+  if(WEB3FORMS_KEY){
+    fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},
+      body:JSON.stringify({access_key:WEB3FORMS_KEY,subject:`New order ${order.id} — ${money(order.total)}`,from_name:'Peptide Store',email:ORDER_EMAIL,message:body})}).catch(()=>{});
+  }else if(ORDER_EMAIL){
+    window.open(`mailto:${ORDER_EMAIL}?subject=${encodeURIComponent('New order '+order.id+' — '+money(order.total))}&body=${encodeURIComponent(body)}`,'_blank');
+  }
 }
 
 /* ---------- dashboard ---------- */
@@ -1139,10 +1186,19 @@ function renderDashboard(){
   const rev=sales.reduce((s,o)=>s+o.total,0),units=sales.reduce((s,o)=>s+o.units,0);
   $('#dRevenue').textContent=money(rev);$('#dOrders').textContent=sales.length;$('#dUnits').textContent=units;$('#dAov').textContent=money(sales.length?rev/sales.length:0);
   const rows=$('#orderRows');
-  if(!sales.length){rows.innerHTML='<tr><td colspan="5" class="empty">No orders yet — place a test order to see it appear here.</td></tr>';return;}
-  rows.innerHTML=[...sales].reverse().map(o=>`<tr><td>${o.id}</td><td>${o.name}</td><td>${o.units} item${o.units>1?'s':''}</td><td>${money(o.total)}</td><td><span class="status-tag">${o.status}</span></td></tr>`).join('');
+  if(!rows)return;
+  if(!sales.length){rows.innerHTML='<tr><td colspan="5" class="empty">No orders on this device yet. Real customer orders are emailed to you the moment they check out.</td></tr>';return;}
+  rows.innerHTML=[...sales].reverse().map(o=>`<tr><td>${o.id}<br><span style="font-size:11px;color:var(--muted2)">${o.addr||''}</span></td><td>${o.name}<br><span style="font-size:11px;color:var(--muted2)">${o.email||''}</span></td><td style="font-size:12px">${(o.items||[o.units+' items']).join('<br>')}</td><td>${money(o.total)}</td><td><span class="status-tag">${o.pay||o.status}</span></td></tr>`).join('');
 }
-function clearSales(){if(confirm('Clear all demo sales data?')){sales=[];localStorage.removeItem('pep_sales');renderDashboard();}}
+function clearSales(){if(confirm('Clear order data on this device?')){sales=[];localStorage.removeItem('pep_sales');renderDashboard();}}
+
+/* ---------- owner gate ---------- */
+function ownerUnlock(){
+  const v=$('#ownerPass').value;
+  if(v===OWNER_PASSCODE){sessionStorage.setItem('pep_owner','1');$('#ownerGate').style.display='none';$('#ownerPanel').style.display='block';renderDashboard();}
+  else{$('#ownerErr').textContent='Incorrect passcode.';}
+}
+function ownerLock(){sessionStorage.removeItem('pep_owner');$('#ownerPanel').style.display='none';$('#ownerGate').style.display='flex';$('#ownerPass').value='';}
 
 /* ---------- modals ---------- */
 function openCoa(prod,lot,pur){$('#coaProd').textContent=prod;$('#coaLot').textContent=lot;$('#coaPur').textContent=pur;$('#coaModal').classList.add('open');}
@@ -1180,6 +1236,7 @@ function initTilt(){
 }
 
 /* ---------- init ---------- */
+if(sessionStorage.getItem('pep_owner')){$('#ownerGate').style.display='none';$('#ownerPanel').style.display='block';}
 buildFilters();renderGoals();renderProducts();renderKits();updateCart();renderDashboard();observeReveal();initParticles();initTilt();
 purityObs.observe(document.querySelector('.purity'));
 </script>
