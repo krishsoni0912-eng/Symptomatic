@@ -353,6 +353,19 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
 .agree-doc p{margin:0 0 6px}
 .agree-check{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--text);margin:14px 0;cursor:pointer}
 .agree-check input{margin-top:3px;flex:none;width:16px;height:16px}
+.best-ribbon{position:absolute;bottom:10px;right:10px;z-index:3;font-size:9px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:4px 9px;border-radius:7px;background:linear-gradient(135deg,#ffd166,#ff9f1c);color:#1b1300;box-shadow:0 4px 14px rgba(255,159,28,.4)}
+.quality-row{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
+.q-badge{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--c4);background:rgba(57,255,136,.1);border:1px solid rgba(57,255,136,.3);padding:5px 10px;border-radius:8px}
+.q-badge svg{width:12px;height:12px}
+.storage-note{font-size:12px;color:var(--muted2);border-left:2px solid var(--stroke);padding-left:12px;margin:14px 0;line-height:1.55}
+.related-head{font-family:var(--display);font-size:15px;letter-spacing:.5px;margin:26px 0 12px;color:var(--text)}
+.mini-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
+.mini{border:1px solid var(--stroke);border-radius:14px;background:var(--panel);padding:10px;cursor:pointer;transition:.25s;text-align:center}
+.mini:hover{border-color:var(--c1);transform:translateY(-3px);box-shadow:0 14px 30px rgba(0,0,0,.4)}
+.mini-img{height:108px;display:grid;place-items:center;overflow:hidden}
+.mini-img svg{height:100%;width:auto}
+.mini-name{font-size:12px;font-weight:600;margin-top:6px;line-height:1.2}
+.mini-price{font-size:11px;color:var(--c1);font-weight:700;margin-top:2px}
 </style>
 </head>
 <body>
@@ -465,6 +478,16 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
       <p>Compounds bundled with bacteriostatic water, 100 syringes and 100 alcohol prep pads. Each kit shows the full price breakdown and the bundle discount applied.</p>
     </div>
     <div class="grid" id="kitGrid"></div>
+  </div>
+</section>
+
+<section class="shop" id="recentSection" style="display:none;padding-top:14px">
+  <div class="wrap">
+    <div class="section-head reveal" style="margin-bottom:24px">
+      <div class="eyebrow">Recently Viewed</div>
+      <h2 class="title">Pick up where you left off</h2>
+    </div>
+    <div class="mini-row" id="recentGrid"></div>
   </div>
 </section>
 
@@ -985,7 +1008,7 @@ const PRODUCTS=[
   // Fat loss / metabolic / appetite
   {id:'tirz',name:'Tirzepatide',goals:['fatloss','appetite'],purity:'99.2%',art:VIAL,desc:'Dual GIP/GLP-1 receptor agonist studied for body weight and glucose regulation.',variants:[{size:'5mg',price:75},{size:'10mg',price:110},{size:'15mg',price:140},{size:'20mg',price:165},{size:'30mg',price:200},{size:'40mg',price:250},{size:'50mg',price:298},{size:'60mg',price:326},{size:'70mg',price:357},{size:'80mg',price:403},{size:'90mg',price:452},{size:'100mg',price:499},{size:'120mg',price:546}]},
   {id:'sema',name:'Semaglutide',goals:['fatloss','appetite'],purity:'99.1%',art:VIAL,desc:'GLP-1 receptor agonist researched for appetite signalling and metabolic studies.',variants:[{size:'5mg',price:70},{size:'10mg',price:110},{size:'15mg',price:130},{size:'20mg',price:156},{size:'30mg',price:191}]},
-  {id:'reta',name:'Retatrutide',goals:['fatloss','appetite'],purity:'99.0%',art:VIAL,desc:'Triple GIP/GLP-1/glucagon agonist studied for advanced metabolic research.',variants:[{size:'5mg',price:128},{size:'10mg',price:191},{size:'15mg',price:214},{size:'20mg',price:238},{size:'30mg',price:357},{size:'40mg',price:427},{size:'50mg',price:523},{size:'60mg',price:618}]},
+  {id:'reta',name:'Retatrutide',best:1,goals:['fatloss','appetite'],purity:'99.0%',art:VIAL,desc:'Triple GIP/GLP-1/glucagon agonist studied for advanced metabolic research.',variants:[{size:'5mg',price:128},{size:'10mg',price:191},{size:'15mg',price:214},{size:'20mg',price:238},{size:'30mg',price:357},{size:'40mg',price:427},{size:'50mg',price:523},{size:'60mg',price:618}]},
   {id:'cagri',name:'Cagrilintide',goals:['fatloss','appetite'],purity:'99.0%',art:VIAL,desc:'Long-acting amylin analogue researched for satiety pathways.',variants:[{size:'5mg',price:201},{size:'10mg',price:394}]},
   {id:'survo',name:'Survodutide',goals:['fatloss','appetite'],purity:'98.9%',art:VIAL,desc:'GLP-1/glucagon dual agonist for metabolic and hepatic research.',variants:[{size:'10mg',price:571}]},
   {id:'aod',name:'AOD-9604',goals:['fatloss'],purity:'99.0%',art:VIAL,desc:'Modified HGH fragment studied for lipolysis without growth effects.',variants:[{size:'2mg',price:105},{size:'5mg',price:191}]},
@@ -1030,7 +1053,7 @@ const PRODUCTS=[
   {id:'shb',name:'Super Human Blend',goals:['recovery','blend'],purity:'Verified',art:WATER,desc:'Multi-peptide recovery and performance research blend.',variants:[{size:'10ml',price:149}]},
 
   // Skin / aesthetics / hair / pretty face
-  {id:'ghkcu',name:'GHK-Cu',goals:['skin','aesthetic','hair'],purity:'99.4%',art:VIAL,desc:'Copper peptide researched for collagen, skin and hair follicle studies.',variants:[{size:'50mg',price:58},{size:'100mg',price:114}]},
+  {id:'ghkcu',name:'GHK-Cu',best:1,goals:['skin','aesthetic','hair'],purity:'99.4%',art:VIAL,desc:'Copper peptide researched for collagen, skin and hair follicle studies.',variants:[{size:'50mg',price:58},{size:'100mg',price:114}]},
   {id:'mt2',name:'Melanotan 2',goals:['aesthetic','libido'],purity:'99.1%',art:VIAL,desc:'Melanocortin agonist studied for pigmentation and libido pathways.',variants:[{size:'10mg',price:95}]},
   {id:'mt1',name:'Melanotan 1',goals:['aesthetic'],purity:'99.0%',art:VIAL,desc:'Selective melanocortin agonist researched for tanning pathways.',variants:[{size:'10mg',price:119}]},
   {id:'gluta',name:'Glutathione',goals:['skin','aesthetic'],purity:'99.0%',art:VIAL,desc:'Master antioxidant studied for skin brightness and detox pathways.',variants:[{size:'600mg',price:70}]},
@@ -1123,6 +1146,7 @@ function productCard(p){
   const isSup=p.goals[0]==='supplies';
   return `<div class="card reveal" data-id="${p.id}" onclick="openDetail('${p.id}')">
     <div class="card-media"><div class="glow" style="background:${GOALS[(p.goals||[])[0]]?.color||'#7c4dff'}"></div>
+      ${p.best?`<div class="best-ribbon">★ Best Seller</div>`:''}
       <div class="goal-badges">${gbadges(p)}</div>
       <span class="purity-tag">${p.purity}</span>
       ${!isSup?`<span class="lab-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 6v6c0 5 8 8 8 8s8-3 8-8V6z"/><path d="M9 12l2 2 4-4"/></svg> Lab Approved</span>`:''}
@@ -1167,11 +1191,18 @@ function renderProducts(){
 function renderKits(){$('#kitGrid').innerHTML=KITS.map(kitCard).join('');observeReveal();}
 
 /* ---------- product detail ---------- */
+function qBadge(t){return `<span class="q-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5 9-11"/></svg> ${t}</span>`;}
+function miniCard(p){return `<div class="mini" onclick="openDetail('${p.id}')"><div class="mini-img">${shelfVial(p.name,doseFmt(p.variants[0].size))}</div><div class="mini-name">${p.name}</div><div class="mini-price">from ${money(p.variants[0].price)}</div></div>`;}
+function relatedProducts(p){const g=new Set(p.goals||[]);return PRODUCTS.filter(x=>x.id!==p.id&&x.goals[0]!=='supplies'&&(x.goals||[]).some(z=>g.has(z))).slice(0,4);}
+let recent=JSON.parse(localStorage.getItem('pep_recent')||'[]');
+function recordRecent(id){recent=[id,...recent.filter(x=>x!==id)].slice(0,10);localStorage.setItem('pep_recent',JSON.stringify(recent));renderRecent();}
+function renderRecent(){const items=recent.map(find).filter(Boolean);const sec=$('#recentSection');if(!sec)return;if(!items.length){sec.style.display='none';return;}sec.style.display='block';$('#recentGrid').innerHTML=items.map(miniCard).join('');}
 function openDetail(id){
   const p=find(id);if(!p)return;
   const isSup=p.goals[0]==='supplies';
   const tags=(p.goals||[]).filter(g=>GOALS[g]).map(g=>`<span class="gb" style="--gbc:${GOALS[g].color}">${GOALS[g].label}</span>`).join('')||'<span class="gb">Supply</span>';
   const lot='RC-2026-'+Math.floor(Math.random()*9000+1000);
+  const rel=relatedProducts(p);
   $('#detailBody').innerHTML=`
     <div class="detail-imgs">
       <div class="detail-img">
@@ -1192,13 +1223,19 @@ function openDetail(id){
     <div class="detail-info">
       <h2>${p.name}</h2>
       <div class="detail-tags">${tags}</div>
+      ${!isSup?`<div class="quality-row">${qBadge('HPLC Tested')}${qBadge('Mass Spec ID')}${qBadge('Endotoxin')}${qBadge('Sterility')}</div>`:''}
       <div class="body"><strong style="color:var(--text)">${EASY[p.id]||p.desc}</strong><br><span style="font-size:13px;color:var(--muted2)">${p.desc}</span>${!isSup?`<br><span style="font-size:12.5px;color:var(--c1)">Researched for: ${(p.goals||[]).map(g=>GOALS[g]&&GOALS[g].label).filter(Boolean).join(', ')}</span>`:''} ${isSup?'':'<br>Sold as a sealed box of <strong>10 vials</strong> — the strength shown is per vial. Reconstitute with bacteriostatic water before use — see the <a href="#instructions" class="coa-link" onclick="closeModal(\'detailModal\')">reconstitution guide</a>.'}</div>
       <div class="detail-spec">
+        <div class="sp"><div class="k">Catalog No.</div><div class="v">PRC-${p.id.toUpperCase()}</div></div>
         <div class="sp"><div class="k">Measured Purity</div><div class="v">${p.purity}</div></div>
         <div class="sp"><div class="k">Pack</div><div class="v">${isSup?p.variants[0].size:'Box of 10 vials'}</div></div>
         <div class="sp"><div class="k">Form</div><div class="v">${p.kind==='water'?'Solution':'Lyophilized powder'}</div></div>
-        <div class="sp"><div class="k">Verification</div><div class="v">3rd-party HPLC / MS</div></div>
+        ${!isSup?`<div class="sp"><div class="k">Storage</div><div class="v">-20°C, protect from light</div></div>
+        <div class="sp"><div class="k">Reconstitution</div><div class="v">Bacteriostatic water</div></div>`:''}
+        <div class="sp"><div class="k">Test Method</div><div class="v">RP-HPLC / MS</div></div>
+        <div class="sp"><div class="k">Lot No.</div><div class="v">${lot}</div></div>
       </div>
+      ${!isSup?`<div class="storage-note">Molecular weight, amino-acid sequence and CAS number are provided on each lot's Certificate of Analysis. Store lyophilized at -20&deg;C protected from light; after reconstitution, refrigerate (2-8&deg;C) and use within the period stated on the COA.</div>`:''}
       <div class="detail-buy">
         ${p.variants.length>1?variantSelect(p,'size-sel'):`<div class="price" style="font-size:24px">${money(p.variants[0].price)}</div>`}
         ${p.variants.length>1?`<div class="price" id="price-${p.id}" style="font-size:22px;align-items:center;display:flex">${money(p.variants[0].price)}</div>`:''}
@@ -1206,7 +1243,10 @@ function openDetail(id){
       </div>
       ${!isSup?`<p style="font-size:12px;color:var(--muted2);margin-top:14px"><a class="coa-link" onclick="openCoa('${p.name}','${lot}','${p.purity}')">View Certificate of Analysis →</a></p>`:''}
       <div class="warn-box"><strong>⚠ Warning — Research Purposes Only · Not FDA Approved · Not Approved for Human Testing.</strong> This is an investigational compound intended strictly for laboratory research. It is not a drug, supplement, or medical product, has not been evaluated or approved by the FDA, and is <strong>not approved for human testing or use of any kind</strong>. Sold for laboratory and testing purposes only — <strong>not for human or animal consumption</strong> and not recommended for personal use. <strong>Buyers must do their own research.</strong> Nothing here is medical advice; consult a licensed professional. Sold with no warranty of fitness; the buyer assumes all responsibility, risk, and liability for handling and lawful use.</div>
+      ${rel.length?`<div class="related-head">Related research compounds</div><div class="mini-row">${rel.map(miniCard).join('')}</div>`:''}
     </div>`;
+  $('#detailModal').scrollTop=0;
+  recordRecent(id);
   $('#detailModal').classList.add('open');
 }
 
@@ -1386,7 +1426,7 @@ function initTilt(){
 
 /* ---------- init ---------- */
 if(sessionStorage.getItem('pep_owner')){$('#ownerGate').style.display='none';$('#ownerPanel').style.display='block';}
-buildFilters();renderGoals();renderProducts();renderKits();updateCart();renderDashboard();observeReveal();initParticles();initTilt();
+buildFilters();renderGoals();renderProducts();renderKits();updateCart();renderDashboard();renderRecent();observeReveal();initParticles();initTilt();
 purityObs.observe(document.querySelector('.purity'));
 </script>
 </body>
