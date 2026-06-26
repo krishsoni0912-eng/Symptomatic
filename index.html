@@ -1305,8 +1305,10 @@ const WEB3FORMS_KEY='';                        // paste a free key from web3form
 const CASHAPP_TAG='$krishsoni0912';                    // your Cash App $cashtag
 const ZELLE_CONTACT='+1 (224) 288-9398 or krishsoni0912@gmail.com'; // your Zelle email or phone
 /* ====== TRACKING (edit this with your universal tracking number) ====== */
-const TRACKING_NUMBER='';                              // paste the universal tracking number here
+const TRACKING_NUMBER='';                              // optional fallback if an order has no tracking yet
 const TRACK_URL='https://t.17track.net/en#nums=';      // multi-carrier tracker (number is appended)
+/* ====== BACKEND (paste your Google Apps Script web-app URL — see backend/README.md) ====== */
+const BACKEND_URL='';                                  // central order database + per-order tracking
 const PAY={
   cashapp:{label:'Cash App',to:CASHAPP_TAG,how:'Open Cash App, send the order total to our Cashtag below, and put your order number in the note.',apps:[['Get Cash App','https://cash.app/']]},
   zelle:{label:'Zelle',to:ZELLE_CONTACT,how:'Open your banking app, choose Zelle, and send the total to the contact below.',apps:[['How Zelle works','https://www.zellepay.com/get-started']]}
@@ -1369,6 +1371,7 @@ function placeOrder(){
   sales.push(order);localStorage.setItem('pep_sales',JSON.stringify(sales));
   const invoice=buildInvoice(order,detailed);
   notifyOwner(order,invoice);
+  saveOrderToBackend(order);
   cart={};saveCart();updateCart();renderDashboard();
   $('#checkoutForm').style.display='none';$('#checkoutSuccess').style.display='block';
   $('#successMsg').innerHTML=`Order <strong>${order.id}</strong> received — total <strong>${money(total)}</strong>.<br><br>
@@ -1408,23 +1411,40 @@ function ownerLock(){sessionStorage.removeItem('pep_owner');$('#ownerPanel').sty
 
 /* ---------- modals ---------- */
 function openCoa(prod,lot,pur){$('#coaProd').textContent=prod;$('#coaLot').textContent=lot;$('#coaPur').textContent=pur;$('#coaModal').classList.add('open');}
-function trackLink(){return TRACKING_NUMBER?`<a class="checkout-btn" style="display:block;text-align:center;text-decoration:none;margin-top:10px" href="${TRACK_URL}${encodeURIComponent(TRACKING_NUMBER)}" target="_blank" rel="noopener">Track shipment ${TRACKING_NUMBER} →</a>`:`<p style="font-size:12px;color:var(--muted2);margin-top:8px">A tracking number is added once your order ships — check back here or your confirmation email.</p>`;}
-function doTrack(){
-  const q=($('#trackInput').value||'').trim().replace(/^#?/,'#').replace('##','#');
-  const o=sales.find(s=>s.id===q||s.id==='#'+q.replace('#',''));
+function saveOrderToBackend(order){
+  if(!BACKEND_URL)return;
+  try{fetch(BACKEND_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(order)}).catch(()=>{});}catch(e){}
+}
+function trackLink(tn){return tn?`<a class="checkout-btn" style="display:block;text-align:center;text-decoration:none;margin-top:10px" href="${TRACK_URL}${encodeURIComponent(tn)}" target="_blank" rel="noopener">Track shipment ${tn} →</a>`:`<p style="font-size:12px;color:var(--muted2);margin-top:8px">A tracking number is added once your order ships — check back here.</p>`;}
+function trackNotFound(){return `<div class="track-box"><div style="color:var(--c3);font-weight:700;margin-bottom:6px">Order not found.</div><div style="font-size:13px;color:var(--muted)">Enter the number exactly as on your confirmation (e.g. #1001).</div>${TRACKING_NUMBER?'<div style="margin-top:12px;font-size:13px;color:var(--muted)">If your order has shipped you can still track it here:</div>'+trackLink(TRACKING_NUMBER):''}</div>`;}
+function renderTrack(o){
   const r=$('#trackResult');
-  if(!o){
-    r.innerHTML=`<div class="track-box"><div style="color:var(--c3);font-weight:700;margin-bottom:6px">Order not found on this device.</div><div style="font-size:13px;color:var(--muted)">Make sure you're using the same device/browser you ordered from, and enter the number exactly as on your confirmation (e.g. #1001).</div>${TRACKING_NUMBER?'<div style="margin-top:12px;font-size:13px;color:var(--muted)">If your order has shipped you can still track it here:</div>'+trackLink():''}</div>`;
-    return;
-  }
+  if(!o||o.found===false){r.innerHTML=trackNotFound();return;}
+  const tn=o.tracking||TRACKING_NUMBER;
+  const tot=typeof o.total==='number'?money(o.total):(o.total||'');
   r.innerHTML=`<div class="track-box">
     <div class="track-row"><span>Order</span><b>${o.id}</b></div>
-    <div class="track-row"><span>Status</span><b style="color:var(--c1)">${o.status}</b></div>
-    <div class="track-row"><span>Placed</span><b>${new Date(o.date).toLocaleDateString()}</b></div>
-    <div class="track-row"><span>Total</span><b>${money(o.total)}</b></div>
-    <div class="track-items">${(o.items||[]).map(i=>'• '+i).join('<br>')}</div>
-    ${trackLink()}
+    <div class="track-row"><span>Status</span><b style="color:var(--c1)">${o.status||'Processing'}</b></div>
+    <div class="track-row"><span>Total</span><b>${tot}</b></div>
+    <div class="track-items">${(o.items||[]).filter(Boolean).map(i=>'• '+i).join('<br>')}</div>
+    ${trackLink(tn)}
   </div>`;
+}
+function doTrack(){
+  const raw=($('#trackInput').value||'').trim();if(!raw)return;
+  const q='#'+raw.replace(/^#/,'');
+  $('#trackResult').innerHTML='<div class="track-box" style="text-align:center;color:var(--muted)">Looking up…</div>';
+  if(BACKEND_URL){
+    const cb='cb_'+Date.now();
+    window[cb]=function(res){renderTrack(res);try{delete window[cb];}catch(e){}if(s.parentNode)s.parentNode.removeChild(s);};
+    const s=document.createElement('script');
+    s.onerror=function(){renderTrack({found:false});};
+    s.src=BACKEND_URL+'?order='+encodeURIComponent(q)+'&callback='+cb;
+    document.body.appendChild(s);
+    return;
+  }
+  const o=sales.find(s=>s.id===q);
+  renderTrack(o||{found:false});
 }
 function openModal(id){$('#'+id).classList.add('open');}
 function closeModal(id){$('#'+id).classList.remove('open');}
