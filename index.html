@@ -1127,7 +1127,7 @@ function productCard(p){
     <div class="card-body">
       <h3>${p.name}</h3>
       <div class="desc">${EASY[p.id]||p.desc}</div>
-      ${!isSup?`<div class="card-warn">Research use only · Not FDA approved · Do your own research</div>`:''}
+      ${!isSup?`<div class="card-warn">Research purposes only · Not FDA approved · Not approved for human testing</div>`:''}
       ${variantSelect(p)}
       <div class="card-meta"><span>${single?packLabel(p,p.variants[0].size):''}</span>${!isSup?`<span class="coa-link" onclick="event.stopPropagation();openCoa('${p.name}','RC-2026-${Math.floor(Math.random()*9000+1000)}','${p.purity}')">View COA</span>`:''}</div>
       <div class="card-foot"><div class="price" id="price-${p.id}">${money(p.variants[0].price)}</div><button class="add-btn" onclick="event.stopPropagation();addToCart('${p.id}',this)">Add</button></div>
@@ -1202,7 +1202,7 @@ function openDetail(id){
         <button class="checkout-btn" onclick="addToCart('${p.id}',this);openCart()">Add to Cart</button>
       </div>
       ${!isSup?`<p style="font-size:12px;color:var(--muted2);margin-top:14px"><a class="coa-link" onclick="openCoa('${p.name}','${lot}','${p.purity}')">View Certificate of Analysis →</a></p>`:''}
-      <div class="warn-box"><strong>⚠ Warning — Research Use Only · Not FDA Approved.</strong> This is an investigational compound under research. It is not a drug, supplement, or medical product and has not been evaluated or approved by the FDA. Sold strictly for laboratory and testing purposes — <strong>not for human or animal consumption</strong> and not recommended for personal use. <strong>Buyers must do their own research.</strong> Nothing here is medical advice; consult a licensed professional. Sold with no warranty of fitness; the buyer assumes all responsibility, risk, and liability for handling and lawful use.</div>
+      <div class="warn-box"><strong>⚠ Warning — Research Purposes Only · Not FDA Approved · Not Approved for Human Testing.</strong> This is an investigational compound intended strictly for laboratory research. It is not a drug, supplement, or medical product, has not been evaluated or approved by the FDA, and is <strong>not approved for human testing or use of any kind</strong>. Sold for laboratory and testing purposes only — <strong>not for human or animal consumption</strong> and not recommended for personal use. <strong>Buyers must do their own research.</strong> Nothing here is medical advice; consult a licensed professional. Sold with no warranty of fitness; the buyer assumes all responsibility, risk, and liability for handling and lawful use.</div>
     </div>`;
   $('#detailModal').classList.add('open');
 }
