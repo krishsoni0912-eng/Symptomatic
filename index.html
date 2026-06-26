@@ -366,6 +366,9 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
 .mini-img svg{height:100%;width:auto}
 .mini-name{font-size:12px;font-weight:600;margin-top:6px;line-height:1.2}
 .mini-price{font-size:11px;color:var(--c1);font-weight:700;margin-top:2px}
+.track-box{border:1px solid var(--stroke);border-radius:14px;background:var(--panel);padding:16px}
+.track-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--stroke);font-size:14px;color:var(--muted)}
+.track-items{font-size:13px;color:var(--muted);margin-top:10px;line-height:1.6}
 </style>
 </head>
 <body>
@@ -398,6 +401,7 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
       <a href="#goals" onclick="closeMenu()">Research Areas</a>
       <a href="#shop" onclick="closeMenu()">All Products</a>
       <a href="#kits" onclick="closeMenu()">Kits</a>
+      <a href="#" onclick="closeMenu();openModal('trackModal');return false">Track Order</a>
       <a href="#instructions" onclick="closeMenu()">Instructions</a>
       <a href="#purity" onclick="closeMenu()">Purity &amp; COA</a>
     </nav>
@@ -767,6 +771,17 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
       <h4>Changes</h4>
       <p>We may update this policy; the latest version is always posted here.</p>
     </div>
+  </div>
+</div>
+
+<div class="modal" id="trackModal">
+  <div class="modal-box">
+    <button class="x close" onclick="closeModal('trackModal')">&times;</button>
+    <h3>Track your order</h3>
+    <div class="sub">Enter the order number from your confirmation (e.g. #1001) to see its status and tracking.</div>
+    <div class="field"><label>Order number</label><input id="trackInput" placeholder="#1001" onkeydown="if(event.key==='Enter')doTrack()"></div>
+    <button class="checkout-btn" onclick="doTrack()">Look Up Order</button>
+    <div id="trackResult" style="margin-top:18px"></div>
   </div>
 </div>
 
@@ -1289,6 +1304,9 @@ const WEB3FORMS_KEY='';                        // paste a free key from web3form
 /* ====== PAYMENT DETAILS (edit these with your real handles) ====== */
 const CASHAPP_TAG='$krishsoni0912';                    // your Cash App $cashtag
 const ZELLE_CONTACT='+1 (224) 288-9398 or krishsoni0912@gmail.com'; // your Zelle email or phone
+/* ====== TRACKING (edit this with your universal tracking number) ====== */
+const TRACKING_NUMBER='';                              // paste the universal tracking number here
+const TRACK_URL='https://t.17track.net/en#nums=';      // multi-carrier tracker (number is appended)
 const PAY={
   cashapp:{label:'Cash App',to:CASHAPP_TAG,how:'Open Cash App, send the order total to our Cashtag below, and put your order number in the note.',apps:[['Get Cash App','https://cash.app/']]},
   zelle:{label:'Zelle',to:ZELLE_CONTACT,how:'Open your banking app, choose Zelle, and send the total to the contact below.',apps:[['How Zelle works','https://www.zellepay.com/get-started']]}
@@ -1390,6 +1408,24 @@ function ownerLock(){sessionStorage.removeItem('pep_owner');$('#ownerPanel').sty
 
 /* ---------- modals ---------- */
 function openCoa(prod,lot,pur){$('#coaProd').textContent=prod;$('#coaLot').textContent=lot;$('#coaPur').textContent=pur;$('#coaModal').classList.add('open');}
+function trackLink(){return TRACKING_NUMBER?`<a class="checkout-btn" style="display:block;text-align:center;text-decoration:none;margin-top:10px" href="${TRACK_URL}${encodeURIComponent(TRACKING_NUMBER)}" target="_blank" rel="noopener">Track shipment ${TRACKING_NUMBER} →</a>`:`<p style="font-size:12px;color:var(--muted2);margin-top:8px">A tracking number is added once your order ships — check back here or your confirmation email.</p>`;}
+function doTrack(){
+  const q=($('#trackInput').value||'').trim().replace(/^#?/,'#').replace('##','#');
+  const o=sales.find(s=>s.id===q||s.id==='#'+q.replace('#',''));
+  const r=$('#trackResult');
+  if(!o){
+    r.innerHTML=`<div class="track-box"><div style="color:var(--c3);font-weight:700;margin-bottom:6px">Order not found on this device.</div><div style="font-size:13px;color:var(--muted)">Make sure you're using the same device/browser you ordered from, and enter the number exactly as on your confirmation (e.g. #1001).</div>${TRACKING_NUMBER?'<div style="margin-top:12px;font-size:13px;color:var(--muted)">If your order has shipped you can still track it here:</div>'+trackLink():''}</div>`;
+    return;
+  }
+  r.innerHTML=`<div class="track-box">
+    <div class="track-row"><span>Order</span><b>${o.id}</b></div>
+    <div class="track-row"><span>Status</span><b style="color:var(--c1)">${o.status}</b></div>
+    <div class="track-row"><span>Placed</span><b>${new Date(o.date).toLocaleDateString()}</b></div>
+    <div class="track-row"><span>Total</span><b>${money(o.total)}</b></div>
+    <div class="track-items">${(o.items||[]).map(i=>'• '+i).join('<br>')}</div>
+    ${trackLink()}
+  </div>`;
+}
 function openModal(id){$('#'+id).classList.add('open');}
 function closeModal(id){$('#'+id).classList.remove('open');}
 
