@@ -81,7 +81,7 @@ header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:li
 .btn-ghost:hover{border-color:var(--c1);transform:translateY(-3px)}
 
 .vial-field{position:absolute;inset:0;pointer-events:none;z-index:1}
-.vial{position:absolute;animation:float 7s ease-in-out infinite}
+.vial{position:absolute}
 .vial:nth-child(1){left:5%;top:32%;animation-delay:0s}
 .vial:nth-child(2){right:6%;top:24%;animation-delay:-2s}
 .vial:nth-child(3){left:11%;bottom:4%;animation-delay:-4s}
@@ -121,8 +121,7 @@ header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:li
 .card-media{height:clamp(140px,30vw,190px);position:relative;overflow:hidden;display:grid;place-items:center;background:radial-gradient(circle at 50% 35%,rgba(124,77,255,.22),rgba(5,6,13,.2))}
 .card-media .glow{position:absolute;width:150px;height:150px;border-radius:50%;filter:blur(46px);opacity:.5;transition:.5s}
 .card:hover .card-media .glow{transform:scale(1.4);opacity:.78}
-.card-media svg.art{position:relative;z-index:2;transition:transform .5s ease;max-height:80%}
-.card:hover .card-media svg.art{transform:scale(1.12) rotate(-3deg)}
+.card-media svg.art{position:relative;z-index:2;max-height:80%}
 .lab-chip{position:absolute;bottom:10px;left:10px;z-index:3;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:4px 8px;border-radius:7px;background:rgba(57,255,136,.12);color:var(--c4);border:1px solid rgba(57,255,136,.4);backdrop-filter:blur(6px);display:flex;gap:5px;align-items:center}
 .lab-chip svg{width:11px;height:11px}
 .goal-badges{position:absolute;top:10px;left:10px;display:flex;gap:5px;z-index:3;flex-wrap:wrap;max-width:78%}
@@ -254,7 +253,7 @@ footer{border-top:1px solid var(--stroke);padding:46px 0 40px;background:rgba(5,
 /* product detail */
 .detail-grid{display:grid;grid-template-columns:300px 1fr;gap:28px}
 .detail-img{position:relative;border-radius:var(--radius2);overflow:hidden;background:radial-gradient(circle at 50% 30%,rgba(124,77,255,.28),rgba(5,6,13,.4));display:grid;place-items:center;min-height:360px;border:1px solid var(--stroke)}
-.detail-img svg{width:62%;filter:drop-shadow(0 18px 40px rgba(0,0,0,.6));animation:float 6s ease-in-out infinite}
+.detail-img svg{width:62%;filter:drop-shadow(0 18px 40px rgba(0,0,0,.6))}
 .lab-badge{position:absolute;top:14px;left:14px;display:flex;align-items:center;gap:7px;padding:7px 11px;border-radius:9px;background:rgba(57,255,136,.13);border:1px solid rgba(57,255,136,.45);color:var(--c4);font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;backdrop-filter:blur(6px)}
 .lab-badge svg{width:14px;height:14px;animation:none;filter:none}
 .detail-info h2{font-family:var(--display);font-weight:800;font-size:26px;margin:0 0 6px;letter-spacing:.5px}
@@ -866,6 +865,8 @@ const EASY={
   tirz:'A GLP-1/GIP receptor peptide widely used in metabolic and body-composition research.',
   sema:'A GLP-1 receptor agonist used in metabolic, appetite-signalling and glucose research.',
   reta:'A triple GIP/GLP-1/glucagon receptor agonist studied in advanced metabolic research.',
+  mz:'A GLP-1/glucagon dual receptor agonist studied in metabolic research.',
+  ta:'A thymic peptide studied in immune-modulation and aging research.',
   cagri:'A long-acting amylin analogue studied in satiety and metabolic research.',
   survo:'A GLP-1/glucagon receptor agonist studied in metabolic and hepatic research.',
   aod:'A modified HGH-fragment peptide studied in lipid-metabolism research.',
@@ -935,6 +936,8 @@ const ALIAS={
   tirz:'glp gip metabolic incretin',
   sema:'glp metabolic incretin',
   reta:'glp gip glucagon triple agonist metabolic',
+  mz:'mazdutide glp glucagon metabolic',
+  ta:'thymosin alpha 1 immune zadaxin',
   cagri:'amylin analogue satiety metabolic',
   cagsem:'cagrisema amylin glp metabolic',
   survo:'glp glucagon metabolic hepatic',
@@ -1024,6 +1027,7 @@ const PRODUCTS=[
   {id:'tirz',name:'Tirzepatide',goals:['fatloss','appetite'],purity:'99.2%',art:VIAL,desc:'Dual GIP/GLP-1 receptor agonist studied for body weight and glucose regulation.',variants:[{size:'5mg',price:75},{size:'10mg',price:110},{size:'15mg',price:140},{size:'20mg',price:165},{size:'30mg',price:200},{size:'40mg',price:250},{size:'50mg',price:298},{size:'60mg',price:326},{size:'70mg',price:357},{size:'80mg',price:403},{size:'90mg',price:452},{size:'100mg',price:499},{size:'120mg',price:546}]},
   {id:'sema',name:'Semaglutide',goals:['fatloss','appetite'],purity:'99.1%',art:VIAL,desc:'GLP-1 receptor agonist researched for appetite signalling and metabolic studies.',variants:[{size:'5mg',price:70},{size:'10mg',price:110},{size:'15mg',price:130},{size:'20mg',price:156},{size:'30mg',price:191}]},
   {id:'reta',name:'Retatrutide',best:1,goals:['fatloss','appetite'],purity:'99.0%',art:VIAL,desc:'Triple GIP/GLP-1/glucagon agonist studied for advanced metabolic research.',variants:[{size:'5mg',price:128},{size:'10mg',price:191},{size:'15mg',price:214},{size:'20mg',price:238},{size:'30mg',price:357},{size:'40mg',price:427},{size:'50mg',price:523},{size:'60mg',price:618}]},
+  {id:'mz',name:'Mazdutide',goals:['fatloss','appetite'],purity:'99.0%',art:VIAL,desc:'GLP-1/glucagon dual receptor agonist studied in metabolic research.',variants:[{size:'5mg',price:99},{size:'10mg',price:159},{size:'15mg',price:199},{size:'20mg',price:239}]},
   {id:'cagri',name:'Cagrilintide',goals:['fatloss','appetite'],purity:'99.0%',art:VIAL,desc:'Long-acting amylin analogue researched for satiety pathways.',variants:[{size:'5mg',price:201},{size:'10mg',price:394}]},
   {id:'survo',name:'Survodutide',goals:['fatloss','appetite'],purity:'98.9%',art:VIAL,desc:'GLP-1/glucagon dual agonist for metabolic and hepatic research.',variants:[{size:'10mg',price:571}]},
   {id:'aod',name:'AOD-9604',goals:['fatloss'],purity:'99.0%',art:VIAL,desc:'Modified HGH fragment studied for lipolysis without growth effects.',variants:[{size:'2mg',price:105},{size:'5mg',price:191}]},
@@ -1058,6 +1062,7 @@ const PRODUCTS=[
   {id:'ll37',name:'LL-37',goals:['immune','recovery'],purity:'98.8%',art:VIAL,desc:'Cathelicidin antimicrobial peptide for immune-defense research.',variants:[{size:'5mg',price:172}]},
   {id:'dermo',name:'Dermorphin',goals:['recovery'],purity:'98.5%',art:VIAL,desc:'Opioid heptapeptide studied in analgesia research.',variants:[{size:'5mg',price:63}]},
   {id:'thymalin',name:'Thymalin',goals:['immune','longevity'],purity:'98.7%',art:VIAL,desc:'Thymus peptide researched for immune regulation and aging.',variants:[{size:'10mg',price:119}]},
+  {id:'ta',name:'Thymosin Alpha-1',goals:['immune','longevity'],purity:'98.6%',art:VIAL,desc:'Thymic peptide studied in immune-modulation research.',variants:[{size:'5mg',price:184},{size:'10mg',price:308}]},
 
   // Blends
   {id:'bbtb',name:'BPC-157 + TB-500 Blend',goals:['recovery','blend'],purity:'Verified',art:VIAL,desc:'Synergy recovery blend studied for accelerated tissue repair.',variants:[{size:'10mg (5+5)',price:184},{size:'20mg (10+10)',price:359}]},
@@ -1482,7 +1487,7 @@ function initTilt(){
 
 /* ---------- init ---------- */
 if(sessionStorage.getItem('pep_owner')){$('#ownerGate').style.display='none';$('#ownerPanel').style.display='block';}
-buildFilters();renderGoals();renderProducts();renderKits();updateCart();renderDashboard();renderRecent();observeReveal();initParticles();initTilt();
+buildFilters();renderGoals();renderProducts();renderKits();updateCart();renderDashboard();renderRecent();observeReveal();initParticles();
 purityObs.observe(document.querySelector('.purity'));
 </script>
 </body>
