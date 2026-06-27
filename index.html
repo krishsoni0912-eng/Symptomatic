@@ -1108,6 +1108,8 @@ const PRODUCTS=[
   {id:'syr31',name:'Insulin Syringes 31G · 1cc',goals:['supplies'],purity:'Sterile',art:SYRINGE,desc:'Fine-gauge sterile syringes, individually blister-packed.',variants:[{size:'Box of 100',price:26}]},
   {id:'pads',name:'Alcohol Prep Pads',goals:['supplies'],purity:'70% IPA',art:PADS,desc:'Sterile 70% isopropyl alcohol prep pads, individually sealed.',variants:[{size:'Box of 100',price:10}]}
 ];
+/* Retail = 100% profit (2x cost). Base prices above are cost x1.75, so x(2/1.75) -> 2x cost. Supplies excluded. */
+PRODUCTS.forEach(p=>{if(p.goals[0]!=='supplies'&&p.variants)p.variants.forEach(v=>{v.price=Math.round(v.price*2/1.75);});});
 
 /* ---------- kits (component breakdown + discount) ---------- */
 const SUP={water:{n:'Bacteriostatic Water 10ml',p:12},syr:{n:'100 Insulin Syringes',p:24},pads:{n:'100 Alcohol Prep Pads',p:10}};
@@ -1119,11 +1121,11 @@ function kitFrom(name,goals,desc,disc,items){
 }
 const KITS=[
   kitFrom('Reconstitution Supplies Kit',['supplies'],'Just the supplies — bacteriostatic water plus 100 syringes and 100 prep pads.',10,[]),
-  kitFrom('Metabolic Research Kit',['fatloss','blend'],'Metabolic-research compound set (Retatrutide + Semaglutide) with reconstitution supplies.',15,[{n:'Retatrutide 10mg',p:191},{n:'Semaglutide 10mg',p:110},{n:'L-Carnitine 600 10ml',p:70}]),
-  kitFrom('GH-Research Kit',['muscle','blend'],'Growth-hormone-research compound set with reconstitution supplies.',15,[{n:'CJC-1295 + Ipamorelin 10mg',p:214},{n:'BPC-157 5mg',p:84}]),
-  kitFrom('Dermatological Research Kit',['aesthetic','skin','blend'],'Dermatological / pigmentation-research compound set with supplies.',15,[{n:'GHK-Cu 50mg',p:58},{n:'Glutathione 600mg',p:70},{n:'Melanotan 2 10mg',p:95}]),
-  kitFrom('Tissue-Repair Research Kit',['recovery','blend'],'Tissue-repair-research compound set with reconstitution supplies.',15,[{n:'BPC-157 + TB-500 Blend 10mg',p:184}]),
-  kitFrom('Sleep / Circadian Research Kit',['sleep','longevity','blend'],'Sleep- and circadian-research compound set with supplies.',12,[{n:'DSIP 5mg',p:81},{n:'Epitalon 10mg',p:67}])
+  kitFrom('Metabolic Research Kit',['fatloss','blend'],'Metabolic-research set (Retatrutide + Semaglutide) with reconstitution supplies.',15,[{n:'Retatrutide 5mg',p:146},{n:'Semaglutide 5mg',p:80}]),
+  kitFrom('GH-Research Kit',['muscle','blend'],'Growth-hormone-research set with reconstitution supplies.',15,[{n:'CJC-1295 + Ipamorelin 10mg',p:245},{n:'BPC-157 5mg',p:96}]),
+  kitFrom('Dermatological Research Kit',['aesthetic','skin','blend'],'Dermatological-research set with reconstitution supplies.',15,[{n:'GHK-Cu 50mg',p:66},{n:'Glutathione 600mg',p:80}]),
+  kitFrom('Tissue-Repair Research Kit',['recovery','blend'],'Tissue-repair-research set with reconstitution supplies.',15,[{n:'BPC-157 + TB-500 Blend 10mg',p:210}]),
+  kitFrom('Sleep / Circadian Research Kit',['sleep','longevity','blend'],'Sleep- and circadian-research set with supplies.',12,[{n:'DSIP 5mg',p:93},{n:'Epitalon 10mg',p:77}])
 ].map((k,i)=>({...k,id:'k'+(i+1)}));
 
 /* ---------- state ---------- */
