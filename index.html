@@ -133,6 +133,7 @@ header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:li
 .size-sel{width:100%;padding:9px 10px;border-radius:10px;border:1px solid var(--stroke);background-color:var(--panel2);color:var(--text);font-family:inherit;font-size:12.5px;margin-top:2px;color-scheme:dark;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2300f0ff' stroke-width='3'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px}
 .size-sel:focus{outline:none;border-color:var(--c1)}
 .size-sel option{background-color:#0a0d1c;color:#ffffff}
+.strength-line{font-size:11.5px;color:var(--c1);font-weight:600;margin:2px 0 6px;letter-spacing:.01em}
 .card-meta{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--muted2)}
 .coa-link{font-size:11px;color:var(--c1);font-weight:600;cursor:pointer}
 .coa-link:hover{text-decoration:underline}
@@ -1110,7 +1111,14 @@ const PRODUCTS=[
   {id:'pads',name:'Alcohol Prep Pads',goals:['supplies'],purity:'70% IPA',art:PADS,desc:'Sterile 70% isopropyl alcohol prep pads, individually sealed.',variants:[{size:'Box of 100',price:10}]}
 ];
 /* Retail = 100% profit (2x cost). Base prices above are cost x1.75, so x(2/1.75) -> 2x cost. Supplies excluded. */
-PRODUCTS.forEach(p=>{if(p.goals[0]!=='supplies'&&p.variants)p.variants.forEach(v=>{v.price=Math.round(v.price*2/1.75);});});
+/* Per-vial retail = 2.5x cost. Sheet price is a box of 10 vials, so per-vial cost = sheet/10.
+   Stored base prices are sheet x1.75, so base/7 = sheet x0.25 = (sheet/10) x2.5 = per-vial retail.
+   Keep only the smallest "starter" strength; sold per vial, max 3 vials (~3-month research supply). */
+PRODUCTS.forEach(p=>{
+  if(p.goals[0]==='supplies'||!p.variants)return;
+  var f=p.variants[0];
+  p.variants=[{size:f.size,price:Math.max(5,Math.round(f.price/7))}];
+});
 
 /* ---------- kits (component breakdown + discount) ---------- */
 const SUP={water:{n:'Bacteriostatic Water 10ml',p:12},syr:{n:'100 Insulin Syringes',p:24},pads:{n:'100 Alcohol Prep Pads',p:10}};
@@ -1122,11 +1130,11 @@ function kitFrom(name,goals,desc,disc,items){
 }
 const KITS=[
   kitFrom('Reconstitution Supplies Kit',['supplies'],'Just the supplies — bacteriostatic water plus 100 syringes and 100 prep pads.',10,[]),
-  kitFrom('Metabolic Research Kit',['fatloss','blend'],'Metabolic-research set (Retatrutide + Semaglutide) with reconstitution supplies.',15,[{n:'Retatrutide 5mg',p:146},{n:'Semaglutide 5mg',p:80}]),
-  kitFrom('GH-Research Kit',['muscle','blend'],'Growth-hormone-research set with reconstitution supplies.',15,[{n:'CJC-1295 + Ipamorelin 10mg',p:245},{n:'BPC-157 5mg',p:96}]),
-  kitFrom('Dermatological Research Kit',['aesthetic','skin','blend'],'Dermatological-research set with reconstitution supplies.',15,[{n:'GHK-Cu 50mg',p:66},{n:'Glutathione 600mg',p:80}]),
-  kitFrom('Tissue-Repair Research Kit',['recovery','blend'],'Tissue-repair-research set with reconstitution supplies.',15,[{n:'BPC-157 + TB-500 Blend 10mg',p:210}]),
-  kitFrom('Sleep / Circadian Research Kit',['sleep','longevity','blend'],'Sleep- and circadian-research set with supplies.',12,[{n:'DSIP 5mg',p:93},{n:'Epitalon 10mg',p:77}])
+  kitFrom('Metabolic Research Kit',['fatloss','blend'],'Metabolic-research set (Retatrutide + Semaglutide) with reconstitution supplies.',15,[{n:'Retatrutide 5mg ×2 vials',p:36},{n:'Semaglutide 5mg ×2 vials',p:20}]),
+  kitFrom('GH-Research Kit',['muscle','blend'],'Growth-hormone-research set with reconstitution supplies.',15,[{n:'CJC-1295 + Ipamorelin 10mg ×2 vials',p:62},{n:'BPC-157 5mg ×2 vials',p:24}]),
+  kitFrom('Dermatological Research Kit',['aesthetic','skin','blend'],'Dermatological-research set with reconstitution supplies.',15,[{n:'GHK-Cu 50mg ×2 vials',p:16},{n:'Glutathione 600mg ×2 vials',p:20}]),
+  kitFrom('Tissue-Repair Research Kit',['recovery','blend'],'Tissue-repair-research set with reconstitution supplies.',15,[{n:'BPC-157 + TB-500 Blend 10mg ×2 vials',p:52}]),
+  kitFrom('Sleep / Circadian Research Kit',['sleep','longevity','blend'],'Sleep- and circadian-research set with supplies.',12,[{n:'DSIP 5mg ×2 vials',p:24},{n:'Epitalon 10mg ×2 vials',p:20}])
 ].map((k,i)=>({...k,id:'k'+(i+1)}));
 
 /* ---------- state ---------- */
@@ -1157,12 +1165,12 @@ function matches(p){
 }
 function gbadges(p){return (p.goals||[]).filter(g=>GOALS[g]).slice(0,3).map(g=>`<span class="gb" style="--gbc:${GOALS[g].color}">${GOALS[g].label.split(' ')[0]}</span>`).join('');}
 
-function packLabel(p,raw){return (p.goals&&p.goals[0]==='supplies')?raw:`10 vials × ${raw}`;}
-function variantSelect(p,cls){
+function variantSelect(p){
   if(p.variants.length<=1)return '';
-  return `<select class="${cls||'size-sel'}" onclick="event.stopPropagation()" onchange="updatePrice('${p.id}',this)">`+p.variants.map((v,i)=>`<option value="${i}">${packLabel(p,v.size)} — ${money(v.price)}</option>`).join('')+`</select>`;
+  return `<select class="size-sel" onclick="event.stopPropagation()" onchange="recalc(this)">`+p.variants.map((v,i)=>`<option value="${i}">${v.size} — ${money(v.price)}</option>`).join('')+`</select>`;
 }
-function updatePrice(id,sel){const p=find(id);const v=p.variants[sel.value];const el=$('#price-'+id);if(el)el.textContent=money(v.price);}
+function countSelect(p){const pv=p.variants[0].price;return `<select class="size-sel qty-sel" onclick="event.stopPropagation()" onchange="recalc(this)">`+[1,2,3].map(n=>`<option value="${n}">${n} vial${n>1?'s':''} — ${money(pv*n)}</option>`).join('')+`</select>`;}
+function recalc(el){var scope=el.closest('[data-id]');if(!scope)return;var p=find(scope.dataset.id);if(!p||!p.variants)return;var pe=scope.querySelector('.js-price');if(!pe)return;if(el.classList.contains('qty-sel'))pe.textContent=money(p.variants[0].price*(+el.value||1));else pe.textContent=money(p.variants[+el.value||0].price);}
 
 function productCard(p){
   const single=p.variants.length<=1;
@@ -1179,8 +1187,8 @@ function productCard(p){
       <h3>${p.name}</h3>
       <div class="desc">${EASY[p.id]||p.desc}</div>
       ${!isSup?`<div class="card-warn">Research only · Not for human testing</div>`:''}
-      ${variantSelect(p)}
-      <div class="card-foot"><div class="price" id="price-${p.id}">${money(p.variants[0].price)}</div><button class="add-btn" onclick="event.stopPropagation();addToCart('${p.id}',this)">Add</button></div>
+      ${isSup?variantSelect(p):`<div class="strength-line">${p.variants[0].size} per vial · 1–3 vials (≈ 3-month supply)</div>${countSelect(p)}`}
+      <div class="card-foot"><div class="price js-price">${money(p.variants[0].price)}</div><button class="add-btn" onclick="event.stopPropagation();addToCart('${p.id}',this)">Add</button></div>
     </div>
   </div>`;
 }
@@ -1243,15 +1251,15 @@ function openDetail(id){
         <div class="pt-note">Representative chromatogram. Full Certificate of Analysis available per lot (${lot}).</div>
       </div>`:''}
     </div>
-    <div class="detail-info">
+    <div class="detail-info" data-id="${p.id}">
       <h2>${p.name}</h2>
       <div class="detail-tags">${tags}</div>
       ${!isSup?`<div class="quality-row">${qBadge('HPLC Tested')}${qBadge('Mass Spec ID')}${qBadge('Endotoxin')}${qBadge('Sterility')}</div>`:''}
-      <div class="body"><strong style="color:var(--text)">${EASY[p.id]||p.desc}</strong><br><span style="font-size:13px;color:var(--muted2)">${p.desc}</span>${!isSup?`<br><span style="font-size:12.5px;color:var(--c1)">Researched for: ${(p.goals||[]).map(g=>GOALS[g]&&GOALS[g].label).filter(Boolean).join(', ')}</span>`:''} ${isSup?'':'<br>Sold as a sealed box of <strong>10 vials</strong> — the strength shown is per vial. Reconstitute with bacteriostatic water before use — see the <a href="#instructions" class="coa-link" onclick="closeModal(\'detailModal\')">reconstitution guide</a>.'}</div>
+      <div class="body"><strong style="color:var(--text)">${EASY[p.id]||p.desc}</strong><br><span style="font-size:13px;color:var(--muted2)">${p.desc}</span>${!isSup?`<br><span style="font-size:12.5px;color:var(--c1)">Researched for: ${(p.goals||[]).map(g=>GOALS[g]&&GOALS[g].label).filter(Boolean).join(', ')}</span>`:''} ${isSup?'':'<br>Sold <strong>per vial</strong> — order 1 to 3 vials (about a 3-month research supply). Reconstitute with bacteriostatic water before use — see the <a href="#instructions" class="coa-link" onclick="closeModal(\'detailModal\')">reconstitution guide</a>.'}</div>
       <div class="detail-spec">
         <div class="sp"><div class="k">Catalog No.</div><div class="v">PRC-${p.id.toUpperCase()}</div></div>
         <div class="sp"><div class="k">Measured Purity</div><div class="v">${p.purity}</div></div>
-        <div class="sp"><div class="k">Pack</div><div class="v">${isSup?p.variants[0].size:'Box of 10 vials'}</div></div>
+        <div class="sp"><div class="k">Format</div><div class="v">${isSup?p.variants[0].size:p.variants[0].size+' / vial · max 3'}</div></div>
         <div class="sp"><div class="k">Form</div><div class="v">${p.kind==='water'?'Solution':'Lyophilized powder'}</div></div>
         ${!isSup?`<div class="sp"><div class="k">Storage</div><div class="v">-20°C, protect from light</div></div>
         <div class="sp"><div class="k">Reconstitution</div><div class="v">Bacteriostatic water</div></div>`:''}
@@ -1259,9 +1267,10 @@ function openDetail(id){
         <div class="sp"><div class="k">Lot No.</div><div class="v">${lot}</div></div>
       </div>
       ${!isSup?`<div class="storage-note">Molecular weight, amino-acid sequence and CAS number are provided on each lot's Certificate of Analysis. Store lyophilized at -20&deg;C protected from light; after reconstitution, refrigerate (2-8&deg;C) and use within the period stated on the COA.</div>`:''}
+      ${!isSup?`<div class="strength-line" style="margin-bottom:8px">${p.variants[0].size} per vial · max 3 vials (≈ 3-month supply)</div>`:''}
       <div class="detail-buy">
-        ${p.variants.length>1?variantSelect(p,'size-sel'):`<div class="price" style="font-size:24px">${money(p.variants[0].price)}</div>`}
-        ${p.variants.length>1?`<div class="price" id="price-${p.id}" style="font-size:22px;align-items:center;display:flex">${money(p.variants[0].price)}</div>`:''}
+        ${isSup?variantSelect(p):countSelect(p)}
+        <div class="price js-price" style="font-size:22px;align-items:center;display:flex">${money(p.variants[0].price)}</div>
         <button class="checkout-btn" onclick="addToCart('${p.id}',this);openCart()">Add to Cart</button>
       </div>
       ${!isSup?`<p style="font-size:12px;color:var(--muted2);margin-top:14px"><a class="coa-link" onclick="openCoa('${p.name}','${lot}','${p.purity}')">View Certificate of Analysis →</a></p>`:''}
@@ -1274,18 +1283,25 @@ function openDetail(id){
 }
 
 /* ---------- cart ---------- */
+function isPeptide(p){return p&&p.variants&&p.goals&&p.goals[0]!=='supplies';}
 function addToCart(id,btn){
-  let size,price;const p=find(id);
-  const scope=btn?btn.closest('.modal-box')||btn.closest('.card'):null;
-  const sel=scope?scope.querySelector('.size-sel'):null;
-  if(p.variants){const idx=sel?+sel.value:0;size=packLabel(p,p.variants[idx].size);price=p.variants[idx].price;}
-  else{size=p.size||'kit';price=p.price;}
+  const p=find(id);
+  const scope=btn?btn.closest('.modal-box')||btn.closest('[data-id]'):null;
+  const qSel=scope?scope.querySelector('.qty-sel'):null;
+  const sSel=scope?scope.querySelector('.size-sel:not(.qty-sel)'):null;
+  let size,price,addQty=1;
+  if(p.comps){size='kit';price=p.price;}
+  else if(qSel){size=p.variants[0].size;price=p.variants[0].price;addQty=Math.min(3,+qSel.value||1);}
+  else if(sSel){const idx=+sSel.value||0;size=p.variants[idx].size;price=p.variants[idx].price;}
+  else{size=p.variants?p.variants[0].size:'item';price=p.variants?p.variants[0].price:p.price;}
   const key=id+'|'+size;
   if(!cart[key])cart[key]={id,name:p.name,size,price,qty:0};
-  cart[key].qty++;saveCart();updateCart();
+  cart[key].qty+=addQty;
+  if(isPeptide(p))cart[key].qty=Math.min(3,cart[key].qty);
+  saveCart();updateCart();
   if(btn){btn.classList.add('added');const t=btn.textContent;btn.textContent='Added';setTimeout(()=>{btn.classList.remove('added');btn.textContent=t;},1000);}
 }
-function changeQty(key,d){if(cart[key]){cart[key].qty+=d;if(cart[key].qty<=0)delete cart[key];saveCart();updateCart();}}
+function changeQty(key,d){if(cart[key]){cart[key].qty+=d;const p=find(cart[key].id);if(isPeptide(p))cart[key].qty=Math.min(3,cart[key].qty);if(cart[key].qty<=0)delete cart[key];saveCart();updateCart();}}
 function removeItem(key){delete cart[key];saveCart();updateCart();}
 function saveCart(){localStorage.setItem('pep_cart3',JSON.stringify(cart));}
 function cartTotal(){return Object.values(cart).reduce((s,i)=>s+i.price*i.qty,0);}
