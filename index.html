@@ -1181,7 +1181,7 @@ function tierList(p){var mx=capVials(p);return [1,2,3,5,mx].filter((n,i,a)=>n<=m
 function countSelect(p){
   var sz=p.variants[0].size,base=unitNum(sz),u=unitTxt(sz);
   return `<select class="size-sel qty-sel" onclick="event.stopPropagation()" onchange="recalc(this)">`+
-   tierList(p).map(n=>{var per=vialPrice(p,n),tot=per*n,mg=base?` · ${+(base*n).toFixed(base%1?1:0)}${u}`:'';return `<option value="${n}">${n} vial${n>1?'s':''}${mg} — ${money(tot)} (${money(per)}/vial)</option>`;}).join('')+`</select>`;
+   tierList(p).map(n=>{var per=vialPrice(p,n),tot=per*n,mg=base?` · ${+(base*n).toFixed(base%1?1:0)}${u}`:'';return `<option value="${n}">${n} vial${n>1?'s':''}${mg} — ${money(tot)}</option>`;}).join('')+`</select>`;
 }
 function recalc(el){var scope=el.closest('[data-id]');if(!scope)return;var p=find(scope.dataset.id);if(!p||!p.variants)return;var pe=scope.querySelector('.js-price');if(!pe)return;if(el.classList.contains('qty-sel')){var n=+el.value||1;pe.textContent=money(vialPrice(p,n)*n);}else pe.textContent=money(p.variants[+el.value||0].price);}
 
@@ -1360,7 +1360,7 @@ const TRACK_URL='https://t.17track.net/en#nums=';      // multi-carrier tracker 
 /* ====== BACKEND (paste your Google Apps Script web-app URL — see backend/README.md) ====== */
 const BACKEND_URL='';                                  // central order database + per-order tracking
 const PAY={
-  cashapp:{label:'Cash App',to:CASHAPP_TAG,how:'Open Cash App, send the order total to our Cashtag below, and put your order number in the note.',apps:[['Get Cash App','https://cash.app/']]},
+  cashapp:{label:'Cash App',to:CASHAPP_TAG,how:'After you place the order you get a one-tap button that opens Cash App with the exact amount pre-filled, sent to us.',apps:[['Get Cash App','https://cash.app/']]},
   zelle:{label:'Zelle',to:ZELLE_CONTACT,how:'Open your banking app, choose Zelle, and send the total to the contact below.',apps:[['How Zelle works','https://www.zellepay.com/get-started']]}
 };
 let selectedPayKey='cashapp';
@@ -1371,6 +1371,10 @@ function renderPayMethods(){
 }
 function selPay(k){selectedPayKey=k;document.querySelectorAll('#payMethods .pay-opt').forEach(o=>o.classList.remove('sel'));const r=document.querySelector(`#payMethods input[value="${k}"]`);if(r)r.closest('.pay-opt').classList.add('sel');renderPayInfo();}
 function payAppsHTML(v,center){return v.apps.length?`<div class="pay-apps"${center?' style="justify-content:center"':''}>${v.apps.map(a=>`<a href="${a[1]}" target="_blank" rel="noopener">${a[0]} ↗</a>`).join('')}</div>`:'';}
+function payNowBtn(total){
+  if(selectedPayKey==='cashapp'&&CASHAPP_TAG)return `<a class="checkout-btn" style="display:block;text-align:center;text-decoration:none;margin-top:10px" href="https://cash.app/${CASHAPP_TAG}/${total}" target="_blank" rel="noopener">Pay ${money(total)} with Cash App →</a>`;
+  return '';
+}
 function renderPayInfo(){
   const v=PAY[selectedPayKey];if(!$('#payInfo'))return;
   $('#payInfo').innerHTML=`<div class="pay-info-box"><div>${v.how}</div>${v.to?`<div class="pay-to">Send to: <b>${v.to}</b></div>`:''}${payAppsHTML(v)}</div>`;
@@ -1424,11 +1428,12 @@ function placeOrder(){
   saveOrderToBackend(order);
   cart={};saveCart();updateCart();renderDashboard();
   $('#checkoutForm').style.display='none';$('#checkoutSuccess').style.display='block';
-  $('#successMsg').innerHTML=`Order <strong>${order.id}</strong> received — total <strong>${money(total)}</strong>.<br><br>
-    <strong>To complete your order, pay ${money(total)} via ${v.label}:</strong><br>${v.how}
-    ${v.to?`<div style="margin-top:6px">Send to: <b style="color:var(--c1);word-break:break-all">${v.to}</b></div>`:''}
-    ${payAppsHTML(v,true)}
-    <div style="margin-top:10px;font-size:12px">After paying, email your payment proof and order number <strong>${order.id}</strong> to <b>${ORDER_EMAIL}</b>. We ship within the dispatch window once payment is confirmed.</div>
+  $('#successMsg').innerHTML=`<div style="font-size:13px;color:var(--c3);font-weight:700;border:1px solid rgba(255,46,136,.4);background:rgba(255,46,136,.07);border-radius:10px;padding:10px 12px;margin-bottom:12px">⚠ Your order is reserved but is <u>NOT</u> confirmed or shipped until your payment is received and verified.</div>
+    Order <strong>${order.id}</strong> · Amount due: <strong style="color:var(--c1);font-size:18px">${money(total)}</strong><br><br>
+    <strong>Pay ${money(total)} now via ${v.label}:</strong>
+    ${payNowBtn(total)}
+    ${(selectedPayKey!=='cashapp'&&v.to)?`<div style="margin-top:8px">Send <b>${money(total)}</b> to <b style="color:var(--c1);word-break:break-all">${v.to}</b> and put <b>${order.id}</b> in the note.</div>`:''}
+    <div style="margin-top:10px;font-size:12px">After paying, email your payment proof and order number <strong>${order.id}</strong> to <b>${ORDER_EMAIL}</b>. We verify the payment, then ship — no payment, no shipment.</div>
     <div class="invoice">${invoice.replace(/</g,'&lt;')}</div>`;
 }
 function notifyOwner(order,body){
